@@ -56,8 +56,8 @@ android {
         applicationId = "com.adshield.pro"
         minSdk = 29
         targetSdk = 36
-        versionCode = 20200
-        versionName = "2.2.0"
+        versionCode = 20202
+        versionName = "2.2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

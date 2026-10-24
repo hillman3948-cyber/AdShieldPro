@@ -1,5 +1,7 @@
 package com.adshield.pro.ui.screens
 
+import com.adshield.pro.BuildConfig
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -210,7 +212,7 @@ fun HomeScreen(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "v2.1.0 • Multi-Layer Local DNS & Browser Firewall",
+                        text = "v${BuildConfig.VERSION_NAME} • Multi-Layer Local DNS & Browser Firewall",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
