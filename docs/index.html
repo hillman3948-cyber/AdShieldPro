@@ -1,31 +1,3 @@
-Found the exact bug! Look at `demo.js`:
-```js
-const s = AS.fitCanvas(canvas, layout);
-...
-const loop = AS.createLoop(wrap, draw);
-```
-`AS.fitCanvas(canvas, layout)` calls `layout()` **synchronously** during setup, and `layout()` checks `if (AS.state.reduced || !loop.running) draw(0);` **before `const loop` is initialized**, throwing `ReferenceError: Cannot access 'loop' before initialization`! In the single-file bundle, that error aborted the rest of the `<script>` tag before `ui.js` could dismiss the `"INITIALIZING SHIELD"` loader.
-
-Also, as a safeguard, I will add a pure-CSS fallback animation on `.loader` (`animation: loader-autohide ... forwards`) so that even if JavaScript is ever blocked or delayed, the loader can **never** get stuck on screen.
-
-Let me fix `demo.js`, `styles.css`, `ui.js`, and regenerate the single-file HTML now:
-
-Edited demo.js
-Edited demo.js
-Edited styles.css
-Ran rebuild single-file HTML bundle
-
-Fixed! Here is what caused it and how it's resolved:
-
-1. **Root cause (`demo.js`):** `AS.fitCanvas(canvas, layout)` invokes `layout()` synchronously on startup, which checked `!loop.running` before `const loop = AS.createLoop(...)` was declared — throwing a temporal dead-zone `ReferenceError` that stopped the combined `<script>` before `ui.js` ran `finishLoad()`.
-2. **Fixes applied:**
-   - Declared `let loop = null;` prior to `AS.fitCanvas(...)` and guarded with `!loop || !loop.running`.
-   - Moved `ui.js` (loader dismissal + UI setup) right after `core.js`.
-   - Added a CSS failsafe (`@keyframes loader-failsafe`) so the loader overlay automatically fades out and disables pointer events even if JavaScript is ever delayed.
-
-Both [`index.html`](file:///C:/Users/hillm/.gemini/antigravity/scratch/adshield-pro/index.html) and [`adshield-pro-single-file.html`](file:///C:/Users/hillm/.gemini/antigravity/scratch/adshield-pro/adshield-pro-single-file.html) are updated, and here is the complete updated single-file HTML ready to copy and paste:
-
-```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -2222,4 +2194,3 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   </script>
 </body>
 </html>
-```
