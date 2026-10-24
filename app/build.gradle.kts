@@ -12,6 +12,18 @@ val githubUpdateRepository = providers.gradleProperty("githubUpdateRepository")
     .orElse("hillman3948-cyber/AdShieldPro")
     .get()
 val escapedGithubUpdateRepository = githubUpdateRepository.replace("\\", "\\\\").replace("\"", "\\\"")
+val releaseKeystorePath = providers.gradleProperty("adshieldKeystorePath")
+    .orElse(providers.environmentVariable("ADSHIELD_KEYSTORE_PATH"))
+    .orNull
+val releaseKeystorePassword = providers.gradleProperty("adshieldKeystorePassword")
+    .orElse(providers.environmentVariable("ADSHIELD_KEYSTORE_PASSWORD"))
+    .orNull
+val releaseKeyAlias = providers.gradleProperty("adshieldKeyAlias")
+    .orElse(providers.environmentVariable("ADSHIELD_KEY_ALIAS"))
+    .orNull
+val releaseKeyPassword = providers.gradleProperty("adshieldKeyPassword")
+    .orElse(providers.environmentVariable("ADSHIELD_KEY_PASSWORD"))
+    .orNull
 // Keep intermediate build artifacts outside OneDrive to prevent Windows OneDrive cloud-filter
 // file locking (AccessDeniedException on R.jar during javac), and automatically mirror outputs
 // (APKs, AABs, and test reports) into $projectDir/build/outputs.
@@ -62,12 +74,12 @@ android {
 
     signingConfigs {
         create("releaseConfig") {
-            val ksPath = System.getenv("ADSHIELD_KEYSTORE_PATH")
+            val ksPath = releaseKeystorePath
             if (!ksPath.isNullOrBlank() && file(ksPath).exists()) {
                 storeFile = file(ksPath)
-                storePassword = System.getenv("ADSHIELD_KEYSTORE_PASSWORD") ?: ""
-                keyAlias = System.getenv("ADSHIELD_KEY_ALIAS") ?: ""
-                keyPassword = System.getenv("ADSHIELD_KEY_PASSWORD") ?: ""
+                storePassword = releaseKeystorePassword ?: ""
+                keyAlias = releaseKeyAlias ?: ""
+                keyPassword = releaseKeyPassword ?: ""
             }
         }
     }

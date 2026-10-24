@@ -4,6 +4,7 @@
 .idea/
 **/build/
 local.properties
+signing.properties
 
 # Release and debug packages stay out of source control
 *.apk

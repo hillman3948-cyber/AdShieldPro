@@ -35,7 +35,16 @@ Run from `C:\Users\hillm\OneDrive\Desktop\PROJECT`:
 For an update to an already installed AdShield Pro app, use the original production keystore and credentials. Do not generate a replacement key: Android will reject the update if it is signed with a different key. If this is the first ever release, create and securely back up a keystore before publishing.
 
 ### Step 2: Set Signing Environment Variables and Build `.aab`
-`app/build.gradle.kts` reads release credentials from environment variables (never hardcoded in source control):
+`app/build.gradle.kts` reads release credentials from environment variables or Gradle user properties (never hardcoded in source control). On Windows, you can keep them in `%USERPROFILE%\.gradle\gradle.properties`, outside this project:
+
+```properties
+adshieldKeystorePath=C:/path/to/signing.keystore
+adshieldKeystorePassword=your_keystore_password
+adshieldKeyAlias=your_key_alias
+adshieldKeyPassword=your_key_password
+```
+
+Keep this file private and never commit or share it. The equivalent environment variable names are shown below:
 
 ```powershell
 $env:ADSHIELD_KEYSTORE_PATH = "C:\path\to\adshield-upload-key.jks"
