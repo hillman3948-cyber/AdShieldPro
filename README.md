@@ -1,6 +1,24 @@
 # AdShield Pro 2.2.5 — Android DNS Ad & Tracker Protection
 
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
+## Website and downloads
+
+- **Project website:** [hillman3948-cyber.github.io/AdShieldPro](https://hillman3948-cyber.github.io/AdShieldPro/)
+- **Direct APK download — v2.2.5:** [AdShield-Pro-2.2.5.apk](https://github.com/hillman3948-cyber/AdShieldPro/releases/download/v2.2.5/AdShield-Pro-2.2.5.apk)
+- [Browse all GitHub releases](https://github.com/hillman3948-cyber/AdShieldPro/releases)
+
+## App screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/images/home-protection.jpg" alt="AdShield Pro home screen showing active DNS protection and statistics" width="280"><br><strong>Home protection</strong></td>
+    <td align="center"><img src="docs/images/smart-boost.jpg" alt="AdShield Pro Smart Boost device health screen" width="280"><br><strong>Smart Boost</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/images/protection-profile.jpg" alt="AdShield Pro DNS activity and protection profiles" width="280"><br><strong>Activity and protection profiles</strong></td>
+    <td align="center"><img src="docs/images/dns-analytics.jpg" alt="AdShield Pro DNS analytics and live top apps" width="280"><br><strong>DNS analytics and live top apps</strong></td>
+  </tr>
+</table>
 
 ## What AdShield Pro does
 
