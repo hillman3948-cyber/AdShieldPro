@@ -3,24 +3,9 @@ package com.adshield.pro.ui.screens
 import com.adshield.pro.BuildConfig
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.offset
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.draw.alpha
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.zIndex
-import kotlin.math.roundToInt
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -144,15 +129,21 @@ fun HomeScreen(
         label = "shield_color"
     )
 
-    val infiniteTransition = rememberInfiniteTransition(label = "shield_pulse")
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1.0f,
-        targetValue = if (isConnected) 1.08f else 1.0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1600, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulse_scale"
+    val shieldScale by animateFloatAsState(
+        targetValue = when (vpnState.status) {
+            VpnStatus.CONNECTED -> 1f
+            VpnStatus.PAUSED -> 0.94f
+            VpnStatus.STARTING, VpnStatus.RECONNECTING -> 1.08f
+            VpnStatus.ERROR -> 0.9f
+            VpnStatus.DISCONNECTED -> 0.86f
+        },
+        animationSpec = tween(durationMillis = 420),
+        label = "shield_state_scale"
+    )
+    val ringScale by animateFloatAsState(
+        targetValue = if (vpnState.status == VpnStatus.STARTING || vpnState.status == VpnStatus.RECONNECTING) 1.1f else 1f,
+        animationSpec = tween(durationMillis = 520),
+        label = "shield_ring_scale"
     )
 
     // Combine session + historical stats safely (never fabricated)
@@ -163,20 +154,6 @@ fun HomeScreen(
         (displayBlocked.toFloat() / displayTotal.toFloat()) * 100f
     } else 0f
 
-    // Animate a small app-icon impact only when the real blocked-query counter increases.
-    val blockImpact = remember { Animatable(1f) }
-    var previousBlockedCount by remember { mutableStateOf(displayBlocked) }
-    LaunchedEffect(displayBlocked) {
-        val hasNewBlockedQuery = displayBlocked > previousBlockedCount
-        previousBlockedCount = displayBlocked
-        if (hasNewBlockedQuery && isConnected) {
-            blockImpact.snapTo(0f)
-            blockImpact.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing)
-            )
-        }
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -237,7 +214,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "UNLOCKED",
+                        text = "All features",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = EmeraldGlow,
@@ -275,53 +252,30 @@ fun HomeScreen(
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // The Facebook-style app icon animates only when a real blocked query is recorded.
-                BoxWithConstraints(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(184.dp),
+                // The shield responds to protection state without a distracting repeating pulse.
+                Box(
+                    modifier = Modifier.fillMaxWidth().height(184.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    val density = LocalDensity.current
-                    val startX = with(density) { -(maxWidth * 0.38f).roundToPx() }
-                    val progress = blockImpact.value
-                    val travel = (progress / 0.74f).coerceIn(0f, 1f)
-                    val iconAlpha = when {
-                        progress < 0.10f -> (progress / 0.10f).coerceIn(0f, 1f)
-                        progress < 0.72f -> 1f
-                        else -> (1f - (progress - 0.72f) / 0.28f).coerceIn(0f, 1f)
-                    }
-                    val iconScale = if (progress > 0.72f) {
-                        1f + 0.55f * ((progress - 0.72f) / 0.28f).coerceIn(0f, 1f)
-                    } else {
-                        0.82f + 0.18f * (progress / 0.72f).coerceIn(0f, 1f)
-                    }
-                    val collisionBoost = when {
-                        progress in 0.68f..0.77f -> ((progress - 0.68f) / 0.09f) * 0.15f
-                        progress in 0.77f..0.92f -> (1f - (progress - 0.77f) / 0.15f) * 0.15f
-                        else -> 0f
-                    }
-
                     Box(
-                        modifier = Modifier
-                            .size(176.dp)
+                        modifier = Modifier.size(176.dp)
+                            .graphicsLayer { scaleX = ringScale; scaleY = ringScale; alpha = 0.5f }
                             .border(1.dp, shieldColor.copy(alpha = 0.24f), CircleShape)
                     )
                     Box(
-                        modifier = Modifier
-                            .size(148.dp)
+                        modifier = Modifier.size(148.dp)
+                            .graphicsLayer { scaleX = ringScale; scaleY = ringScale; alpha = 0.75f }
                             .border(1.dp, shieldColor.copy(alpha = 0.38f), CircleShape)
                     )
-
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(128.dp)
-                            .scale(pulseScale * (1f + collisionBoost))
+                        modifier = Modifier.size(128.dp).scale(shieldScale)
                             .clip(CircleShape)
                             .background(shieldColor.copy(alpha = 0.14f))
                             .border(2.dp, shieldColor.copy(alpha = 0.6f), CircleShape)
-                            .clickable { onToggleVpn(!isActiveOrPaused) }
+                            .clickable(onClickLabel = if (isActiveOrPaused) "Turn protection off" else "Turn protection on") {
+                                onToggleVpn(!isActiveOrPaused)
+                            }
                     ) {
                         Icon(
                             imageVector = when (vpnState.status) {
@@ -329,61 +283,10 @@ fun HomeScreen(
                                 VpnStatus.PAUSED -> Icons.Default.PauseCircle
                                 else -> Icons.Default.Shield
                             },
-                            contentDescription = "Toggle Protection",
+                            contentDescription = "Protection status: ${vpnState.status.name.lowercase()}",
                             tint = shieldColor,
                             modifier = Modifier.size(64.dp)
                         )
-                    }
-
-                    if (progress < 1f) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .offset { IntOffset((startX * (1f - travel)).roundToInt(), 0) }
-                                .size(44.dp)
-                                .zIndex(3f)
-                                .graphicsLayer {
-                                    alpha = iconAlpha
-                                    scaleX = iconScale
-                                    scaleY = iconScale
-                                }
-                                .clip(RoundedCornerShape(13.dp))
-                                .background(Color(0xFF1877F2))
-                                .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(13.dp))
-                        ) {
-                            Text(
-                                text = "f",
-                                color = Color.White,
-                                fontSize = 34.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                        }
-
-                        if (progress in 0.70f..0.96f) {
-                            val labelAlpha = if (progress < 0.78f) {
-                                ((progress - 0.70f) / 0.08f).coerceIn(0f, 1f)
-                            } else {
-                                (1f - (progress - 0.78f) / 0.18f).coerceIn(0f, 1f)
-                            }
-                            Surface(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .offset(y = 76.dp)
-                                    .zIndex(4f)
-                                    .alpha(labelAlpha),
-                                shape = RoundedCornerShape(50),
-                                color = EmeraldPrimary
-                            ) {
-                                Text(
-                                    text = "BLOCKED",
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                    color = Color(0xFF052D27),
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.ExtraBold
-                                )
-                            }
-                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(14.dp))
@@ -406,12 +309,12 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = when (vpnState.status) {
-                                VpnStatus.CONNECTED -> "VPN PROTECTED • ${vpnState.activeNetworkLabel.uppercase()}"
-                                VpnStatus.PAUSED -> "VPN PAUSED (PASSTHROUGH)"
-                                VpnStatus.STARTING -> "INITIALIZING LOCAL TUNNEL..."
-                                VpnStatus.RECONNECTING -> "RECONNECTING..."
-                                VpnStatus.ERROR -> "VPN ERROR"
-                                VpnStatus.DISCONNECTED -> "PROTECTION DISCONNECTED"
+                                VpnStatus.CONNECTED -> "Protected • ${vpnState.activeNetworkLabel}"
+                                VpnStatus.PAUSED -> "Filtering paused"
+                                VpnStatus.STARTING -> "Starting protection…"
+                                VpnStatus.RECONNECTING -> "Reconnecting…"
+                                VpnStatus.ERROR -> "Protection needs attention"
+                                VpnStatus.DISCONNECTED -> "Protection off"
                             },
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
@@ -425,7 +328,7 @@ fun HomeScreen(
                 Text(
                     text = when (vpnState.status) {
                         VpnStatus.CONNECTED -> "Filtering ads, trackers, and malware across apps via ${settings.resolverConfig.protocol.label}."
-                        VpnStatus.PAUSED -> "Tunnel is open in passthrough mode. Tap Resume to restore filtering."
+                        VpnStatus.PAUSED -> "Your connection is active, but DNS filtering is paused. Tap Resume to restart filtering."
                         VpnStatus.ERROR -> vpnState.lastError ?: "Unable to establish VPN tunnel."
                         else -> "Tap the switch below to start device-wide non-root DNS & VPN protection."
                     },
@@ -455,13 +358,19 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = if (isActiveOrPaused) "Device-Wide Protection ON" else "Enable Protection",
+                                text = when (vpnState.status) {
+                                    VpnStatus.CONNECTED -> "Protection is on"
+                                    VpnStatus.PAUSED -> "Filtering is paused"
+                                    VpnStatus.STARTING, VpnStatus.RECONNECTING -> "Connecting…"
+                                    VpnStatus.ERROR -> "Protection needs attention"
+                                    VpnStatus.DISCONNECTED -> "Turn on protection"
+                                },
                                 style = MaterialTheme.typography.titleMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "${vpnState.loadedRuleCount} active rules in engine",
+                                text = if (isConnected) "${vpnState.loadedRuleCount} rules active" else if (isPaused) "Filtering is paused" else "Device-wide DNS filtering",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -498,7 +407,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = if (isPaused) "Resume DNS Filtering" else "Pause Protection (Passthrough Mode)",
+                            text = if (isPaused) "Resume filtering" else "Pause filtering",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -515,14 +424,14 @@ fun HomeScreen(
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Total DNS Queries",
-                value = displayTotal.toString(),
+                value = java.text.NumberFormat.getIntegerInstance().format(displayTotal),
                 subtitle = "Session: ${vpnState.sessionTotalQueries}",
                 accentColor = CyberCyan
             )
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Blocked Queries",
-                value = displayBlocked.toString(),
+                value = java.text.NumberFormat.getIntegerInstance().format(displayBlocked),
                 subtitle = "Ads & Trackers",
                 accentColor = AlertRed
             )
@@ -535,15 +444,15 @@ fun HomeScreen(
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Allowed Queries",
-                value = displayAllowed.toString(),
+                value = java.text.NumberFormat.getIntegerInstance().format(displayAllowed),
                 subtitle = "Cached: ${vpnState.sessionCachedQueries}",
                 accentColor = EmeraldPrimary
             )
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Blocking Rate",
-                value = String.format(Locale.US, "%.1f%%", displayBlockPct),
-                subtitle = "Avg Latency: ${vpnState.averageLatencyMs} ms",
+                value = if (displayTotal > 0L) String.format(Locale.getDefault(), "%.1f%%", displayBlockPct) else "—",
+                subtitle = if (displayTotal > 0L) "Average latency: ${vpnState.averageLatencyMs} ms" else "No DNS requests yet",
                 accentColor = WarningAmber
             )
         }
@@ -699,7 +608,7 @@ fun HomeScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "Emerald = Allowed DNS • Red = Blocked DNS Queries",
+                            text = "Green = allowed • Red = blocked",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

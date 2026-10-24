@@ -336,7 +336,7 @@ fun BrowserScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Security, contentDescription = null, tint = EmeraldPrimary)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Layer 3 Browser Shield Controls")
+                    Text("Browser protection settings")
                 }
             },
             text = {

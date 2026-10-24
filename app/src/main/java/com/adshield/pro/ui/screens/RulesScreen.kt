@@ -112,7 +112,7 @@ fun RulesScreen(
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Text(
-                        text = "Instant hot-reload • Zero VPN restart required",
+                        text = "Changes take effect immediately—no restart needed.",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

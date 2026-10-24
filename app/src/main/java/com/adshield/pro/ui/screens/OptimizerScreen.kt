@@ -280,7 +280,7 @@ private fun SmartBoostTabContent(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "AI SMART BOOST ENGINE",
+                        text = "AI smart boost",
                         style = MaterialTheme.typography.labelMedium,
                         color = CyberCyan,
                         fontWeight = FontWeight.Bold
@@ -305,7 +305,7 @@ private fun SmartBoostTabContent(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "HEALTH",
+                            text = "DEVICE HEALTH",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -982,7 +982,7 @@ private fun RamManagerTabContent(
                 ) {
                     Icon(Icons.Default.Memory, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("SMART RAM OPTIMIZE", fontWeight = FontWeight.Bold)
+                    Text("Optimize RAM", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -1476,7 +1476,7 @@ private fun BatteryThermalTabContent(
                 ) {
                     Icon(Icons.Default.Thermostat, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("AUTO BATTERY OPTIMIZE", fontWeight = FontWeight.Bold)
+                    Text("Battery optimization", fontWeight = FontWeight.Bold)
                 }
             }
         }

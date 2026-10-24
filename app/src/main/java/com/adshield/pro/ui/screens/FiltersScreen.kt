@@ -117,7 +117,7 @@ fun FiltersScreen(
             item {
                 Column {
                     Text(
-                        text = "Validating & atomically updating enabled HTTPS blocklists...",
+                        text = "Checking enabled filter lists and saving a verified update…",
                         style = MaterialTheme.typography.labelMedium,
                         color = EmeraldPrimary
                     )
@@ -289,7 +289,7 @@ fun FiltersScreen(
                                 "Not yet downloaded"
                             }
                             Text(
-                                text = "$updatedText • ${source.ruleCount} rules (${source.duplicateCount} dupes skipped)",
+                                text = "$updatedText • ${source.ruleCount} rules (${source.duplicateCount} duplicates skipped)",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

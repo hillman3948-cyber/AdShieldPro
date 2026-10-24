@@ -113,7 +113,7 @@ fun ActivityScreen(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "100% Local On-Device Telemetry • Never Shared",
+                        text = "Stored on this device · Never shared",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
