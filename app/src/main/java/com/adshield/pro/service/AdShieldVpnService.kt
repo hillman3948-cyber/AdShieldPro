@@ -12,6 +12,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.VpnService
+import android.os.Process
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.core.app.NotificationCompat
@@ -32,6 +33,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.util.concurrent.ConcurrentHashMap
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InterruptedIOException
@@ -59,6 +63,8 @@ class AdShieldVpnService : VpnService() {
     private var vpnInterface: ParcelFileDescriptor? = null
     private var tunnelJob: Job? = null
     private val tunWriteLock = Any()
+    private data class AppAttribution(val packageName: String, val label: String)
+    private val appAttributionByUid = ConcurrentHashMap<Int, AppAttribution>()
 
     @Volatile
     private var isPaused: Boolean = false
@@ -240,7 +246,8 @@ class AdShieldVpnService : VpnService() {
         outputStream: FileOutputStream
     ) {
         val dnsQuery = DnsPacketCodec.parseQuery(udpPacket.payload) ?: return
-        val dnsResponseBytes = processDnsQuery(dnsQuery)
+        val app = resolveDnsOwner(IpPacketFraming.PROTOCOL_UDP, udpPacket)
+        val dnsResponseBytes = processDnsQuery(dnsQuery, app)
         val responseIpPacket = IpPacketFraming.buildUdpResponsePacket(udpPacket, dnsResponseBytes)
         writeToTunSafe(outputStream, responseIpPacket)
     }
@@ -275,7 +282,8 @@ class AdShieldVpnService : VpnService() {
             if (dnsLen >= 12 && 2 + dnsLen <= tcpPacket.payload.size) {
                 val dnsQuery = DnsPacketCodec.parseQuery(tcpPacket.payload, 2, dnsLen)
                 if (dnsQuery != null) {
-                    val dnsResp = processDnsQuery(dnsQuery)
+                    val app = resolveDnsOwner(IpPacketFraming.PROTOCOL_TCP, tcpPacket)
+                    val dnsResp = processDnsQuery(dnsQuery, app)
                     val tcpDnsPayload = ByteArray(2 + dnsResp.size)
                     tcpDnsPayload[0] = ((dnsResp.size ushr 8) and 0xFF).toByte()
                     tcpDnsPayload[1] = (dnsResp.size and 0xFF).toByte()
@@ -304,7 +312,32 @@ class AdShieldVpnService : VpnService() {
         }
     }
 
-    private suspend fun processDnsQuery(query: DnsPacketCodec.ParsedDnsQuery): ByteArray {
+    private fun resolveDnsOwner(
+        protocol: Int,
+        packet: IpPacketFraming.ParsedTransportPacket
+    ): AppAttribution? = runCatching {
+        val manager = connectivityManager ?: return null
+        val uid = manager.getConnectionOwnerUid(
+            protocol,
+            InetSocketAddress(InetAddress.getByAddress(packet.sourceAddress), packet.sourcePort),
+            InetSocketAddress(InetAddress.getByAddress(packet.destinationAddress), packet.destinationPort)
+        )
+        if (uid == Process.INVALID_UID) return null
+        appAttributionByUid[uid]?.let { return it }
+        val packageName = packageManager.getPackagesForUid(uid)
+            ?.firstOrNull { it != this.packageName }
+            ?: packageManager.getPackagesForUid(uid)?.firstOrNull()
+            ?: return null
+        val appInfo = packageManager.getApplicationInfo(packageName, 0)
+        val attribution = AppAttribution(packageName, packageManager.getApplicationLabel(appInfo).toString())
+        appAttributionByUid[uid] = attribution
+        attribution
+    }.getOrNull()
+
+    private suspend fun processDnsQuery(
+        query: DnsPacketCodec.ParsedDnsQuery,
+        app: AppAttribution?
+    ): ByteArray {
         val currentSettings = preferencesRepository.getSettingsSnapshot()
 
         // If protection is temporarily paused by user, forward directly to encrypted upstream DNS
@@ -319,7 +352,9 @@ class AdShieldVpnService : VpnService() {
                 sourceList = "Paused (Passthrough)",
                 latencyMs = upstream.latencyMs,
                 protocolUsed = upstream.protocolUsed,
-                fromCache = upstream.fromCache
+                fromCache = upstream.fromCache,
+                appPackageName = app?.packageName,
+                appName = app?.label
             )
             return upstream.responseBytes
         }
@@ -342,7 +377,9 @@ class AdShieldVpnService : VpnService() {
                 sourceList = evaluation.sourceName,
                 latencyMs = 0,
                 protocolUsed = if (mode.blockSinkholeZeroIp) "Sinkhole 0.0.0.0" else "Local NXDOMAIN",
-                fromCache = false
+                fromCache = false,
+                appPackageName = app?.packageName,
+                appName = app?.label
             )
             maybeRefreshNotificationCounter()
             return blockedBytes
@@ -359,7 +396,9 @@ class AdShieldVpnService : VpnService() {
             sourceList = evaluation.sourceName,
             latencyMs = upstreamResult.latencyMs,
             protocolUsed = upstreamResult.protocolUsed,
-            fromCache = upstreamResult.fromCache
+            fromCache = upstreamResult.fromCache,
+            appPackageName = app?.packageName,
+            appName = app?.label
         )
         maybeRefreshNotificationCounter()
         return upstreamResult.responseBytes

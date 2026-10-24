@@ -10,6 +10,7 @@ import com.adshield.pro.data.local.preferences.DarkThemePreference
 import com.adshield.pro.data.local.preferences.UserPreferencesRepository
 import com.adshield.pro.data.repository.AdShieldRepository
 import com.adshield.pro.domain.model.AppExclusionInfo
+import com.adshield.pro.domain.model.AppDnsActivity
 import com.adshield.pro.domain.model.BatteryMode
 import com.adshield.pro.domain.model.BatteryThermalSnapshot
 import com.adshield.pro.domain.model.CustomRule
@@ -79,6 +80,9 @@ class AdShieldViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppSettingsState())
 
     val recentLogs: StateFlow<List<DnsActivityRecord>> = repository.recentLogsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val liveTopApps: StateFlow<List<AppDnsActivity>> = repository.liveTopAppsFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val topBlockedDomains: StateFlow<List<DomainBlockCount>> = repository.topBlockedDomainsFlow

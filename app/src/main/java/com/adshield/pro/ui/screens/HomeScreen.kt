@@ -3,10 +3,11 @@ package com.adshield.pro.ui.screens
 import com.adshield.pro.BuildConfig
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,6 +58,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -140,6 +143,17 @@ fun HomeScreen(
         animationSpec = tween(durationMillis = 420),
         label = "shield_state_scale"
     )
+    val glowPulse = remember { Animatable(0f) }
+    LaunchedEffect(isConnected) {
+        if (!isConnected) {
+            glowPulse.snapTo(0f)
+            return@LaunchedEffect
+        }
+        while (true) {
+            glowPulse.animateTo(1f, tween(durationMillis = 1400, easing = FastOutSlowInEasing))
+            glowPulse.animateTo(0f, tween(durationMillis = 1400, easing = FastOutSlowInEasing))
+        }
+    }
     val ringScale by animateFloatAsState(
         targetValue = if (vpnState.status == VpnStatus.STARTING || vpnState.status == VpnStatus.RECONNECTING) 1.1f else 1f,
         animationSpec = tween(durationMillis = 520),
@@ -257,6 +271,21 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth().height(184.dp),
                     contentAlignment = Alignment.Center
                 ) {
+                    Box(
+                        modifier = Modifier.size(172.dp)
+                            .graphicsLayer {
+                                val pulse = glowPulse.value
+                                alpha = if (isConnected) 0.28f + 0.42f * pulse else 0f
+                                scaleX = 0.86f + 0.14f * pulse
+                                scaleY = 0.86f + 0.14f * pulse
+                            }
+                            .background(
+                                Brush.radialGradient(
+                                    colors = listOf(shieldColor.copy(alpha = 0.46f), shieldColor.copy(alpha = 0.16f), Color.Transparent)
+                                ),
+                                CircleShape
+                            )
+                    )
                     Box(
                         modifier = Modifier.size(176.dp)
                             .graphicsLayer { scaleX = ringScale; scaleY = ringScale; alpha = 0.5f }

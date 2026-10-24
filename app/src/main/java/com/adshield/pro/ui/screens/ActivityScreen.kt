@@ -1,5 +1,15 @@
 package com.adshield.pro.ui.screens
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.graphics.drawable.toBitmap
+import com.adshield.pro.domain.model.AppDnsActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +50,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,6 +75,7 @@ import java.util.Locale
 fun ActivityScreen(
     logs: List<DnsActivityRecord>,
     topBlockedDomains: List<DomainBlockCount>,
+    liveTopApps: List<AppDnsActivity>,
     sourceEffectiveness: List<SourceEffectiveness>,
     chartBuckets: List<TimeBucketStat>,
     selectedRange: StatsChartRange,
@@ -161,6 +173,8 @@ fun ActivityScreen(
                 }
             }
         }
+
+        item { LiveTopAppsCard(apps = liveTopApps) }
 
         // Historical Chart Card (Daily 7D / Weekly 14D / Monthly 30D)
         item {
@@ -488,6 +502,83 @@ fun ActivityScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LiveTopAppsCard(apps: List<AppDnsActivity>) {
+    val maxQueries = (apps.maxOfOrNull { it.totalQueries } ?: 0L).coerceAtLeast(1L)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column {
+                Text("Live top apps", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text("DNS requests seen in this app session", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            if (apps.isEmpty()) {
+                Text(
+                    "Apps appear here as they make DNS requests through AdShield. Some encrypted-DNS traffic and Android shared-UID traffic may not be attributable to one app.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                apps.take(10).forEach { app ->
+                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AppIconBadge(app = app)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(app.appName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(app.packageName ?: "App could not be identified", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(java.text.NumberFormat.getIntegerInstance().format(app.totalQueries), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                                Text("${java.text.NumberFormat.getIntegerInstance().format(app.blockedQueries)} blocked", style = MaterialTheme.typography.labelMedium, color = AlertRed)
+                            }
+                        }
+                        LinearProgressIndicator(
+                            progress = { (app.totalQueries.toFloat() / maxQueries.toFloat()).coerceIn(0f, 1f) },
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MaterialTheme.colorScheme.primary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    }
+                }
+                Text(
+                    "Counts are DNS requests, not ads removed. The list resets when app statistics are cleared or AdShield restarts.",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppIconBadge(app: AppDnsActivity) {
+    val context = LocalContext.current
+    val icon = produceState<ImageBitmap?>(initialValue = null, app.packageName) {
+        val packageName = app.packageName
+        value = if (packageName == null) null else withContext(Dispatchers.IO) {
+            runCatching {
+                context.packageManager.getApplicationIcon(packageName)
+                    .toBitmap(96, 96, Bitmap.Config.ARGB_8888)
+                    .asImageBitmap()
+            }.getOrNull()
+        }
+    }.value
+    if (icon != null) {
+        Image(icon, contentDescription = "${app.appName} app icon", modifier = Modifier.size(38.dp).clip(RoundedCornerShape(10.dp)))
+    } else {
+        Surface(shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.size(38.dp)) {
+            Box(contentAlignment = Alignment.Center) {
+                Text(app.appName.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
             }
         }
     }

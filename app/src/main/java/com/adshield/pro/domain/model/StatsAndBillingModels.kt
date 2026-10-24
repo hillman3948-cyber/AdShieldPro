@@ -40,3 +40,11 @@ data class AppExclusionInfo(
     val usesFirstPartyMultiplexedAds: Boolean,
     val compatibilityNote: String?
 )
+
+/** Live per-application DNS counters; held in memory and reset when statistics are cleared. */
+data class AppDnsActivity(
+    val packageName: String?,
+    val appName: String,
+    val totalQueries: Long,
+    val blockedQueries: Long
+)

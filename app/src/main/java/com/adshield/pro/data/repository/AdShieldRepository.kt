@@ -11,6 +11,7 @@ import com.adshield.pro.data.local.db.FilterSourceEntity
 import com.adshield.pro.data.local.preferences.AppSettingsState
 import com.adshield.pro.data.local.preferences.UserPreferencesRepository
 import com.adshield.pro.domain.model.AppExclusionInfo
+import com.adshield.pro.domain.model.AppDnsActivity
 import com.adshield.pro.domain.model.CustomRule
 import com.adshield.pro.domain.model.DnsActivityRecord
 import com.adshield.pro.domain.model.DomainBlockCount
@@ -83,6 +84,11 @@ class AdShieldRepository @Inject constructor(
 
     private val _vpnRuntimeState = MutableStateFlow(VpnRuntimeState())
     val vpnRuntimeState: StateFlow<VpnRuntimeState> = _vpnRuntimeState.asStateFlow()
+
+    private val _liveTopApps = MutableStateFlow<Map<String, AppDnsActivity>>(emptyMap())
+    val liveTopAppsFlow: Flow<List<AppDnsActivity>> = _liveTopApps.map { apps ->
+        apps.values.sortedWith(compareByDescending<AppDnsActivity> { it.totalQueries }.thenByDescending { it.blockedQueries })
+    }
 
     val settingsFlow: Flow<AppSettingsState> = prefs.settingsFlow
 
@@ -239,8 +245,22 @@ class AdShieldRepository @Inject constructor(
         sourceList: String,
         latencyMs: Int,
         protocolUsed: String,
-        fromCache: Boolean
+        fromCache: Boolean,
+        appPackageName: String? = null,
+        appName: String? = null
     ) {
+        // Live per-app counters are intentionally memory-only; detailed DNS logging remains optional.
+        val appKey = appPackageName?.takeIf { it.isNotBlank() } ?: "unattributed"
+        _liveTopApps.update { current ->
+            val previous = current[appKey]
+            current + (appKey to AppDnsActivity(
+                packageName = appPackageName?.takeIf { it.isNotBlank() },
+                appName = appName?.takeIf { it.isNotBlank() } ?: "Unattributed",
+                totalQueries = (previous?.totalQueries ?: 0L) + 1L,
+                blockedQueries = (previous?.blockedQueries ?: 0L) + if (isBlocked) 1L else 0L
+            ))
+        }
+
         // 1. Update live session state
         _vpnRuntimeState.update { state ->
             val newTotal = state.sessionTotalQueries + 1
@@ -310,6 +330,7 @@ class AdShieldRepository @Inject constructor(
             dao.clearAllDnsLogs()
             dao.clearAllDailyStats()
         }
+        _liveTopApps.value = emptyMap()
         _vpnRuntimeState.update {
             it.copy(
                 sessionTotalQueries = 0L,

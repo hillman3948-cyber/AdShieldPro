@@ -90,6 +90,7 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val vpnState by viewModel.vpnState.collectAsStateWithLifecycle()
     val settings by viewModel.settingsState.collectAsStateWithLifecycle()
     val recentLogs by viewModel.recentLogs.collectAsStateWithLifecycle()
+    val liveTopApps by viewModel.liveTopApps.collectAsStateWithLifecycle()
     val topBlockedDomains by viewModel.topBlockedDomains.collectAsStateWithLifecycle()
     val sourceEffectiveness by viewModel.sourceEffectiveness.collectAsStateWithLifecycle()
     val allTimeTotal by viewModel.allTimeTotalQueries.collectAsStateWithLifecycle()
@@ -345,6 +346,7 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
 
                 MainNavDestination.STATISTICS -> ActivityScreen(
                     logs = recentLogs,
+                    liveTopApps = liveTopApps,
                     topBlockedDomains = topBlockedDomains,
                     sourceEffectiveness = sourceEffectiveness,
                     chartBuckets = chartBuckets,
