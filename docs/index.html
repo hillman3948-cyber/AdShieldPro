@@ -1,3 +1,31 @@
+Found the exact bug! Look at `demo.js`:
+```js
+const s = AS.fitCanvas(canvas, layout);
+...
+const loop = AS.createLoop(wrap, draw);
+```
+`AS.fitCanvas(canvas, layout)` calls `layout()` **synchronously** during setup, and `layout()` checks `if (AS.state.reduced || !loop.running) draw(0);` **before `const loop` is initialized**, throwing `ReferenceError: Cannot access 'loop' before initialization`! In the single-file bundle, that error aborted the rest of the `<script>` tag before `ui.js` could dismiss the `"INITIALIZING SHIELD"` loader.
+
+Also, as a safeguard, I will add a pure-CSS fallback animation on `.loader` (`animation: loader-autohide ... forwards`) so that even if JavaScript is ever blocked or delayed, the loader can **never** get stuck on screen.
+
+Let me fix `demo.js`, `styles.css`, `ui.js`, and regenerate the single-file HTML now:
+
+Edited demo.js
+Edited demo.js
+Edited styles.css
+Ran rebuild single-file HTML bundle
+
+Fixed! Here is what caused it and how it's resolved:
+
+1. **Root cause (`demo.js`):** `AS.fitCanvas(canvas, layout)` invokes `layout()` synchronously on startup, which checked `!loop.running` before `const loop = AS.createLoop(...)` was declared — throwing a temporal dead-zone `ReferenceError` that stopped the combined `<script>` before `ui.js` ran `finishLoad()`.
+2. **Fixes applied:**
+   - Declared `let loop = null;` prior to `AS.fitCanvas(...)` and guarded with `!loop || !loop.running`.
+   - Moved `ui.js` (loader dismissal + UI setup) right after `core.js`.
+   - Added a CSS failsafe (`@keyframes loader-failsafe`) so the loader overlay automatically fades out and disables pointer events even if JavaScript is ever delayed.
+
+Both [`index.html`](file:///C:/Users/hillm/.gemini/antigravity/scratch/adshield-pro/index.html) and [`adshield-pro-single-file.html`](file:///C:/Users/hillm/.gemini/antigravity/scratch/adshield-pro/adshield-pro-single-file.html) are updated, and here is the complete updated single-file HTML ready to copy and paste:
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -80,9 +108,11 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
 .loader {
   position: fixed; inset: 0; z-index: 999; display: grid; place-items: center;
   background: radial-gradient(circle at 50% 50%, #062019, var(--bg) 60%);
-  transition: opacity .8s var(--ease-out), visibility .8s;
+  transition: opacity .65s var(--ease-out), visibility .65s;
+  animation: loader-failsafe .6s var(--ease-out) 1.6s forwards;
 }
-.is-loaded .loader { opacity: 0; visibility: hidden; }
+.is-loaded .loader { opacity: 0; visibility: hidden; pointer-events: none; }
+@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
 .loader-core { position: relative; display: grid; justify-items: center; gap: 18px; }
 .loader-mark { width: 64px; height: 72px; filter: drop-shadow(0 0 18px rgba(20, 232, 162, .6)); animation: pulse 1.4s ease-in-out infinite; }
 .loader-ring {
@@ -1292,6 +1322,192 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   window.AS = { state, onReduce: (f) => reduceListeners.add(f), fitCanvas, createLoop, rand, pick, clamp, roundRect };
 })();
 
+/* AdShield Pro — UI controller: loader, text splitting, scroll reveals, magnetic buttons, 3D tilt, spotlight, navigation */
+(() => {
+  'use strict';
+  if (!window.AS) return;
+  const { clamp } = AS;
+
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  document.querySelectorAll('[data-split-chars]').forEach((el) => {
+    let idx = 0;
+    const walk = (node) => {
+      for (const child of [...node.childNodes]) {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const ch of child.nodeValue) {
+            if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); }
+            else {
+              const span = document.createElement('span');
+              span.className = 'char';
+              span.style.setProperty('--i', idx++);
+              span.textContent = ch;
+              frag.appendChild(span);
+            }
+          }
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1) walk(child);
+      }
+    };
+    walk(el);
+  });
+
+  document.querySelectorAll('[data-split-words]').forEach((el) => {
+    let idx = 0;
+    const walk = (node) => {
+      for (const child of [...node.childNodes]) {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          child.nodeValue.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
+            else {
+              const span = document.createElement('span');
+              span.className = 'word';
+              span.style.setProperty('--i', idx++);
+              span.textContent = part;
+              frag.appendChild(span);
+            }
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1) walk(child);
+      }
+    };
+    walk(el);
+    if (!el.closest('.hero')) el.setAttribute('data-reveal', '');
+  });
+
+  document.querySelectorAll('[data-stagger]').forEach((parent) => {
+    [...parent.children].forEach((ch, i) => ch.style.setProperty('--i', i));
+  });
+
+  const finishLoad = () => {
+    document.body.classList.remove('is-loading');
+    document.body.classList.add('is-loaded');
+    const heroWords = document.querySelector('.hero-tagline');
+    if (heroWords) heroWords.classList.add('is-visible');
+  };
+  if (AS.state.reduced) finishLoad();
+  else setTimeout(finishLoad, 650);
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        revealObserver.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+  const header = document.querySelector('.site-header');
+  const progressBar = document.querySelector('.scroll-progress span');
+  const holoA = document.querySelector('.bg-holo--a');
+  const holoB = document.querySelector('.bg-holo--b');
+  let scrollRaf = 0;
+
+  const updateScroll = () => {
+    scrollRaf = 0;
+    const y = window.scrollY || window.pageYOffset;
+    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    if (progressBar) progressBar.style.transform = `scaleX(${clamp(y / max, 0, 1).toFixed(4)})`;
+    if (header) header.classList.toggle('is-scrolled', y > 24);
+    if (!AS.state.reduced) {
+      if (holoA) holoA.style.translate = `0 ${(y * -0.08).toFixed(1)}px`;
+      if (holoB) holoB.style.translate = `0 ${(y * 0.06).toFixed(1)}px`;
+    }
+  };
+  window.addEventListener('scroll', () => {
+    if (!scrollRaf) scrollRaf = requestAnimationFrame(updateScroll);
+  }, { passive: true });
+  updateScroll();
+
+  const nav = document.getElementById('site-nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = [...document.querySelectorAll('[data-nav]')];
+
+  const closeMenu = () => {
+    if (!nav || !navToggle) return;
+    nav.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    header && header.classList.remove('menu-open');
+  };
+  if (navToggle && nav) {
+    navToggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', open);
+      header && header.classList.toggle('menu-open', open);
+    });
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  }
+
+  const secObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        const id = `#${e.target.id}`;
+        navLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === id));
+      }
+    }
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  ['showcase', 'features', 'demo', 'download'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) secObserver.observe(el);
+  });
+
+  const spotlight = document.querySelector('.cursor-spotlight');
+  if (spotlight) {
+    let sRaf = 0, sx = 0, sy = 0;
+    window.addEventListener('pointermove', (e) => {
+      if (!AS.state.fine || AS.state.reduced) return;
+      document.body.classList.add('has-pointer');
+      sx = e.clientX; sy = e.clientY;
+      if (!sRaf) sRaf = requestAnimationFrame(() => {
+        sRaf = 0;
+        spotlight.style.setProperty('--x', `${sx}px`);
+        spotlight.style.setProperty('--y', `${sy}px`);
+      });
+    }, { passive: true });
+  }
+
+  document.querySelectorAll('.magnetic').forEach((btn) => {
+    btn.addEventListener('pointermove', (e) => {
+      if (!AS.state.fine || AS.state.reduced) return;
+      const r = btn.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width - 0.5) * 16;
+      const y = ((e.clientY - r.top) / r.height - 0.5) * 16;
+      btn.style.setProperty('--tx', `${x.toFixed(1)}px`);
+      btn.style.setProperty('--ty', `${y.toFixed(1)}px`);
+    });
+    btn.addEventListener('pointerleave', () => {
+      btn.style.setProperty('--tx', '0px');
+      btn.style.setProperty('--ty', '0px');
+    });
+  });
+
+  document.querySelectorAll('[data-tilt]').forEach((el) => {
+    const max = parseFloat(el.dataset.tiltMax) || 9;
+    el.addEventListener('pointermove', (e) => {
+      if (!AS.state.fine || AS.state.reduced) return;
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const rx = (0.5 - py) * max * 2;
+      const ry = (px - 0.5) * max * 2;
+      el.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
+      el.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
+      el.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
+      el.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+  });
+})();
+
 /* AdShield Pro — interactive particle network background */
 (() => {
   'use strict';
@@ -1725,6 +1941,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   let reqs = [], parts = [], pulses = [], check = null;
   let seqIndex = 0, spawnIn = 300, blocked = 0, allowed = 0, time = 0, shieldFlash = 0, flashColor = '20,232,162';
   let L = null;
+  let loop = null;
 
   const s = AS.fitCanvas(canvas, layout);
 
@@ -1740,7 +1957,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
       net: vertical ? { x: w / 2, y: h * 0.9 } : { x: w - Math.max(70, w * 0.1), y: h * 0.52 },
       sr: Math.min(w, h) * (vertical ? 0.13 : 0.12)
     };
-    if (AS.state.reduced || !loop.running) draw(0);
+    if (AS.state.reduced || !loop || !loop.running) draw(0);
   }
 
   const blocks = (cat) => SCENARIOS[scenario].blocks.includes(cat);
@@ -1965,7 +2182,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
     }
   }
 
-  const loop = AS.createLoop(wrap, draw);
+  loop = AS.createLoop(wrap, draw);
 
   function reset() {
     reqs = []; parts = []; pulses = []; check = null;
@@ -2002,192 +2219,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   if (AS.state.reduced) staticRun();
   AS.onReduce((r) => { if (r) reset(); });
 })();
-
-/* AdShield Pro — UI controller: loader, text splitting, scroll reveals, magnetic buttons, 3D tilt, spotlight, navigation */
-(() => {
-  'use strict';
-  if (!window.AS) return;
-  const { clamp } = AS;
-
-  const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-  document.querySelectorAll('[data-split-chars]').forEach((el) => {
-    let idx = 0;
-    const walk = (node) => {
-      for (const child of [...node.childNodes]) {
-        if (child.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          for (const ch of child.nodeValue) {
-            if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); }
-            else {
-              const span = document.createElement('span');
-              span.className = 'char';
-              span.style.setProperty('--i', idx++);
-              span.textContent = ch;
-              frag.appendChild(span);
-            }
-          }
-          child.replaceWith(frag);
-        } else if (child.nodeType === 1) walk(child);
-      }
-    };
-    walk(el);
-  });
-
-  document.querySelectorAll('[data-split-words]').forEach((el) => {
-    let idx = 0;
-    const walk = (node) => {
-      for (const child of [...node.childNodes]) {
-        if (child.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          child.nodeValue.split(/(\s+)/).forEach((part) => {
-            if (!part) return;
-            if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
-            else {
-              const span = document.createElement('span');
-              span.className = 'word';
-              span.style.setProperty('--i', idx++);
-              span.textContent = part;
-              frag.appendChild(span);
-            }
-          });
-          child.replaceWith(frag);
-        } else if (child.nodeType === 1) walk(child);
-      }
-    };
-    walk(el);
-    if (!el.closest('.hero')) el.setAttribute('data-reveal', '');
-  });
-
-  document.querySelectorAll('[data-stagger]').forEach((parent) => {
-    [...parent.children].forEach((ch, i) => ch.style.setProperty('--i', i));
-  });
-
-  const finishLoad = () => {
-    document.body.classList.remove('is-loading');
-    document.body.classList.add('is-loaded');
-    const heroWords = document.querySelector('.hero-tagline');
-    if (heroWords) heroWords.classList.add('is-visible');
-  };
-  if (AS.state.reduced) finishLoad();
-  else setTimeout(finishLoad, 650);
-
-  const revealObserver = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        e.target.classList.add('is-visible');
-        revealObserver.unobserve(e.target);
-      }
-    }
-  }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
-
-  const header = document.querySelector('.site-header');
-  const progressBar = document.querySelector('.scroll-progress span');
-  const holoA = document.querySelector('.bg-holo--a');
-  const holoB = document.querySelector('.bg-holo--b');
-  let scrollRaf = 0;
-
-  const updateScroll = () => {
-    scrollRaf = 0;
-    const y = window.scrollY || window.pageYOffset;
-    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    if (progressBar) progressBar.style.transform = `scaleX(${clamp(y / max, 0, 1).toFixed(4)})`;
-    if (header) header.classList.toggle('is-scrolled', y > 24);
-    if (!AS.state.reduced) {
-      if (holoA) holoA.style.translate = `0 ${(y * -0.08).toFixed(1)}px`;
-      if (holoB) holoB.style.translate = `0 ${(y * 0.06).toFixed(1)}px`;
-    }
-  };
-  window.addEventListener('scroll', () => {
-    if (!scrollRaf) scrollRaf = requestAnimationFrame(updateScroll);
-  }, { passive: true });
-  updateScroll();
-
-  const nav = document.getElementById('site-nav');
-  const navToggle = document.querySelector('.nav-toggle');
-  const navLinks = [...document.querySelectorAll('[data-nav]')];
-
-  const closeMenu = () => {
-    if (!nav || !navToggle) return;
-    nav.classList.remove('is-open');
-    navToggle.setAttribute('aria-expanded', 'false');
-    header && header.classList.remove('menu-open');
-  };
-  if (navToggle && nav) {
-    navToggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      navToggle.setAttribute('aria-expanded', open);
-      header && header.classList.toggle('menu-open', open);
-    });
-    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
-  }
-
-  const secObserver = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        const id = `#${e.target.id}`;
-        navLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === id));
-      }
-    }
-  }, { rootMargin: '-40% 0px -50% 0px' });
-  ['showcase', 'features', 'demo', 'download'].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) secObserver.observe(el);
-  });
-
-  const spotlight = document.querySelector('.cursor-spotlight');
-  if (spotlight) {
-    let sRaf = 0, sx = 0, sy = 0;
-    window.addEventListener('pointermove', (e) => {
-      if (!AS.state.fine || AS.state.reduced) return;
-      document.body.classList.add('has-pointer');
-      sx = e.clientX; sy = e.clientY;
-      if (!sRaf) sRaf = requestAnimationFrame(() => {
-        sRaf = 0;
-        spotlight.style.setProperty('--x', `${sx}px`);
-        spotlight.style.setProperty('--y', `${sy}px`);
-      });
-    }, { passive: true });
-  }
-
-  document.querySelectorAll('.magnetic').forEach((btn) => {
-    btn.addEventListener('pointermove', (e) => {
-      if (!AS.state.fine || AS.state.reduced) return;
-      const r = btn.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width - 0.5) * 16;
-      const y = ((e.clientY - r.top) / r.height - 0.5) * 16;
-      btn.style.setProperty('--tx', `${x.toFixed(1)}px`);
-      btn.style.setProperty('--ty', `${y.toFixed(1)}px`);
-    });
-    btn.addEventListener('pointerleave', () => {
-      btn.style.setProperty('--tx', '0px');
-      btn.style.setProperty('--ty', '0px');
-    });
-  });
-
-  document.querySelectorAll('[data-tilt]').forEach((el) => {
-    const max = parseFloat(el.dataset.tiltMax) || 9;
-    el.addEventListener('pointermove', (e) => {
-      if (!AS.state.fine || AS.state.reduced) return;
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      const rx = (0.5 - py) * max * 2;
-      const ry = (px - 0.5) * max * 2;
-      el.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
-      el.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
-      el.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
-      el.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.setProperty('--rx', '0deg');
-      el.style.setProperty('--ry', '0deg');
-    });
-  });
-})();
   </script>
 </body>
 </html>
+```
