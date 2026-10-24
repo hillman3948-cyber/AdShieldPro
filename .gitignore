@@ -1,0 +1,23 @@
+# Local Android and Gradle state
+.gradle/
+.kotlin/
+.idea/
+**/build/
+local.properties
+
+# Release and debug packages stay out of source control
+*.apk
+*.aab
+
+# Signing material and local secrets
+*.jks
+*.keystore
+*.pem
+*.p12
+.env
+.env.*
+!*.env.example
+
+# Node dependencies and logs
+node_modules/
+npm-debug.log*
