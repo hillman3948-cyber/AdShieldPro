@@ -1235,35 +1235,41 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   function fitCanvas(canvas, onResize, maxDpr = 2) {
     const ctx = canvas.getContext('2d');
     const s = { ctx, w: 0, h: 0, dpr: 1 };
+    let initialized = false;
     const resize = () => {
       const r = canvas.getBoundingClientRect();
-      if (!r.width || !r.height) return;
+      const w = canvas.clientWidth || r.width;
+      const h = canvas.clientHeight || r.height;
+      if (!w || !h) return;
       s.dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-      s.w = r.width; s.h = r.height;
-      canvas.width = Math.round(r.width * s.dpr);
-      canvas.height = Math.round(r.height * s.dpr);
+      s.w = w; s.h = h;
+      canvas.width = Math.round(w * s.dpr);
+      canvas.height = Math.round(h * s.dpr);
       ctx.setTransform(s.dpr, 0, 0, s.dpr, 0, 0);
-      onResize && onResize(s);
+      if (initialized && onResize) onResize(s);
     };
+    resize();
+    initialized = true;
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
     else window.addEventListener('resize', resize);
-    resize();
+    queueMicrotask(() => onResize && onResize(s));
     return s;
   }
 
-  function createLoop(el, draw) {
+  function createLoop(el, draw, alwaysAnimate = false) {
     let raf = 0, last = 0, running = false, visible = false, paused = false;
     const frame = (t) => {
+      if (!running) return;
       const dt = last ? Math.min(t - last, 50) : 16;
       last = t;
       draw(dt, t);
-      raf = requestAnimationFrame(frame);
+      if (running) raf = requestAnimationFrame(frame);
     };
     const update = () => {
-      const should = visible && !paused && !document.hidden && !state.reduced;
+      const should = visible && !paused && !document.hidden && (alwaysAnimate || !state.reduced);
       if (should && !running) { running = true; last = 0; raf = requestAnimationFrame(frame); }
       else if (!should && running) { running = false; cancelAnimationFrame(raf); }
-      if (visible && state.reduced) draw(0, performance.now());
+      if (visible && !running) draw(0, performance.now());
     };
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; update(); }, { rootMargin: '120px' });
     io.observe(el);
@@ -1273,7 +1279,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
       update,
       setPaused(p) { paused = p; update(); },
       get running() { return running; },
-      destroy() { cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener('visibilitychange', update); reduceListeners.delete(update); }
+      destroy() { running = false; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener('visibilitychange', update); reduceListeners.delete(update); }
     };
   }
 
@@ -1491,21 +1497,21 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
 
   const s = AS.fitCanvas(canvas, init, 1.5);
 
-  function init() {
-    const mobile = s.w < 700;
-    const count = Math.min(mobile ? 38 : 90, Math.round((s.w * s.h) / (mobile ? 14000 : 16000)));
+  function init(st = s) {
+    const mobile = st.w < 700;
+    const count = Math.min(mobile ? 38 : 90, Math.round((st.w * st.h) / (mobile ? 14000 : 16000)));
     particles = Array.from({ length: count }, () => ({
-      x: rand(0, s.w), y: rand(0, s.h),
+      x: rand(0, st.w), y: rand(0, st.h),
       vx: rand(-.18, .18), vy: rand(-.18, .18),
       r: rand(.8, 2.1), hue: Math.random() < .5 ? 0 : 1
     }));
-    glyphs = Array.from({ length: mobile ? 8 : 18 }, () => newGlyph(true));
+    glyphs = Array.from({ length: mobile ? 8 : 18 }, () => newGlyph(true, st));
     if (AS.state.reduced) draw(0);
   }
 
-  function newGlyph(anywhere) {
+  function newGlyph(anywhere, st = s) {
     return {
-      x: rand(0, s.w), y: anywhere ? rand(0, s.h) : s.h + 20,
+      x: rand(0, st.w), y: anywhere ? rand(0, st.h) : st.h + 20,
       v: rand(8, 22), a: rand(.05, .16),
       t: Math.random() < .5 ? (Math.random() < .5 ? '0' : '1') : ['DNS', '::', '0x', '//', '#'][(Math.random() * 5) | 0],
       size: rand(9, 13)
@@ -1599,18 +1605,18 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   const threats = [], parts = [], hits = [];
   let spawnIn = 400, rot = 0, cx = 0, cy = 0, R = 0;
 
-  const s = AS.fitCanvas(canvas, () => {
-    cx = s.w / 2; cy = s.h / 2; R = Math.min(s.w, s.h) * 0.3;
-    if (!threats.length) for (let i = 0; i < 4; i++) spawn(R + 40 + i * (s.w * 0.07));
-    if (AS.state.reduced) draw(0);
+  const s = AS.fitCanvas(canvas, (st) => {
+    cx = st.w / 2; cy = st.h / 2; R = Math.min(st.w, st.h) * 0.3;
+    if (!threats.length) for (let i = 0; i < 4; i++) spawn(R + 40 + i * (st.w * 0.07), st);
+    draw(0);
   });
 
-  function spawn(dist) {
+  function spawn(dist, st = s) {
     const type = pick(TYPES);
     threats.push({
-      a: rand(0, Math.PI * 2), d: dist || Math.hypot(s.w, s.h) * 0.55,
+      a: rand(0, Math.PI * 2), d: dist || Math.hypot(st.w, st.h) * 0.55,
       speed: rand(55, 85), drift: rand(-.25, .25), spin: rand(-1.2, 1.2), rot: rand(-.4, .4),
-      size: rand(24, 32) * (s.w < 420 ? .8 : 1), type, life: 0
+      size: rand(24, 32) * (st.w < 420 ? .8 : 1), type, life: 0
     });
   }
 
@@ -1658,6 +1664,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   function draw(dt) {
     if (dt) update(dt);
     const { ctx, w, h } = s;
+    if (!w || !h) return;
     ctx.clearRect(0, 0, w, h);
 
     const N = 7, nr = R * 1.42;
@@ -1697,7 +1704,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const t of threats) {
       const x = cx + Math.cos(t.a) * t.d, y = cy + Math.sin(t.a) * t.d;
-      const alpha = Math.min(1, t.life * 2.5);
+      const alpha = Math.min(1, t.life * 2.5 + 0.25);
       const tx = cx + Math.cos(t.a) * (t.d + 46), ty = cy + Math.sin(t.a) * (t.d + 46);
       const tg = ctx.createLinearGradient(x, y, tx, ty);
       tg.addColorStop(0, `rgba(${t.type.c},${.45 * alpha})`); tg.addColorStop(1, `rgba(${t.type.c},0)`);
@@ -1727,7 +1734,7 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
     ctx.globalAlpha = 1;
   }
 
-  AS.createLoop(stage, draw);
+  AS.createLoop(stage, draw, true);
 
   stage.querySelectorAll('[data-depth]').forEach((el) => el.style.setProperty('--depth', el.dataset.depth));
   if (hero) {
@@ -1911,14 +1918,15 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
 
   let scenario = 'balanced';
   let reqs = [], parts = [], pulses = [], check = null;
-  let seqIndex = 0, spawnIn = 300, blocked = 0, allowed = 0, time = 0, shieldFlash = 0, flashColor = '20,232,162';
+  let seqIndex = 0, spawnIn = 80, blocked = 0, allowed = 0, time = 0, shieldFlash = 0, flashColor = '20,232,162';
   let L = null;
   let loop = null;
 
   const s = AS.fitCanvas(canvas, layout);
 
-  function layout() {
-    const { w, h } = s;
+  function layout(st = s) {
+    const { w, h } = st;
+    if (!w || !h) return;
     const vertical = w < 640;
     const apps = APPS.map((name, i) => vertical
       ? { name, x: w * (0.14 + i * 0.24), y: h * 0.1 }
@@ -1929,7 +1937,8 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
       net: vertical ? { x: w / 2, y: h * 0.9 } : { x: w - Math.max(70, w * 0.1), y: h * 0.52 },
       sr: Math.min(w, h) * (vertical ? 0.13 : 0.12)
     };
-    if (AS.state.reduced || !loop || !loop.running) draw(0);
+    if (!reqs.length && seqIndex === 0) spawn();
+    draw(0);
   }
 
   const blocks = (cat) => SCENARIOS[scenario].blocks.includes(cat);
@@ -2154,23 +2163,14 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
     }
   }
 
-  loop = AS.createLoop(wrap, draw);
+  loop = AS.createLoop(wrap, draw, true);
 
   function reset() {
     reqs = []; parts = []; pulses = []; check = null;
-    seqIndex = 0; spawnIn = 200; blocked = 0; allowed = 0; shieldFlash = 0;
+    seqIndex = 0; spawnIn = 600; blocked = 0; allowed = 0; shieldFlash = 0;
     blockedEl.textContent = '0'; allowedEl.textContent = '0';
     logEl.replaceChildren();
-    if (AS.state.reduced) staticRun(); else if (!loop.running) draw(0);
-  }
-
-  function staticRun() {
-    SEQ.slice().reverse().forEach(([app, domain, cat]) => {
-      const isBlocked = blocks(cat);
-      isBlocked ? blocked++ : allowed++;
-      addLog({ app, domain, cat }, isBlocked);
-    });
-    blockedEl.textContent = blocked; allowedEl.textContent = allowed;
+    spawn();
     draw(0);
   }
 
@@ -2187,9 +2187,6 @@ h1, h2, h3 { font-family: var(--font-display); margin: 0; }
     pauseBtn.setAttribute('aria-label', paused ? 'Resume simulation' : 'Pause simulation');
     loop.setPaused(paused);
   });
-
-  if (AS.state.reduced) staticRun();
-  AS.onReduce((r) => { if (r) reset(); });
 })();
   </script>
 </body>
