@@ -2,8 +2,6 @@
 
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 
-> DNS filtering is not a full VPN and cannot remove every ad. It does not inspect encrypted HTTPS content. Apps that use their own encrypted DNS may bypass Android's DNS routing.
-
 ## What AdShield Pro does
 
 - **Device-wide DNS filtering:** Run a local Android VPN service that routes DNS requests to AdShield's on-device filter. Other app traffic continues over the device's normal network connection; AdShield does not send it through a remote VPN server.
