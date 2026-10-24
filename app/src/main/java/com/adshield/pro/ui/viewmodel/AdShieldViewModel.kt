@@ -9,6 +9,7 @@ import com.adshield.pro.data.local.preferences.AppSettingsState
 import com.adshield.pro.data.local.preferences.DarkThemePreference
 import com.adshield.pro.data.local.preferences.UserPreferencesRepository
 import com.adshield.pro.data.repository.AdShieldRepository
+import com.adshield.pro.BuildConfig
 import com.adshield.pro.domain.model.AppExclusionInfo
 import com.adshield.pro.domain.model.AppDnsActivity
 import com.adshield.pro.domain.model.BatteryMode
@@ -42,11 +43,14 @@ import com.adshield.pro.engine.filter.FilterRuleEngine
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
 import com.adshield.pro.engine.optimizer.SystemOptimizerEngine
 import com.adshield.pro.service.AdShieldVpnService
+import com.adshield.pro.ui.UpdatePromptActivity
+import com.adshield.pro.update.GitHubReleaseClient
 import com.adshield.pro.worker.FilterUpdateWorker
 import com.adshield.pro.worker.SmartOptimizationWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -55,6 +59,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 enum class StatsChartRange(val label: String, val days: Int) {
@@ -126,6 +131,9 @@ class AdShieldViewModel @Inject constructor(
     private val _uiFeedbackMessage = MutableStateFlow<String?>(null)
     val uiFeedbackMessage: StateFlow<String?> = _uiFeedbackMessage.asStateFlow()
 
+    private val _isCheckingForUpdates = MutableStateFlow(false)
+    val isCheckingForUpdates: StateFlow<Boolean> = _isCheckingForUpdates.asStateFlow()
+
     private val _sandboxTestResult = MutableStateFlow<FilterEvaluationResult?>(null)
     val sandboxTestResult: StateFlow<FilterEvaluationResult?> = _sandboxTestResult.asStateFlow()
 
@@ -193,6 +201,36 @@ class AdShieldViewModel @Inject constructor(
 
     fun clearFeedback() {
         _uiFeedbackMessage.value = null
+    }
+
+    fun checkForUpdates() {
+        if (_isCheckingForUpdates.value) return
+        viewModelScope.launch {
+            _isCheckingForUpdates.value = true
+            try {
+                val release = withContext(Dispatchers.IO) { GitHubReleaseClient.latest() }
+                when {
+                    release == null -> showFeedback("Couldn't check for updates. Check your internet connection and try again.")
+                    release.code <= BuildConfig.VERSION_CODE -> showFeedback("AdShield Pro is up to date.")
+                    else -> {
+                        val intent = Intent(appContext, UpdatePromptActivity::class.java).apply {
+                            putExtra(UpdatePromptActivity.TAG, release.tag)
+                            putExtra(UpdatePromptActivity.NAME, release.name)
+                            putExtra(UpdatePromptActivity.CODE, release.code)
+                            putExtra(UpdatePromptActivity.APK, release.apk)
+                            putExtra(UpdatePromptActivity.SHA, release.sha256)
+                            putExtra(UpdatePromptActivity.NOTES, release.notes)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }
+                        appContext.startActivity(intent)
+                    }
+                }
+            } catch (_: Exception) {
+                showFeedback("Couldn't check for updates. Check your internet connection and try again.")
+            } finally {
+                _isCheckingForUpdates.value = false
+            }
+        }
     }
 
     // --- System Optimizer & AI Smart Boost Actions ---

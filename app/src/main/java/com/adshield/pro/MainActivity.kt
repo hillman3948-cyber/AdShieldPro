@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.compose.BackHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -85,7 +86,10 @@ class MainActivity : ComponentActivity() {
 fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val context = LocalContext.current
     var currentTab by rememberSaveable { mutableStateOf(MainNavDestination.HOME) }
+    var showAboutScreen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    BackHandler(enabled = showAboutScreen) { showAboutScreen = false }
 
     val vpnState by viewModel.vpnState.collectAsStateWithLifecycle()
     val settings by viewModel.settingsState.collectAsStateWithLifecycle()
@@ -105,6 +109,7 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val installedApps by viewModel.installedApps.collectAsStateWithLifecycle()
     val sandboxResult by viewModel.sandboxTestResult.collectAsStateWithLifecycle()
     val uiFeedback by viewModel.uiFeedbackMessage.collectAsStateWithLifecycle()
+    val isCheckingForUpdates by viewModel.isCheckingForUpdates.collectAsStateWithLifecycle()
 
     // Phone Optimizer & AI Smart Boost states
     val ramSnapshot by viewModel.ramSnapshot.collectAsStateWithLifecycle()
@@ -229,27 +234,29 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            NavigationBar {
-                MainNavDestination.entries.forEach { dest ->
-                    NavigationBarItem(
-                        selected = currentTab == dest,
-                        onClick = { currentTab = dest },
-                        icon = {
-                            Icon(
-                                imageVector = dest.icon,
-                                contentDescription = dest.label
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = dest.label,
-                                fontSize = 11.sp,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        },
-                        alwaysShowLabel = true
-                    )
+            if (!showAboutScreen) {
+                NavigationBar {
+                    MainNavDestination.entries.forEach { dest ->
+                        NavigationBarItem(
+                            selected = currentTab == dest,
+                            onClick = { currentTab = dest },
+                            icon = {
+                                Icon(
+                                    imageVector = dest.icon,
+                                    contentDescription = dest.label
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = dest.label,
+                                    fontSize = 11.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            },
+                            alwaysShowLabel = true
+                        )
+                    }
                 }
             }
         }
@@ -274,6 +281,8 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     healthAssessment = healthAssessment,
                     smartBoostResult = smartBoostResult,
                     isRunningSmartBoost = isRunningSmartBoost,
+                    isCheckingForUpdates = isCheckingForUpdates,
+                    onCheckForUpdates = viewModel::checkForUpdates,
                     onToggleVpn = handleToggleVpn,
                     onPauseResumeVpn = {
                         if (vpnState.status == VpnStatus.PAUSED) {
@@ -370,6 +379,9 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                 )
 
                 MainNavDestination.SETTINGS -> SettingsScreen(
+                    showAboutScreen = showAboutScreen,
+                    onOpenAbout = { showAboutScreen = true },
+                    onCloseAbout = { showAboutScreen = false },
                     settings = settings,
                     installedApps = installedApps,
                     onUpdateResolverConfig = viewModel::updateDnsResolverConfig,

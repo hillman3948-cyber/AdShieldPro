@@ -1,12 +1,34 @@
-# AdShield Pro v2.1 — Advanced Non-Root Android DNS Privacy & Filtering
+# AdShield Pro 2.2.5 — Android DNS Ad & Tracker Protection
 
-**AdShield Pro v2.1** is an Android privacy application built with **Kotlin, Jetpack Compose (Material 3), Clean Architecture + MVVM, Room SQLite, DataStore, WorkManager, Hilt, and Android `VpnService`**.
+AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 
-It combines DNS filtering and browser-level content blocking to reduce requests to known advertising, tracking, and malicious domains. DNS filtering cannot remove every ad, inspect encrypted HTTPS payloads, or guarantee protection from every threat.
+> DNS filtering is not a full VPN and cannot remove every ad. It does not inspect encrypted HTTPS content. Apps that use their own encrypted DNS may bypass Android's DNS routing.
+
+## What AdShield Pro does
+
+- **Device-wide DNS filtering:** Run a local Android VPN service that routes DNS requests to AdShield's on-device filter. Other app traffic continues over the device's normal network connection; AdShield does not send it through a remote VPN server.
+- **Choose protection modes:** Standard, Strict, Privacy, and Custom modes control which categories and lists are active. Strict mode can interfere with some apps or sign-ins.
+- **Manage blocklists and rules:** Enable built-in ad, tracker, and threat lists; add custom HTTPS list sources; create custom block and allow rules; and review rule conflicts. Filter lists can sync in the background.
+- **Use the built-in Privacy Browser:** Filter browser requests, remove common tracking query parameters, block pop-ups, manage third-party cookies, and apply cosmetic hiding rules inside this browser.
+- **See activity and statistics:** View DNS totals, allowed and blocked queries, recent local activity, trends, and a live top-app view when Android provides app attribution for a DNS request.
+- **Run AI Smart Boost:** Review memory, storage, battery, and temperature signals; safely clean eligible AdShield-owned temporary files; and optimize AdShield's own DNS cache and memory use. The “AI” feature name refers to local, rule-based analysis and recommendations; it does not call a cloud AI service. Android controls memory used by other apps, so Smart Boost does not promise to kill other apps or free their memory.
+- **Clean storage with review controls:** Quick, deep, scheduled, and custom scans distinguish safe app-owned temporary files from downloads, duplicate files, and APK installers that require user review or confirmation. Android scoped-storage rules limit which shared files the app can inspect.
+- **Use Game Booster and battery modes:** Select games and choose AdShield workload profiles that adjust its cache, background filter sync, and local logging behavior. Battery and thermal tools show device readings and can adapt AdShield's own background work; they do not override Android's system-wide power controls.
+- **Check for app updates:** Check GitHub Releases from Home or receive a background update notification when Android runs scheduled work. The app downloads the signed APK and opens Android's installer; users approve installation themselves.
+- **Keep settings on the device:** Settings, custom rules, and activity history are stored locally. Allowed DNS lookups are sent to the upstream DNS provider selected in the app, and that provider's privacy terms apply.
+
+## Download and project links
+
+- [Source code](https://github.com/hillman3948-cyber/AdShieldPro)
+- [Latest releases and APK downloads](https://github.com/hillman3948-cyber/AdShieldPro/releases)
+- [Privacy policy](https://github.com/hillman3948-cyber/AdShieldPro/blob/main/docs/PRIVACY_POLICY.md)
+- [Report a problem](https://github.com/hillman3948-cyber/AdShieldPro/issues)
+
+AdShield Pro is built with **Kotlin, Jetpack Compose (Material 3), Clean Architecture + MVVM, Room SQLite, DataStore, WorkManager, Hilt, and Android `VpnService`**. DNS filtering can reduce requests to known ad, tracking, and malicious domains, but it cannot guarantee protection from every threat.
 
 ---
 
-## 1. Multi-Layer Protection Architecture
+## Technical architecture
 
 ### Layer 1 — Device-Wide Wire-Format DNS Engine (`engine/dns/`)
 - **`DnsPacketCodec.kt`**: Full RFC 1035 / RFC 3596 wire-format DNS parser and response synthesizer. Supports IPv4 (`A`) and IPv6 (`AAAA`), `CNAME`, `HTTPS`, `SVCB`, `TXT`, and `MX` queries. Hardened against truncated headers and malicious cyclic compression pointer loops (`0xC0`).

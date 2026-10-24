@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,7 +18,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Dns
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.Power
@@ -61,6 +64,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
+    showAboutScreen: Boolean,
+    onOpenAbout: () -> Unit,
+    onCloseAbout: () -> Unit,
     settings: AppSettingsState,
     installedApps: List<AppExclusionInfo>,
     onUpdateResolverConfig: (DnsResolverConfig) -> Unit,
@@ -71,6 +77,11 @@ fun SettingsScreen(
     onExportBackupJson: suspend () -> String,
     onRestoreBackupJson: (String) -> Unit
 ) {
+    if (showAboutScreen) {
+        AboutScreen(onBack = onCloseAbout)
+        return
+    }
+
     var showAppExclusionDialog by remember { mutableStateOf(false) }
     var showBackupDialog by remember { mutableStateOf(false) }
     var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
@@ -441,6 +452,31 @@ fun SettingsScreen(
                             Text("Privacy Policy")
                         }
                     }
+                }
+            }
+        }
+
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenAbout),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Info, contentDescription = null, tint = EmeraldPrimary)
+                    Spacer(Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("About Us", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            "Version, privacy, and project links",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Icon(Icons.Default.ChevronRight, contentDescription = "Open About Us", tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }

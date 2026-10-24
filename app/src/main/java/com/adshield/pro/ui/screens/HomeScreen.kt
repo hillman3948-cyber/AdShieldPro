@@ -1,14 +1,17 @@
 package com.adshield.pro.ui.screens
 
 import com.adshield.pro.BuildConfig
+import com.adshield.pro.R
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +44,7 @@ import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.SystemUpdateAlt
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AssistChip
@@ -60,6 +64,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,6 +100,8 @@ import com.adshield.pro.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -110,6 +119,8 @@ fun HomeScreen(
     healthAssessment: DeviceHealthAssessment,
     smartBoostResult: SmartBoostResult?,
     isRunningSmartBoost: Boolean,
+    isCheckingForUpdates: Boolean,
+    onCheckForUpdates: () -> Unit,
     onToggleVpn: (Boolean) -> Unit,
     onPauseResumeVpn: () -> Unit,
     onSelectProtectionMode: (ProtectionMode) -> Unit,
@@ -154,6 +165,29 @@ fun HomeScreen(
             glowPulse.animateTo(0f, tween(durationMillis = 1400, easing = FastOutSlowInEasing))
         }
     }
+    val outerWireRotation = remember { Animatable(0f) }
+    val innerWireRotation = remember { Animatable(0f) }
+    LaunchedEffect(isConnected) {
+        if (!isConnected) {
+            outerWireRotation.snapTo(0f)
+            innerWireRotation.snapTo(0f)
+            return@LaunchedEffect
+        }
+        coroutineScope {
+            launch {
+                while (true) {
+                    outerWireRotation.animateTo(360f, tween(4200, easing = LinearEasing))
+                    outerWireRotation.snapTo(0f)
+                }
+            }
+            launch {
+                while (true) {
+                    innerWireRotation.animateTo(-360f, tween(3100, easing = LinearEasing))
+                    innerWireRotation.snapTo(0f)
+                }
+            }
+        }
+    }
     val ringScale by animateFloatAsState(
         targetValue = if (vpnState.status == VpnStatus.STARTING || vpnState.status == VpnStatus.RECONNECTING) 1.1f else 1f,
         animationSpec = tween(durationMillis = 520),
@@ -187,11 +221,10 @@ fun HomeScreen(
                     .padding(end = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Shield,
-                    contentDescription = "AdShield Logo",
-                    tint = EmeraldPrimary,
-                    modifier = Modifier.size(28.dp)
+                Image(
+                    painter = painterResource(R.drawable.ic_adshield_mark),
+                    contentDescription = "AdShield Pro shield logo",
+                    modifier = Modifier.size(30.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Column {
@@ -213,22 +246,27 @@ fun HomeScreen(
             }
 
             Surface(
+                modifier = Modifier.clickable(
+                    enabled = !isCheckingForUpdates,
+                    onClickLabel = "Check for app updates",
+                    onClick = onCheckForUpdates
+                ),
                 shape = RoundedCornerShape(50),
                 color = EmeraldPrimary.copy(alpha = 0.18f)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.VerifiedUser,
-                        contentDescription = null,
+                        imageVector = Icons.Default.SystemUpdateAlt,
+                        contentDescription = "Check for app updates",
                         tint = EmeraldGlow,
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "All features",
+                        text = if (isCheckingForUpdates) "Checking…" else "Check updates",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = EmeraldGlow,
@@ -266,36 +304,78 @@ fun HomeScreen(
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // The shield responds to protection state without a distracting repeating pulse.
+                    // Bright halo and rotating signal arcs animate only while protection is active.
                 Box(
                     modifier = Modifier.fillMaxWidth().height(184.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
-                        modifier = Modifier.size(172.dp)
+                        modifier = Modifier.size(190.dp)
                             .graphicsLayer {
                                 val pulse = glowPulse.value
-                                alpha = if (isConnected) 0.28f + 0.42f * pulse else 0f
-                                scaleX = 0.86f + 0.14f * pulse
-                                scaleY = 0.86f + 0.14f * pulse
+                                alpha = if (isConnected) 0.68f + 0.30f * pulse else 0f
+                                scaleX = 0.92f + 0.12f * pulse
+                                scaleY = 0.92f + 0.12f * pulse
                             }
                             .background(
                                 Brush.radialGradient(
-                                    colors = listOf(shieldColor.copy(alpha = 0.46f), shieldColor.copy(alpha = 0.16f), Color.Transparent)
+                                    colors = listOf(
+                                        shieldColor.copy(alpha = 0.92f),
+                                        shieldColor.copy(alpha = 0.55f),
+                                        shieldColor.copy(alpha = 0.18f),
+                                        Color.Transparent
+                                    )
                                 ),
                                 CircleShape
                             )
                     )
-                    Box(
-                        modifier = Modifier.size(176.dp)
-                            .graphicsLayer { scaleX = ringScale; scaleY = ringScale; alpha = 0.5f }
-                            .border(1.dp, shieldColor.copy(alpha = 0.24f), CircleShape)
-                    )
-                    Box(
-                        modifier = Modifier.size(148.dp)
-                            .graphicsLayer { scaleX = ringScale; scaleY = ringScale; alpha = 0.75f }
-                            .border(1.dp, shieldColor.copy(alpha = 0.38f), CircleShape)
-                    )
+                    Canvas(
+                        modifier = Modifier.size(184.dp).graphicsLayer {
+                            scaleX = ringScale
+                            scaleY = ringScale
+                            alpha = if (isConnected) 1f else 0.48f
+                        }
+                    ) {
+                        val centerOffset = Offset(size.width / 2f, size.height / 2f)
+                        val outerRadius = size.minDimension * 0.48f
+                        val innerRadius = size.minDimension * 0.40f
+                        drawCircle(shieldColor.copy(alpha = 0.25f), outerRadius, centerOffset, style = Stroke(1.dp.toPx()))
+                        drawCircle(shieldColor.copy(alpha = 0.38f), innerRadius, centerOffset, style = Stroke(1.dp.toPx()))
+                        if (isConnected) {
+                            rotate(outerWireRotation.value, centerOffset) {
+                                drawArc(
+                                    color = EmeraldGlow.copy(alpha = 0.32f), startAngle = 0f, sweepAngle = 92f,
+                                    useCenter = false,
+                                    topLeft = Offset(centerOffset.x - outerRadius, centerOffset.y - outerRadius),
+                                    size = Size(outerRadius * 2, outerRadius * 2),
+                                    style = Stroke(width = 9.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                                drawArc(
+                                    color = Color(0xFF72FFD0), startAngle = 0f, sweepAngle = 92f,
+                                    useCenter = false,
+                                    topLeft = Offset(centerOffset.x - outerRadius, centerOffset.y - outerRadius),
+                                    size = Size(outerRadius * 2, outerRadius * 2),
+                                    style = Stroke(width = 3.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                            }
+                            rotate(innerWireRotation.value, centerOffset) {
+                                drawArc(
+                                    color = EmeraldGlow.copy(alpha = 0.30f), startAngle = 185f, sweepAngle = 74f,
+                                    useCenter = false,
+                                    topLeft = Offset(centerOffset.x - innerRadius, centerOffset.y - innerRadius),
+                                    size = Size(innerRadius * 2, innerRadius * 2),
+                                    style = Stroke(width = 7.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                                drawArc(
+                                    color = Color(0xFF8CFFE0), startAngle = 185f, sweepAngle = 74f,
+                                    useCenter = false,
+                                    topLeft = Offset(centerOffset.x - innerRadius, centerOffset.y - innerRadius),
+                                    size = Size(innerRadius * 2, innerRadius * 2),
+                                    style = Stroke(width = 2.5.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                            }
+                        }
+                    }
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.size(128.dp).scale(shieldScale)
@@ -306,15 +386,11 @@ fun HomeScreen(
                                 onToggleVpn(!isActiveOrPaused)
                             }
                     ) {
-                        Icon(
-                            imageVector = when (vpnState.status) {
-                                VpnStatus.CONNECTED -> Icons.Default.VerifiedUser
-                                VpnStatus.PAUSED -> Icons.Default.PauseCircle
-                                else -> Icons.Default.Shield
-                            },
+                        Image(
+                            painter = painterResource(R.drawable.ic_adshield_mark),
                             contentDescription = "Protection status: ${vpnState.status.name.lowercase()}",
-                            tint = shieldColor,
-                            modifier = Modifier.size(64.dp)
+                            alpha = if (isConnected) 1f else 0.82f,
+                            modifier = Modifier.size(84.dp)
                         )
                     }
                 }
