@@ -20,7 +20,7 @@ AdShield Pro is a non-root Android app that filters DNS requests on-device and i
   </tr>
 </table>
 
-## AdShield Pro in action
+## How it Works
 
 ![Animated preview of AdShield Pro](docs/images/adshield-demo.gif)
 
