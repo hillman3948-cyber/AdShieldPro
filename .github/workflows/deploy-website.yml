@@ -40,6 +40,18 @@ jobs:
           grep -q "AdShield Pro" docs/index.html
           ls -l docs/index.html docs/PRIVACY_POLICY.md
 
+      # Pages must be turned on once with build_type=workflow. A repository admin can do that
+      # in Settings -> Pages; the default token cannot, so report it instead of failing silently.
+      - name: Ensure GitHub Pages is enabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh api "repos/${GITHUB_REPOSITORY}/pages" > /dev/null 2>&1; then
+            echo "::error::GitHub Pages is not enabled for this repository yet. A repository admin must open Settings -> Pages and set Source to \"GitHub Actions\", then re-run this workflow."
+            exit 1
+          fi
+          echo "Pages is enabled."
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 

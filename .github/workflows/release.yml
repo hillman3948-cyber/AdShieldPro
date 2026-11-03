@@ -202,8 +202,11 @@ jobs:
           TAG: ${{ steps.meta.outputs.tag }}
         run: gh release upload "$TAG" "$ADSHIELD_KEYSTORE_PATH#adshield-release.keystore" --clobber
 
+      # Best effort: Pages has to be switched on once by a repository admin
+      # (Settings -> Pages -> Source: GitHub Actions). Do not fail a good release over it.
       - name: Publish the website (GitHub Pages)
         if: success()
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
