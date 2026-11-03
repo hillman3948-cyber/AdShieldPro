@@ -151,6 +151,31 @@ def parse(source: str) -> list[dict]:
     return entries
 
 
+def verify_sources(entries: list[dict]) -> None:
+    """Every shipping capability must point at a file that exists in this checkout."""
+    src_root = ROOT / "app/src/main/java/com/adshield/pro"
+    problems: list[str] = []
+    for entry in entries:
+        if entry["status"] not in ("IMPLEMENTED", "PARTIAL"):
+            continue
+        if not entry["code"]:
+            problems.append(f"{entry['id']}: shipping capability has no code pointer")
+            continue
+        if not (src_root / entry["code"]).is_file() and not (ROOT / entry["code"]).is_file():
+            problems.append(f"{entry['id']}: {entry['code']} does not exist")
+        if not entry["verification"] or entry["verification"].startswith("n/a"):
+            problems.append(f"{entry['id']}: no verification method")
+        if not entry["data_sources"]:
+            problems.append(f"{entry['id']}: no data sources")
+        if not entry["limitations"]:
+            problems.append(f"{entry['id']}: no limitations")
+    for entry in entries:
+        if entry["status"] in ("PLANNED", "UNAVAILABLE") and entry["code"]:
+            problems.append(f"{entry['id']}: non-shipping capability must not point at code")
+    if problems:
+        raise SystemExit("capability registry problems:\n  " + "\n  ".join(problems))
+
+
 def render(entries: list[dict]) -> str:
     counts = {status: sum(1 for e in entries if e["status"] == status) for status in STATUS_LABEL}
     lines: list[str] = []
@@ -210,6 +235,7 @@ def render(entries: list[dict]) -> str:
 
 def main() -> int:
     entries = parse(REGISTRY.read_text(encoding="utf-8"))
+    verify_sources(entries)
     rendered = render(entries)
     check = "--check" in sys.argv
     if check:
