@@ -52,12 +52,17 @@ class CapabilityRegistryTest {
                 capability.code.isNotBlank()
             )
             assertTrue(
-                "${capability.id}: ${capability.code} does not exist (registry is out of date)",
+                "${capability.id}: ${capability.code} does not exist (registry is out of date). " +
+                    "cwd=${System.getProperty("user.dir")} sourceRoot=${sourceRoot.absolutePath}",
                 File(sourceRoot, capability.code).isFile
             )
             assertTrue(
                 "${capability.id}: must document verification",
                 capability.verification.isNotBlank() && capability.verification != "n/a — architecture only"
+            )
+            assertTrue(
+                "${capability.id}: verification text is '${capability.verification}'",
+                capability.verification.isNotBlank()
             )
             assertTrue(
                 "${capability.id}: must document at least one data source",

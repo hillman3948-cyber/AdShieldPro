@@ -326,7 +326,11 @@ class BatteryIntelligenceTestSuite {
         assertEquals(100, pristine)
         val worn = BatteryDiagnostics.healthScore(telemetry(), capacityHealthPercent = 72f, averageTemperatureCelsius = 41f, cycleCount = 900)
         // 100 - 22 (capacity) - 20 (heat) - 15 (cycles) = 43
-        assertEquals(43, worn)
+        assertEquals(
+            "worn score with capacity=72%, 41C avg, 900 cycles, health=${telemetry().health}",
+            43,
+            worn
+        )
         assertTrue("wear signals must lower the score", worn < 50)
         assertTrue(worn >= 5)
         assertEquals("Degraded", BatteryDiagnostics.healthLabel(worn))
