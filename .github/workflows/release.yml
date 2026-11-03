@@ -136,6 +136,12 @@ jobs:
           ./gradlew :app:assembleRelease --no-daemon --console=plain
           ls -l app/build/outputs/apk/release/
 
+      - name: Universal-build gate (blocks the release if the APK is device-specific)
+        run: |
+          set -euo pipefail
+          chmod +x tools/check_universal_release.py
+          python3 tools/check_universal_release.py "$(ls app/build/outputs/apk/release/*.apk | head -1)" | tee .ci/universal.log
+
       - name: Verify and package APK
         id: apk
         run: |
@@ -188,6 +194,12 @@ jobs:
           - Activity, statistics and per-app DNS analytics; AI Smart Boost, storage cleaning,
             Game Booster and battery/thermal tools — all local, no cloud AI.
           - In-app update checks against this repository's own releases.
+
+          ## Universal build
+          One ABI-independent APK: no native libraries, so it installs on arm64-v8a,
+          armeabi-v7a, x86 and x86_64 devices running Android 10+ (API 29-37), on phones,
+          tablets and foldables. Verified by `tools/check_universal_release.py` before this
+          release was published.
 
           ## Notes
           - \`versionCode ${{ steps.meta.outputs.version_code }}\`, \`minSdk 29\`, \`targetSdk 36\`.

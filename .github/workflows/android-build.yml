@@ -92,6 +92,11 @@ jobs:
           ls -l "$APK"
           sha256sum "$APK"
 
+      - name: Universal-build gate (debug APK must be device-independent)
+        run: |
+          chmod +x tools/check_universal_release.py
+          python3 tools/check_universal_release.py "$(ls app/build/outputs/apk/debug/*.apk | head -1)"
+
       - name: JVM unit tests
         run: |
           set -o pipefail

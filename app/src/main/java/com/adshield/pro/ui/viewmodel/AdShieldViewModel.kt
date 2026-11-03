@@ -45,6 +45,7 @@ import com.adshield.pro.engine.battery.BatteryDiagnostics
 import com.adshield.pro.engine.battery.BatterySession
 import com.adshield.pro.engine.battery.BatteryTelemetry
 import com.adshield.pro.engine.browser.BrowserContentBlocker
+import com.adshield.pro.engine.platform.DeviceProfiler
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.filter.FilterRuleEngine
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
@@ -93,7 +94,8 @@ class AdShieldViewModel @Inject constructor(
     val browserContentBlocker: BrowserContentBlocker,
     private val optimizerEngine: SystemOptimizerEngine,
     private val securityEngine: SecurityEngine,
-    private val batteryRepository: BatteryIntelligenceRepository
+    private val batteryRepository: BatteryIntelligenceRepository,
+    private val deviceProfiler: DeviceProfiler
 ) : ViewModel() {
 
     val vpnState: StateFlow<VpnRuntimeState> = repository.vpnRuntimeState
@@ -942,6 +944,10 @@ class AdShieldViewModel @Inject constructor(
     fun refreshBatteryReadings() {
         batteryRepository.telemetry.value.let { refreshBatteryDerived() }
     }
+
+    /** Runtime capability profile for the Status screen (no defaults guessed). */
+    fun deviceProfile(screenWidthDp: Int, smallestWidthDp: Int) =
+        deviceProfiler.profile(batteryRepository.telemetry.value, screenWidthDp, smallestWidthDp)
 
     fun clearBatterySessions() {
         batteryRepository.clearSessions()

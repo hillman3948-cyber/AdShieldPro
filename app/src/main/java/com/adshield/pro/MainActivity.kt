@@ -152,6 +152,15 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val batteryMinutesToEmpty by viewModel.batteryMinutesToEmpty.collectAsStateWithLifecycle()
     val batteryChargeRate by viewModel.batteryChargeRate.collectAsStateWithLifecycle()
 
+    // Device capability profile for the Status tab (form factor from the current window).
+    val configuration = LocalConfiguration.current
+    val deviceProfile = remember(configuration.screenWidthDp, configuration.smallestScreenWidthDp, batteryTelemetry) {
+        viewModel.deviceProfile(
+            screenWidthDp = configuration.screenWidthDp,
+            smallestWidthDp = configuration.smallestScreenWidthDp
+        )
+    }
+
     // Phone Optimizer & AI Smart Boost states
     val ramSnapshot by viewModel.ramSnapshot.collectAsStateWithLifecycle()
     val ramUsageTrend by viewModel.ramUsageTrend.collectAsStateWithLifecycle()
@@ -378,7 +387,7 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     onShowFeedback = viewModel::showFeedback
                 )
 
-                MainNavDestination.STATUS -> CapabilitiesScreen()
+                MainNavDestination.STATUS -> CapabilitiesScreen(deviceProfile = deviceProfile)
 
                 MainNavDestination.BATTERY -> BatteryScreen(
                     telemetry = batteryTelemetry,

@@ -463,6 +463,13 @@ object CapabilityRegistry {
             "Manual security review"
         ),
         cap(
+            "universal-package", "One APK for every CPU architecture and Android 10+", CapabilityArea.PLATFORM,
+            CapabilityStatus.IMPLEMENTED, "tools/check_universal_release.py", emptyList(),
+            listOf("Build config and the packaged APK (no native libraries, no ABI splits)"),
+            listOf("Universal by construction (pure Kotlin/Java); the release job refuses to publish an APK that contains native libraries or per-ABI splits"),
+            "Release APK workflow: universal-build gate"
+        ),
+        cap(
             "device-compatibility", "Runs correctly on every supported device (API 29–37, phone/tablet/foldable)", CapabilityArea.PLATFORM,
             CapabilityStatus.IMPLEMENTED, "engine/platform/DeviceCompatibility.kt", emptyList(),
             listOf("Build.VERSION.SDK_INT, window size class, battery driver values"),

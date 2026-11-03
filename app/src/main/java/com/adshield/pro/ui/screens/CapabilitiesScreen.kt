@@ -29,6 +29,7 @@ import com.adshield.pro.engine.platform.Capability
 import com.adshield.pro.engine.platform.CapabilityArea
 import com.adshield.pro.engine.platform.CapabilityRegistry
 import com.adshield.pro.engine.platform.CapabilityStatus
+import com.adshield.pro.engine.platform.DeviceProfile
 import com.adshield.pro.ui.theme.EmeraldPrimary
 import com.adshield.pro.ui.theme.WarningAmber
 
@@ -44,12 +45,15 @@ private val StatusBlue = Color(0xFF2E7DFF)
  * from the same list a unit test validates.
  */
 @Composable
-fun CapabilitiesScreen() {
+fun CapabilitiesScreen(deviceProfile: DeviceProfile? = null) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        if (deviceProfile != null) {
+            item { DeviceProfileCard(deviceProfile) }
+        }
         item {
             Surface(color = CardSurface, shape = RoundedCornerShape(16.dp)) {
                 Column(Modifier.padding(16.dp)) {
@@ -143,6 +147,67 @@ private fun CapabilityCard(capability: Capability) {
                     Text("• $it", fontSize = 11.sp, color = MutedText.copy(alpha = 0.9f))
                 }
             }
+        }
+    }
+}
+
+/** Everything this particular phone/tablet reports about itself, at a glance. */
+@Composable
+private fun DeviceProfileCard(profile: DeviceProfile) {
+    Card(colors = CardDefaults.cardColors(containerColor = CardSurface), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp)) {
+            Text("This device", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                "${profile.manufacturer} ${profile.model} · Android ${profile.androidRelease} · ${profile.formFactor.name.lowercase().replace('_', ' ')}",
+                fontSize = 13.sp,
+                color = Color.White
+            )
+            Text(
+                "CPU: ${profile.cpuArchitectures.joinToString(", ").ifEmpty { "not reported" }} — the same universal APK runs on every architecture",
+                fontSize = 11.sp,
+                color = MutedText
+            )
+            Text(
+                "Platform support: ${if (profile.supportedPlatform) "within the tested range" else "outside the tested range (API ${profile.sdkInt})"}",
+                fontSize = 11.sp,
+                color = if (profile.supportedPlatform) EmeraldPrimary else WarningAmber
+            )
+            val radios = buildList {
+                if (profile.hasWifi) add("Wi-Fi")
+                if (profile.hasTelephony) add("Mobile data")
+                if (profile.hasBluetooth) add("Bluetooth")
+                if (profile.hasNfc) add("NFC")
+                if (profile.hasGps) add("GPS")
+                if (profile.hasTouchscreen) add("Touch")
+            }
+            if (radios.isNotEmpty()) {
+                Text("Hardware: ${radios.joinToString(", ")}", fontSize = 11.sp, color = MutedText)
+            }
+            Text("Notifications: ${profile.notificationPermission}", fontSize = 11.sp, color = MutedText)
+
+            Spacer(Modifier.height(10.dp))
+            Text("Battery hardware on this device", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(4.dp))
+            profile.batteryChecks.forEach { row ->
+                Row(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
+                    Text(
+                        if (row.supported) "✓" else "—",
+                        color = if (row.supported) EmeraldPrimary else MutedText,
+                        fontSize = 11.sp,
+                        modifier = Modifier.width(18.dp)
+                    )
+                    Text(row.label, fontSize = 11.sp, color = Color.White, modifier = Modifier.weight(1f))
+                    Text(row.value, fontSize = 11.sp, color = if (row.supported) Color.White else MutedText)
+                }
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                "Rows marked — are values this device's firmware does not publish to apps. They are shown as " +
+                    "unavailable in the app rather than estimated.",
+                fontSize = 10.sp,
+                color = MutedText
+            )
         }
     }
 }
