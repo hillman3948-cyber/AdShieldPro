@@ -29,8 +29,8 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:processDebugJavaRes UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest FROM-CACHE
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
 > Task :app:kspDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:processDebugUnitTestJavaRes
@@ -88,15 +88,14 @@ BatteryIntelligenceTestSuite > testDiagnostics_flagsRealMeasuredCapacityLoss PAS
 
 BatteryIntelligenceTestSuite > testWattsFromMilliAmpsAndMillivolts_conversionIsExact PASSED
 
-BatteryIntelligenceTestSuite > testCurrentSign_isNormalisedPerVendorConvention FAILED
-    java.lang.AssertionError at BatteryIntelligenceTestSuite.kt:124
+BatteryIntelligenceTestSuite > testCurrentSign_isNormalisedPerVendorConvention PASSED
 
 BatteryIntelligenceTestSuite > testDiagnostics_hotBatteryIsCritical_andColdIsWarned PASSED
 
 BatteryIntelligenceTestSuite > testFahrenheitConversion_matchesReferenceScreenshot PASSED
 
 BatteryIntelligenceTestSuite > testHealthScore_dropsWithRealWearSignals FAILED
-    org.junit.ComparisonFailure at BatteryIntelligenceTestSuite.kt:329
+    org.junit.ComparisonFailure at BatteryIntelligenceTestSuite.kt:332
 
 BatteryIntelligenceTestSuite > testDiagnostics_lowChargePowerCallsOutCableOrCharger PASSED
 
@@ -133,7 +132,7 @@ CapabilityRegistryTest > testNoCapabilityClaimsCloudAiOrChargeControl PASSED
 CapabilityRegistryTest > testEveryCapabilityHasUniqueIdAndHonestStatus PASSED
 
 CapabilityRegistryTest > testImplementedCapabilitiesPointAtRealCode FAILED
-    java.lang.AssertionError at CapabilityRegistryTest.kt:39
+    java.lang.AssertionError at CapabilityRegistryTest.kt:54
 
 CapabilityRegistryTest > testUnavailableCapabilitiesClaimNoCode PASSED
 
@@ -159,16 +158,15 @@ SecurityCenterTestSuite > testUrlScanner_cleanUrlPasses PASSED
 
 SecurityCenterTestSuite > testFileScanner_detectsEicarTestSignature PASSED
 
-SecurityCenterTestSuite > testUrlScanner_flagsEmbeddedCredentialsAndRawIpLogins PASSED
+SecurityCenterTestSuite > testFilterEngine_blocksSubdomainsAndHonoursExceptions PASSED
 
-SecurityCenterTestSuite > testFilterEngine_bloomFastPath_preservesBlockingSemantics FAILED
-    java.lang.AssertionError at SecurityCenterTestSuite.kt:68
+SecurityCenterTestSuite > testUrlScanner_flagsEmbeddedCredentialsAndRawIpLogins PASSED
 
 SecurityCenterTestSuite > testFileScanner_detectsZipSlipArchive PASSED
 
 SecurityCenterTestSuite > testFileScanner_flagsMacroOfficeDocuments PASSED
 
-61 tests completed, 4 failed
+61 tests completed, 2 failed
 
 FAILURE: Build failed with an exception.
 
@@ -357,5 +355,5 @@ Caused by: org.gradle.api.internal.exceptions.MarkedVerificationException: There
 	... 61 more
 
 
-BUILD FAILED in 26s
+BUILD FAILED in 24s
 33 actionable tasks: 7 executed, 2 from cache, 24 up-to-date
