@@ -189,12 +189,17 @@ class AetherAnalyzer(
             signals.add(heuristic("phishing_keywords", "Credential-related word in the hostname.", 20))
         }
         if (!knownGood && domain.contains(".")) {
-            val firstLabel = skeleton(labels.first())
+            val rawLabel = labels.first()
+            val firstLabel = skeleton(rawLabel)
             for (good in allowlist) {
                 val goodLabel = skeleton(good.substringBefore("."))
-                if (goodLabel.length >= 4 && firstLabel != goodLabel &&
-                    levenshteinBounded(firstLabel, goodLabel, 1) <= 1
-                ) {
+                if (goodLabel.length < 4 || rawLabel == goodLabel) continue
+                // Compare the ORIGINAL label: skeleton() maps '1'->'l', so
+                // comparing skeletons alone would make "paypa1" == "paypal"
+                // and silently miss the confusable typosquat.
+                val oneEdit = levenshteinBounded(rawLabel, goodLabel, 1) <= 1
+                val confusable = firstLabel == goodLabel && rawLabel != goodLabel
+                if (oneEdit || confusable) {
                     signals.add(heuristic("typosquat", "'$domain' is one character away from known service '$good'.", 68))
                     break
                 }

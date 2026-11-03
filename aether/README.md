@@ -30,11 +30,16 @@ curl -H "Authorization: Bearer $(cat aether/data/api.token)" \
      http://127.0.0.1:8000/api/v1/dashboard
 ```
 
-Run the tests (no network required):
+Run the tests:
 
 ```bash
-.venv/bin/python aether/run_tests.py
+.venv/bin/python aether/run_tests.py          # Python core + HTTP integration (44 tests)
+bash aether/tools/kotlin_jvm/run.sh           # Kotlin 2.0.21 compile + 12 JVM unit tests + 17 integration checks
 ```
+
+The Python suite needs no network. The Kotlin harness downloads a JDK 17 and the
+matching Kotlin compiler once (from PyPI/npm) and uses small JVM stubs for Android /
+Compose / Hilt APIs; it is not a replacement for `./gradlew assembleDebug`.
 
 Rebuild the signed bundled feed, the labeled corpus and the Android offline assets
 (requires HTTPS access to `api.github.com`):

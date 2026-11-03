@@ -23,9 +23,13 @@ is additive.
 - **Real, measurable detection:** 14,419 indicators from four evidence-linked public
   sources; validation precision 1.000 / recall 0.929 / FP rate 0.000 on a labeled
   corpus. Held-out real IOC recall (0.020) is reported honestly rather than hidden.
-- **44 automated tests pass** (`python3 aether/run_tests.py` — requires the venv from
-  `aether/run.sh`), covering signed-feed tampering, detection, policy/rollback, audit
-  integrity, prompt injection, encryption, CSRF/scopes and full HTTP integration.
+- **44 automated Python tests pass** (`python3 aether/run_tests.py` — requires the venv
+  from `aether/run.sh`), covering signed-feed tampering, detection, policy/rollback,
+  audit integrity, prompt injection, encryption, CSRF/scopes and full HTTP integration.
+  A second harness (`bash aether/tools/kotlin_jvm/run.sh`) compiles all new Kotlin with
+  the real Kotlin 2.0.21 compiler and passes **12 JVM unit tests + 17 Android
+  integration checks** against the real bundled baselines. Full APK/lint/device tests
+  still need an Android SDK + Gradle.
 
 Start here: [`aether/README.md`](aether/README.md) ·
 [module docs & limitations](docs/aether/MODULES.md) ·
