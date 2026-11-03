@@ -33,6 +33,13 @@ class CapabilityRegistryTest {
                 candidates.joinToString { it.absolutePath })
     }
 
+    /** Repository root (parent of the app module), for capabilities implemented outside src/. */
+    private val repoRoot: File by lazy { sourceRoot.parentFile.parentFile.parentFile.parentFile }
+
+    /** Resolves a registry code pointer, which may live either in the app sources or in CI/tools. */
+    private fun codeFile(path: String): File =
+        File(sourceRoot, path).takeIf { it.exists() } ?: File(repoRoot, path)
+
     @Test
     fun testEveryCapabilityHasUniqueIdAndHonestStatus() {
         val ids = CapabilityRegistry.capabilities.map { it.id }
@@ -53,8 +60,8 @@ class CapabilityRegistryTest {
             )
             assertTrue(
                 "${capability.id}: ${capability.code} does not exist (registry is out of date). " +
-                    "cwd=${System.getProperty("user.dir")} sourceRoot=${sourceRoot.absolutePath}",
-                File(sourceRoot, capability.code).isFile
+                    "repoRoot=${repoRoot.absolutePath}",
+                codeFile(capability.code).isFile
             )
             assertTrue(
                 "${capability.id}: must document verification",

@@ -333,8 +333,12 @@ class BatteryIntelligenceTestSuite {
         )
         assertTrue("wear signals must lower the score", worn < 50)
         assertTrue(worn >= 5)
-        assertEquals("Degraded", BatteryDiagnostics.healthLabel(worn))
+        assertEquals("Worn", BatteryDiagnostics.healthLabel(worn))
         assertEquals("Excellent", BatteryDiagnostics.healthLabel(95))
+        // Labels are bands of the same score, not independent numbers.
+        assertEquals("Good", BatteryDiagnostics.healthLabel(80))
+        assertEquals("Fair", BatteryDiagnostics.healthLabel(65))
+        assertEquals("Degraded", BatteryDiagnostics.healthLabel(20))
     }
 
     @Test
