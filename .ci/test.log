@@ -33,10 +33,8 @@ Daemon will be stopped at the end of the build
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:kspDebugUnitTestKotlin
 
-> Task :app:compileDebugUnitTestKotlin
-e: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/SecurityCenterTestSuite.kt:445:49 Unresolved reference 'UrlPatternFilter'.
-
 > Task :app:compileDebugUnitTestKotlin FAILED
+e: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/SecurityCenterTestSuite.kt:445:23 No value passed for parameter 'filterRuleEngine'.
 
 [Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
@@ -45,9 +43,9 @@ FAILURE: Build failed with an exception.
 * What went wrong:
 Execution failed for task ':app:compileDebugUnitTestKotlin' (registered by plugin 'com.android.internal.application').
 > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
-   > Kotlin compiler: UNRESOLVED_REFERENCE
+   > Kotlin compiler: NO_VALUE_FOR_PARAMETER
        Kotlin compiler error
-         Unresolved reference 'UrlPatternFilter'.
+         No value passed for parameter 'filterRuleEngine'.
          Location: /home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/SecurityCenterTestSuite.kt line 445
 
 * Try:
@@ -209,7 +207,7 @@ Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionExcept
 	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:68)
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
 	... 30 more
-Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Unresolved reference 'UrlPatternFilter'.
+Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: No value passed for parameter 'filterRuleEngine'.
 	at org.jetbrains.kotlin.gradle.plugin.diagnostics.DefaultCompilerDiagnosticsProblemsReporter.reportCompilerMessage(CompilerDiagnosticsProblemsReporter.kt:63)
 	at org.jetbrains.kotlin.compilerRunner.btapi.ProblemsApiCompilerMessageRenderer.replayTo(ProblemsApiCompilerMessageRenderer.kt:88)
 	at org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork.execute(BuildToolsApiCompilationWork.kt:251)
@@ -246,5 +244,5 @@ Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Unresolv
 	... 2 more
 
 
-BUILD FAILED in 19s
+BUILD FAILED in 15s
 29 actionable tasks: 4 executed, 1 from cache, 24 up-to-date
