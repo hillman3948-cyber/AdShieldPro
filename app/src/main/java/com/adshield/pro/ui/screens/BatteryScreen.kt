@@ -314,9 +314,9 @@ private fun BatteryMetricCard(telemetry: BatteryTelemetry, healthScore: Int) {
                 label = "Health (Android status)",
                 value = telemetry.healthLabel,
                 reading = null,
-                valueColor = when (telemetry.healthRaw) {
-                    android.os.BatteryManager.BATTERY_HEALTH_GOOD -> EmeraldPrimary
-                    android.os.BatteryManager.BATTERY_HEALTH_UNKNOWN -> MutedText
+                valueColor = when (telemetry.health) {
+                    com.adshield.pro.engine.battery.BatteryHealthStatus.GOOD -> EmeraldPrimary
+                    com.adshield.pro.engine.battery.BatteryHealthStatus.UNKNOWN -> MutedText
                     else -> WarningAmber
                 }
             )

@@ -55,6 +55,12 @@ data class BatteryReading<T>(
     }
 }
 
+/**
+ * Android's reported battery health status, mapped to an enum so the diagnostics engine stays
+ * pure Kotlin (android.os constants are meaningless in JVM unit tests).
+ */
+enum class BatteryHealthStatus { GOOD, OVERHEAT, DEAD, OVER_VOLTAGE, COLD, FAILURE, UNKNOWN }
+
 /** Full, timestamped snapshot of what this device actually reports. */
 data class BatteryTelemetry(
     val timestampEpochMs: Long,
@@ -71,7 +77,7 @@ data class BatteryTelemetry(
     val chargeCounterMicroAmpHours: BatteryReading<Long>,
     val powerWatts: BatteryReading<Float>,
     val healthLabel: String,
-    val healthRaw: Int,
+    val health: BatteryHealthStatus,
     val technology: String,
     val chargeTimeRemainingMinutes: BatteryReading<Int>,
     val runtimeRemainingMinutes: BatteryReading<Int>,

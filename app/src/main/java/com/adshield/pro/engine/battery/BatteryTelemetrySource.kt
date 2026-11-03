@@ -121,6 +121,15 @@ class BatteryTelemetrySource @Inject constructor(
         // --- Health / technology ------------------------------------------------
         val health = intent?.getIntExtra(BatteryManager.EXTRA_HEALTH, BatteryManager.BATTERY_HEALTH_UNKNOWN)
             ?: BatteryManager.BATTERY_HEALTH_UNKNOWN
+        val healthStatus = when (health) {
+            BatteryManager.BATTERY_HEALTH_GOOD -> BatteryHealthStatus.GOOD
+            BatteryManager.BATTERY_HEALTH_OVERHEAT -> BatteryHealthStatus.OVERHEAT
+            BatteryManager.BATTERY_HEALTH_DEAD -> BatteryHealthStatus.DEAD
+            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> BatteryHealthStatus.OVER_VOLTAGE
+            BatteryManager.BATTERY_HEALTH_COLD -> BatteryHealthStatus.COLD
+            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> BatteryHealthStatus.FAILURE
+            else -> BatteryHealthStatus.UNKNOWN
+        }
         val healthLabel = when (health) {
             BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
             BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Overheating"
@@ -197,7 +206,7 @@ class BatteryTelemetrySource @Inject constructor(
             } ?: BatteryReading.unsupported("µAh", "BATTERY_PROPERTY_CHARGE_COUNTER is not exposed"),
             powerWatts = powerWatts,
             healthLabel = healthLabel,
-            healthRaw = health,
+            health = healthStatus,
             technology = technology,
             chargeTimeRemainingMinutes = if (isCharging && chargeTimeFromFramework != null) {
                 BatteryReading.estimated(

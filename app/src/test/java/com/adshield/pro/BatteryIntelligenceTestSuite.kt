@@ -2,6 +2,7 @@ package com.adshield.pro
 
 import com.adshield.pro.engine.battery.BatteryDiagnosticSeverity
 import com.adshield.pro.engine.battery.BatteryDiagnostics
+import com.adshield.pro.engine.battery.BatteryHealthStatus
 import com.adshield.pro.engine.battery.BatteryReading
 import com.adshield.pro.engine.battery.BatteryReadingSource
 import com.adshield.pro.engine.battery.BatterySession
@@ -31,7 +32,7 @@ class BatteryIntelligenceTestSuite {
         currentSource: BatteryReadingSource = BatteryReadingSource.HARDWARE,
         capacityHealthFullUah: Long? = null,
         capacityHealthDesignUah: Long? = null,
-        healthRaw: Int = android.os.BatteryManager.BATTERY_HEALTH_GOOD
+        health: BatteryHealthStatus = BatteryHealthStatus.GOOD
     ): BatteryTelemetry {
         val voltage = voltageVolts?.let { BatteryReading.measured(it, "V") }
             ?: BatteryReading.unsupported("V")
@@ -60,7 +61,7 @@ class BatteryIntelligenceTestSuite {
             chargeCounterMicroAmpHours = BatteryReading.unsupported("µAh"),
             powerWatts = power,
             healthLabel = "Good",
-            healthRaw = healthRaw,
+            health = health,
             technology = "Li-poly",
             chargeTimeRemainingMinutes = BatteryReading.unsupported("min"),
             runtimeRemainingMinutes = BatteryReading.unsupported("min"),
@@ -122,12 +123,12 @@ class BatteryIntelligenceTestSuite {
     fun testCurrentSign_isNormalisedPerVendorConvention() {
         // Vendor A: negative while discharging.
         assertEquals(-600, BatteryDiagnostics.normalisedCurrentMilliAmps(-600, isCharging = false))
-        // Vendor B: positive while discharging — the sign is not trusted, magnitude is kept.
-        assertEquals(600, BatteryDiagnostics.normalisedCurrentMilliAmps(600, isCharging = false))
+        // Vendor B: positive while discharging — flipped into the normalised convention.
+        assertEquals(-600, BatteryDiagnostics.normalisedCurrentMilliAmps(600, isCharging = false))
         // Vendor A: positive while charging.
         assertEquals(1500, BatteryDiagnostics.normalisedCurrentMilliAmps(1500, isCharging = true))
-        // Vendor B: negative while charging — magnitude is kept, sign ignored.
-        assertEquals(-1500, BatteryDiagnostics.normalisedCurrentMilliAmps(-1500, isCharging = true))
+        // Vendor B: negative while charging — flipped into the normalised convention.
+        assertEquals(1500, BatteryDiagnostics.normalisedCurrentMilliAmps(-1500, isCharging = true))
         assertNull(BatteryDiagnostics.normalisedCurrentMilliAmps(null, isCharging = true))
     }
 
@@ -324,6 +325,8 @@ class BatteryIntelligenceTestSuite {
         val pristine = BatteryDiagnostics.healthScore(telemetry(), null, null, null)
         assertEquals(100, pristine)
         val worn = BatteryDiagnostics.healthScore(telemetry(), capacityHealthPercent = 72f, averageTemperatureCelsius = 41f, cycleCount = 900)
+        // 100 - 22 (capacity) - 20 (heat) - 15 (cycles) = 43
+        assertEquals(43, worn)
         assertTrue("wear signals must lower the score", worn < 50)
         assertTrue(worn >= 5)
         assertEquals("Degraded", BatteryDiagnostics.healthLabel(worn))

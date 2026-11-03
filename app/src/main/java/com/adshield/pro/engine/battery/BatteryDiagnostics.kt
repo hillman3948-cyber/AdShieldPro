@@ -24,15 +24,15 @@ object BatteryDiagnostics {
     )
 
     /**
-     * Normalises the current reading to "positive while charging".
-     * Vendors disagree on the sign, so a value is only trusted when it agrees with the state;
-     * otherwise the magnitude is returned and the sign is ignored.
+     * Normalises a vendor current reading to the "positive while charging, negative while
+     * discharging" convention. Vendors disagree on the sign, so the state decides the expected
+     * direction and a contradicting sign is flipped. Magnitude is never altered.
      */
     fun normalisedCurrentMilliAmps(currentMilliAmps: Int?, isCharging: Boolean): Int? {
         val value = currentMilliAmps ?: return null
         if (value == 0) return 0
-        val positiveWhileCharging = if (isCharging) value > 0 else value < 0
-        return if (positiveWhileCharging) abs(value) else value
+        val signAgreesWithState = if (isCharging) value > 0 else value < 0
+        return if (signAgreesWithState) value else -value
     }
 
     /** Battery-side power; null unless both voltage and current are actually available. */
@@ -385,11 +385,13 @@ object BatteryDiagnostics {
                 cycleCount >= 300 -> score -= 6
             }
         }
-        when (telemetry.healthRaw) {
-            android.os.BatteryManager.BATTERY_HEALTH_OVERHEAT -> score -= 20
-            android.os.BatteryManager.BATTERY_HEALTH_DEAD -> score -= 40
-            android.os.BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> score -= 25
-            android.os.BatteryManager.BATTERY_HEALTH_COLD -> score -= 10
+        when (telemetry.health) {
+            com.adshield.pro.engine.battery.BatteryHealthStatus.OVERHEAT -> score -= 20
+            com.adshield.pro.engine.battery.BatteryHealthStatus.DEAD -> score -= 40
+            com.adshield.pro.engine.battery.BatteryHealthStatus.OVER_VOLTAGE -> score -= 25
+            com.adshield.pro.engine.battery.BatteryHealthStatus.COLD -> score -= 10
+            com.adshield.pro.engine.battery.BatteryHealthStatus.FAILURE -> score -= 15
+            else -> Unit
         }
         return score.coerceIn(5, 100)
     }

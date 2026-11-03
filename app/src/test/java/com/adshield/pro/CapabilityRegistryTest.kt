@@ -16,7 +16,22 @@ import java.io.File
  */
 class CapabilityRegistryTest {
 
-    private val sourceRoot = File("src/main/java/com/adshield/pro")
+    /**
+     * The Gradle unit-test task's working directory is not guaranteed across AGP versions, so
+     * the source root is discovered instead of assumed: walk up from the module dir until the
+     * package directory containing this registry exists.
+     */
+    private val sourceRoot: File by lazy {
+        val candidates = listOf(
+            File("src/main/java/com/adshield/pro"),
+            File("app/src/main/java/com/adshield/pro"),
+            File(System.getProperty("user.dir"), "app/src/main/java/com/adshield/pro"),
+            File(System.getProperty("user.dir"), "src/main/java/com/adshield/pro")
+        )
+        candidates.firstOrNull { it.isDirectory }
+            ?: throw AssertionError("could not locate the app source root; looked in " +
+                candidates.joinToString { it.absolutePath })
+    }
 
     @Test
     fun testEveryCapabilityHasUniqueIdAndHonestStatus() {

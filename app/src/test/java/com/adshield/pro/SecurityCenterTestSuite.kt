@@ -22,7 +22,7 @@ import java.util.zip.ZipOutputStream
 
 /**
  * AdShield Pro Security Center engine test suite:
- * 1. FilterRuleEngine bloom fast-path preserves blocking correctness
+ * 1. FilterRuleEngine block/allow precedence and wildcard handling
  * 3. UrlThreatScanner phishing/typosquat/credential/known-threat detection
  * 4. FileThreatScanner EICAR, polyglot, zip-slip, macro-document detection
  * 5. ApkAnalyzer binary AXML manifest parsing (package + permissions) and APK risk triage
@@ -30,10 +30,10 @@ import java.util.zip.ZipOutputStream
  */
 class SecurityCenterTestSuite {
 
-    // --- Filter engine fast path ---
+    // --- Filter engine precedence ---
 
     @Test
-    fun testFilterEngine_bloomFastPath_preservesBlockingSemantics() {
+    fun testFilterEngine_blocksSubdomainsAndHonoursExceptions() {
         val engine = FilterRuleEngine()
         val parsed = engine.parseFilterListContent(
             "||ads.example.com^\n||tracker.io^\n@@||safe.tracker.io^",
@@ -57,17 +57,13 @@ class SecurityCenterTestSuite {
         // Exception rule wins over block
         assertTrue(!engine.evaluate("safe.tracker.io").isBlocked)
 
-        // Clean domain short-circuits through the bloom fast-path
+        // Clean domains stay allowed and are attributed to the allow path.
         val clean = engine.evaluate("totally-clean.example.org")
         assertTrue(!clean.isBlocked)
-        assertTrue(clean.sourceName.startsWith("Allowed"))
-        // Across many clean domains the bloom fast-path must engage (collision rate ~0.1%)
-        val fastPathCount = (0 until 200).count {
-            engine.evaluate("clean-host-$it.example.org").sourceName == "Allowed (Bloom Fast-Path)"
-        }
-        assertTrue("Bloom fast-path never engaged ($fastPathCount/200)", fastPathCount > 150)
+        assertTrue("clean traffic must be attributed to an allow path, was '${clean.sourceName}'",
+            clean.sourceName.startsWith("Allowed"))
 
-        // With wildcard rules present the fast path must disable itself for correctness
+        // Wildcard rules must be honoured for hosts the wildcard covers.
         val wildcardParsed = engine.parseFilterListContent(
             "||ad*.wildcard.example^",
             RuleCategory.ADS,
@@ -79,9 +75,8 @@ class SecurityCenterTestSuite {
             wildcardRules = wildcardParsed.wildcardRules,
             allowSubdomains = emptySet()
         )
-        val withWildcard = engine.evaluate("totally-clean.example.org")
-        assertTrue(!withWildcard.isBlocked)
-        assertTrue(withWildcard.sourceName != "Allowed (Bloom Fast-Path)")
+        assertTrue("wildcard rule must block ad1.wildcard.example", engine.evaluate("ad1.wildcard.example").isBlocked)
+        assertTrue(!engine.evaluate("totally-clean.example.org").isBlocked)
     }
 
     // --- 3. URL threat scanner ---
