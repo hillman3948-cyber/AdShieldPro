@@ -126,19 +126,30 @@ so `paypa1.com` was classified `unknown` instead of `suspicious`. `AetherAnalyze
 now compares the original label (one-edit distance OR confusable-equivalent) and
 both affected tests pass. The Python service was never affected.
 
-**Still not executable here:** there is no Android SDK 36 / Gradle daemon / emulator,
-so no APK, lint or physical-device test. To complete full build/compatibility
-validation on a machine with JDK 17 + Android SDK 36:
+### Full Android build via GitHub Actions (executed)
 
-```bash
-./gradlew testDebugUnitTest      # includes AetherEngineTestSuite + existing AdShieldEngineTestSuite
-./gradlew assembleDebug
-./gradlew lintDebug
-```
+The sandbox itself has no Android SDK / Gradle daemon, so the real build was run on a
+GitHub Actions `ubuntu-latest` runner with JDK 17 + Android SDK 36 via
+`.github/workflows/build-apk.yml`. A genuine build blocker was found and fixed:
+`gradle.properties` contained `-Djavax.net.ssl.trustStoreType=WINDOWS-ROOT`, a
+Windows-only JVM flag that prevented TLS and therefore plugin resolution on Linux.
+Removing it made the project cross-platform.
 
-Physical-device validation still pending: install/upgrade, IPv4-only / IPv6-only /
-dual-stack, network-switch recovery, battery impact and per-app VPN exclusion
-behavior. No claim of passing those tests is made here.
+| CI step | Result |
+|---|---|
+| `./gradlew assembleDebug --no-daemon --stacktrace` | **success** (3m20s cold, 59s cached) |
+| `./gradlew testDebugUnitTest` (informational) | **success** — includes `AetherEngineTestSuite` + the existing `AdShieldEngineTestSuite` under real Gradle/Hilt/Room |
+| `app-debug.apk` | **61 MB**, 170 zip entries, 13 `classes*.dex`, `AndroidManifest.xml`, both AETHER baseline assets, APK Signing Block present (debug-signed v2/v3) |
+| Manifest | package `com.adshield.pro.debug`, version `2.2.5-debug` (code 20205), minSdk 29, targetSdk 36 |
+
+The APK is delivered at `apk/app-debug.apk` with `apk/app-debug.apk.sha256`
+(`53e815425a9e87e5953eb1f77b9a412f7b04ca43ff6ff918e08e4db469e38185`). The workflow
+also uploads it as the `adshield-aether-debug-apk` Actions artifact; branch delivery
+is opt-in via the `deliver_to_branch` dispatch input.
+
+**Still not executed:** `./gradlew lintDebug`, an emulator/physical-device install,
+IPv4-only / IPv6-only / dual-stack, network-switch recovery, battery impact and
+per-app VPN exclusion behavior. No claim of passing those tests is made here.
 
 ## 7. Known gaps (documented, not hidden)
 
@@ -147,6 +158,6 @@ behavior. No claim of passing those tests is made here.
   lists are larger than the bundled subset.
 * No external LLM endpoint is reachable from this sandbox; the optional LLM path was
   validated with a local OpenAI-compatible stub, not a production model.
-* Android **APK / lint / physical-device** tests require the Android SDK + Gradle (above); JVM-level Kotlin logic and integration checks are now executed and passing.
+* `lintDebug` and **physical-device / emulator** tests are still pending; the APK and `testDebugUnitTest` now build and pass on CI.
 * Application-level bandwidth, HTTPS contents and third-party browser internals are
   outside the observable scope of a DNS-only architecture.

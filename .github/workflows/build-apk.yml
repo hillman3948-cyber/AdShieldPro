@@ -2,6 +2,12 @@ name: Build AETHER debug APK
 
 on:
   workflow_dispatch:
+    inputs:
+      deliver_to_branch:
+        description: 'Also commit the debug APK to this branch (used when artifact download is blocked)'
+        type: boolean
+        default: false
+        required: false
   push:
     branches:
       - arena/b1d244c1-adshieldpro
@@ -65,6 +71,10 @@ jobs:
         continue-on-error: true
         run: ./gradlew testDebugUnitTest --no-daemon
 
+      - name: Android lint (informational)
+        continue-on-error: true
+        run: ./gradlew lintDebug --no-daemon
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -73,7 +83,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish APK to branch for delivery
-        if: success() && github.event_name == 'workflow_dispatch'
+        if: success() && github.event_name == 'workflow_dispatch' && inputs.deliver_to_branch
         run: |
           mkdir -p apk
           APK="$(ls app/build/outputs/apk/debug/*.apk | head -1)"

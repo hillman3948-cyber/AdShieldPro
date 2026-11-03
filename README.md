@@ -31,6 +31,17 @@ is additive.
   integration checks** against the real bundled baselines. Full APK/lint/device tests
   still need an Android SDK + Gradle.
 
+## APK
+
+A **real, installable debug APK** is built by
+[`.github/workflows/build-apk.yml`](.github/workflows/build-apk.yml) (JDK 17 +
+Android SDK 36) and delivered at [`apk/app-debug.apk`](apk/app-debug.apk) with its
+SHA-256 checksum. Package `com.adshield.pro.debug`, version `2.2.5-debug`,
+minSdk 29 / targetSdk 36, includes the AETHER baseline assets and the new
+**Aether AI** tab. `./gradlew testDebugUnitTest` passes on CI. It is debug-signed —
+for Play/release distribution configure `ADSHIELD_*` signing variables and build
+`:app:assembleRelease` (see `docs/BUILD_AND_SIGNING_GUIDE.md`).
+
 Start here: [`aether/README.md`](aether/README.md) ·
 [module docs & limitations](docs/aether/MODULES.md) ·
 [API reference](docs/aether/API.md) ·
