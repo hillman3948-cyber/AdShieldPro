@@ -9,9 +9,8 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources FROM-CACHE
 > Task :app:generateDebugRFile FROM-CACHE
 > Task :app:kspDebugKotlin
-
 > Task :app:compileDebugKotlin
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/MainActivity.kt:81:48 'fun <reified VM : ViewModel> hiltViewModel(viewModelStoreOwner: ViewModelStoreOwner = ..., key: String? = ...): VM' is deprecated. Moved to package: androidx.hilt.lifecycle.viewmodel.compose.
+w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/MainActivity.kt:84:48 'fun <reified VM : ViewModel> hiltViewModel(viewModelStoreOwner: ViewModelStoreOwner = ..., key: String? = ...): VM' is deprecated. Moved to package: androidx.hilt.lifecycle.viewmodel.compose.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/data/repository/AdShieldRepository.kt:597:48 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/di/AppModule.kt:29:14 'fun fallbackToDestructiveMigrationOnDowngrade(): RoomDatabase.Builder<AdShieldDatabase>' is deprecated. Replace by overloaded version with parameter to indicate if all tables should be dropped or not.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/battery/BatteryTelemetrySource.kt:147:33 Cast is redundant.
@@ -23,6 +22,6 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 
 [Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
-BUILD SUCCESSFUL in 58s
+BUILD SUCCESSFUL in 1m 6s
 8 actionable tasks: 2 executed, 6 from cache
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html
