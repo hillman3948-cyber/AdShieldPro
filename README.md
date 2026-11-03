@@ -1,4 +1,4 @@
-# AdShield Pro 2.4.0 — Android DNS Ad & Tracker Protection
+# AdShield Pro 2.5.0 — Android DNS Ad & Tracker Protection
 
 [![Android build & test](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml/badge.svg)](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml)
 
@@ -48,7 +48,19 @@ To sign with your own key instead, add repository secrets `ADSHIELD_KEYSTORE_BAS
 
 ![Animated preview of AdShield Pro](docs/images/adshield-demo.gif)
 
-## What's new in 2.4.0
+## What's new in 2.5.0
+
+- **Aether AI decision core** — every block/allow is now an explainable verdict: VERIFIED (curated
+  threat list or your own rule), SUSPECTED (heuristics only, never blocked by default) or UNKNOWN.
+  Each verdict carries its evidence list and a confidence score, and the autonomy ceiling is yours:
+  Manual → verified only → verified + suspected.
+- **Live network dashboard** — animated shield fed exclusively by this device's DNS log: totals,
+  block rate, per-category breakdown, top apps by UID attribution, resolver latency health and a
+  live event feed. An idle tunnel renders an explicit empty state; there is no simulation mode.
+- **Universal release gate** — the build now refuses to ship a non-universal APK and prints the
+  device matrix (see below).
+
+## What was new in 2.4.0
 
 - **Battery Intelligence tab** — live hardware telemetry (level, temperature, voltage, current,
   charge counters, cycle count where Android exposes them), battery-side power, measured charging
@@ -87,12 +99,14 @@ Everything needed is pinned in the repository (Gradle 9.7.1 wrapper, AGP 9.4.1, 
 ./gradlew :app:lintDebug            # Android Lint
 ```
 
-The JVM suite (61 cases across `AdShieldEngineTestSuite`, `SecurityCenterTestSuite`,
-`BatteryIntelligenceTestSuite` and `CapabilityRegistryTest`) covers DNS
+The JVM suite (82 cases across `AdShieldEngineTestSuite`, `SecurityCenterTestSuite`,
+`BatteryIntelligenceTestSuite`, `AetherCoreTest` and `CapabilityRegistryTest`) covers DNS
 wire-format parsing, UDP/TCP packet framing and checksums, upstream response validation and cache
 policy, UDP truncation and TCP segmentation limits, the filter rule engine, the browser blocker, and
 in-app update asset selection (release APK over debug/split APKs), the battery power/rate maths and
-its no-fabrication rules, and the capability registry's honesty constraints.
+its no-fabrication rules, the Aether decision table (no verdict without evidence), the live
+dashboard model, cross-device feature gates for API 29–37, and the capability registry's honesty
+constraints.
 See [docs/TESTING.md](docs/TESTING.md) for the full matrix, signing requirements and the on-device
 smoke test checklist.
 

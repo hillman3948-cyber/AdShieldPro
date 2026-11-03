@@ -43,6 +43,7 @@ import com.adshield.pro.data.repository.BatteryIntelligenceRepository
 import com.adshield.pro.engine.battery.BatteryDiagnostic
 import com.adshield.pro.engine.battery.BatteryDiagnostics
 import com.adshield.pro.engine.battery.BatterySession
+import com.adshield.pro.engine.aether.LiveNetworkModel
 import com.adshield.pro.engine.battery.BatteryTelemetry
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.platform.DeviceProfiler
@@ -70,6 +71,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
@@ -953,4 +955,29 @@ class AdShieldViewModel @Inject constructor(
         batteryRepository.clearSessions()
         showFeedback("Battery session history cleared.")
     }
+
+    // --- Aether AI (live network intelligence) ---
+
+    /**
+     * The live network snapshot is derived from the repository's own streams (session runtime,
+     * DNS log, top apps, blocked domains). It is recomputed whenever any of them changes, so the
+     * dashboard can only ever show traffic that actually happened.
+     */
+    val liveNetwork: StateFlow<LiveNetworkModel.NetworkSnapshot> = combine(
+        repository.vpnRuntimeState,
+        recentLogs,
+        liveTopApps,
+        topBlockedDomains
+    ) { runtime, logs, apps, blocked ->
+        LiveNetworkModel.snapshot(runtime, logs, apps, blocked)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        LiveNetworkModel.snapshot(
+            repository.vpnRuntimeState.value,
+            emptyList(),
+            emptyList(),
+            emptyList()
+        )
+    )
 }

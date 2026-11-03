@@ -27,6 +27,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.Monitor
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Home
@@ -66,6 +67,7 @@ import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
 import com.adshield.pro.ui.screens.BatteryScreen
 import com.adshield.pro.ui.screens.CapabilitiesScreen
+import com.adshield.pro.ui.screens.LiveNetworkScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
 import com.adshield.pro.ui.screens.SecurityScreen
@@ -77,6 +79,7 @@ import dagger.hilt.android.AndroidEntryPoint
 enum class MainNavDestination(val label: String, val icon: ImageVector) {
     HOME("Home", Icons.Default.Home),
     AD_BLOCKER("Ad Blocker", Icons.Default.Shield),
+    LIVE("Live", Icons.Default.Monitor),
     SECURITY("Security", Icons.Default.Security),
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
     BATTERY("Battery", Icons.Default.BatteryChargingFull),
@@ -141,6 +144,8 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val securityHistory by viewModel.securityHistory.collectAsStateWithLifecycle()
 
     // Battery Intelligence state
+    val liveNetwork by viewModel.liveNetwork.collectAsStateWithLifecycle()
+
     val batteryTelemetry by viewModel.batteryTelemetry.collectAsStateWithLifecycle()
     val batteryHistory by viewModel.batteryHistory.collectAsStateWithLifecycle()
     val batterySessions by viewModel.batterySessions.collectAsStateWithLifecycle()

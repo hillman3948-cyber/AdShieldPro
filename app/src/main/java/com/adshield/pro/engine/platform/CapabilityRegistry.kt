@@ -470,6 +470,34 @@ object CapabilityRegistry {
             "Release APK workflow: universal-build gate"
         ),
         cap(
+            "aether-decision-core", "Aether AI evidence-based verdicts (VERIFIED / SUSPECTED / UNKNOWN)", CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/aether/AetherCore.kt", listOf(PERM_VPN),
+            listOf("Filter-engine matches, user rules, domain heuristics, app audit signals"),
+            listOf("Rule-based, explainable decision table — no ML model and no cloud call; heuristics alone can never verify a threat"),
+            "AetherCoreTest.testHeuristicsAlone_canNeverVerifyOrBlock and related cases"
+        ),
+        cap(
+            "aether-domain-heuristics", "Domain risk heuristics (IP hosts, punycode, brand lookalikes, risky TLDs)", CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/aether/DomainRiskAnalyzer.kt", emptyList(),
+            listOf("The request string itself — no network lookups, safe on the DNS hot path"),
+            listOf("Indicators are weak on their own; they surface as SUSPECTED and never auto-block by default"),
+            "AetherCoreTest.testDomainAnalyzer_flagsRealPhishingPatterns"
+        ),
+        cap(
+            "aether-autonomy", "User-controlled autonomous response ceiling", CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/aether/AetherCore.kt", emptyList(),
+            listOf("User setting: Manual / verified only / verified + suspected"),
+            listOf("Manual mode reports instead of blocking; suspected blocking is opt-in and needs a higher score"),
+            "AetherCoreTest.testManualAutonomy_reportsInsteadOfBlocking"
+        ),
+        cap(
+            "live-network-dashboard", "Live DNS traffic dashboard with real event feed", CapabilityArea.DNS_PROTECTION,
+            CapabilityStatus.IMPLEMENTED, "engine/aether/LiveNetworkModel.kt", listOf(PERM_VPN),
+            listOf("AdShield DNS log, session counters, resolver config, per-UID attribution"),
+            listOf("Shows only logged traffic; there is no simulation mode, so an idle tunnel renders an explicit empty state"),
+            "AetherCoreTest.testLiveSnapshot_isBuiltOnlyFromRealLogs"
+        ),
+        cap(
             "device-compatibility", "Runs correctly on every supported device (API 29–37, phone/tablet/foldable)", CapabilityArea.PLATFORM,
             CapabilityStatus.IMPLEMENTED, "engine/platform/DeviceCompatibility.kt", emptyList(),
             listOf("Build.VERSION.SDK_INT, window size class, battery driver values"),
