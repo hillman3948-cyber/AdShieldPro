@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Message
+import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
@@ -97,7 +98,14 @@ fun BrowserScreen(
 
     DisposableEffect(Unit) {
         onDispose {
-            webViewRef.value?.stopLoading()
+            // Tear the WebView down with the composition. Leaving it alive keeps the Activity
+            // context, its clients and any running page timers reachable, which is a leak.
+            webViewRef.value?.let { webView ->
+                webView.stopLoading()
+                (webView.parent as? ViewGroup)?.removeView(webView)
+                webView.destroy()
+            }
+            webViewRef.value = null
         }
     }
 

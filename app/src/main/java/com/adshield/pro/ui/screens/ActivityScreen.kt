@@ -63,6 +63,7 @@ import com.adshield.pro.domain.model.RuleType
 import com.adshield.pro.domain.model.SourceEffectiveness
 import com.adshield.pro.domain.model.TimeBucketStat
 import com.adshield.pro.ui.theme.AlertRed
+import com.adshield.pro.ui.theme.formatInteger
 import com.adshield.pro.ui.theme.CyberCyan
 import com.adshield.pro.ui.theme.EmeraldPrimary
 import com.adshield.pro.ui.theme.WarningAmber
@@ -538,8 +539,8 @@ private fun LiveTopAppsCard(apps: List<AppDnsActivity>) {
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Column(horizontalAlignment = Alignment.End) {
-                                Text(java.text.NumberFormat.getIntegerInstance().format(app.totalQueries), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                                Text("${java.text.NumberFormat.getIntegerInstance().format(app.blockedQueries)} blocked", style = MaterialTheme.typography.labelMedium, color = AlertRed)
+                                Text(formatInteger(app.totalQueries), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                                Text("${formatInteger(app.blockedQueries)} blocked", style = MaterialTheme.typography.labelMedium, color = AlertRed)
                             }
                         }
                         LinearProgressIndicator(

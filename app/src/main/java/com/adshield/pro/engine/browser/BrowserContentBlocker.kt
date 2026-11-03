@@ -78,10 +78,12 @@ class BrowserContentBlocker @Inject constructor(
             )
         }
 
-        // Evaluate URL path heuristics for known ad/tracker scripts when third-party
+        // Evaluate URL path heuristics for known ad/tracker scripts when third-party.
+        // Suffix comparison must respect label boundaries: "evilnews.example.com" is NOT
+        // first-party to "news.example.com" even though the raw strings overlap.
         val isThirdParty = normalizedPageHost != null &&
-            !requestHost.endsWith(normalizedPageHost) &&
-            !normalizedPageHost.endsWith(requestHost)
+            !isSameOrSubdomainOf(requestHost, normalizedPageHost) &&
+            !isSameOrSubdomainOf(normalizedPageHost, requestHost)
 
         val lowerPath = (uri.rawPath ?: "").lowercase()
         if (isThirdParty && THIRD_PARTY_AD_PATH_PATTERNS.any { lowerPath.contains(it) }) {
@@ -191,6 +193,17 @@ class BrowserContentBlocker @Inject constructor(
                 document.addEventListener('DOMContentLoaded', applyStyle);
             })();
         """.trimIndent()
+    }
+
+    /**
+     * True when [host] equals [parent] or is a dot-delimited subdomain of it.
+     * Prevents false "first-party" matches such as `nottracker.example.com` vs `tracker.example.com`.
+     */
+    fun isSameOrSubdomainOf(host: String, parent: String): Boolean {
+        val cleanHost = host.trim().lowercase().trimEnd('.')
+        val cleanParent = parent.trim().lowercase().trimEnd('.')
+        if (cleanHost.isEmpty() || cleanParent.isEmpty()) return false
+        return cleanHost == cleanParent || cleanHost.endsWith(".$cleanParent")
     }
 
     fun isHostInExceptionSet(host: String, allowlistedSites: Set<String>): Boolean {

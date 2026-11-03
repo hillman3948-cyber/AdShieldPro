@@ -1,11 +1,35 @@
-# AdShield Pro 2.2.5 — Android DNS Ad & Tracker Protection
+# AdShield Pro 2.4.0 — Android DNS Ad & Tracker Protection
+
+[![Android build & test](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml/badge.svg)](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml)
 
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 ## Website and downloads
 
-- **Project website:** [https://adshieldpro-docs.vercel.app](https://adshieldpro-docs.vercel.app/)
-- **Direct APK download — v2.2.5:** [AdShield-Pro-2.2.5.apk](https://github.com/hillman3948-cyber/AdShieldPro/releases/download/v2.2.5/AdShield-Pro-2.2.5.apk)
-- [Browse all GitHub releases](https://github.com/hillman3948-cyber/AdShieldPro/releases)
+- **Project website:** <https://yawiyuson231-oss.github.io/AdShieldPro/> — source in
+  [docs/](docs), deployed by [`.github/workflows/deploy-website.yml`](.github/workflows/deploy-website.yml).
+  One-time setup: repository **Settings → Pages → Source: GitHub Actions** (a repository admin has
+  to click it once; the deploy workflow reports it if it is still off).
+- **Direct APK download:** [latest AdShield Pro release](https://github.com/yawiyuson231-oss/AdShieldPro/releases/latest)
+- [Browse all GitHub releases](https://github.com/yawiyuson231-oss/AdShieldPro/releases)
+
+### Publishing a release
+
+Every published build comes from one pipeline, [`.github/workflows/release.yml`](.github/workflows/release.yml):
+
+```bash
+# build the version currently in app/build.gradle.kts and publish tag v<versionName>
+gh workflow run "Release APK" --ref main
+
+# or publish a specific version: bump versionCode/versionName, commit, then
+git tag v2.3.1 && git push origin v2.3.1
+```
+
+The workflow runs the JVM unit tests, builds the R8-minified release APK, checks its structure,
+publishes it to GitHub Releases with a SHA-256 checksum, uploads `adshield-release.keystore` for
+future upgrade installs, and refreshes the GitHub Pages site. Re-running it for an existing tag
+replaces that release's APK assets instead of failing or creating a duplicate release.
+To sign with your own key instead, add repository secrets `ADSHIELD_KEYSTORE_BASE64`,
+`ADSHIELD_STORE_PASSWORD`, and optionally `ADSHIELD_KEY_ALIAS` / `ADSHIELD_KEY_PASSWORD`.
 
 ## App screenshots
 
@@ -24,6 +48,21 @@ AdShield Pro is a non-root Android app that filters DNS requests on-device and i
 
 ![Animated preview of AdShield Pro](docs/images/adshield-demo.gif)
 
+## What's new in 2.4.0
+
+- **Battery Intelligence tab** — live hardware telemetry (level, temperature, voltage, current,
+  charge counters, cycle count where Android exposes them), battery-side power, measured charging
+  speed, charging diagnostics with evidence and confidence, real capacity-health measurement when
+  the device reports it, and persistent charging history. Every tile states whether its value is
+  measured, computed, estimated, unsupported or unavailable.
+- **Security tab** — on-device link/phishing scanner, file and APK scanner, installed-app risk
+  audit, protection posture and scan history.
+- **367k offline rules** bundled in the APK (HaGeZi Multi Pro + TIF, lite list on low-RAM devices),
+  so protection works with no network and a fresh install.
+- **Status tab + [capability matrix](docs/CAPABILITY_MATRIX.md)** — a machine-checked list of what
+  works, what is partial, what is planned and what Android does not allow. CI fails if the matrix
+  drifts from the code.
+
 ## What AdShield Pro does
 
 - **Device-wide DNS filtering:** Run a local Android VPN service that routes DNS requests to AdShield's on-device filter. Other app traffic continues over the device's normal network connection; AdShield does not send it through a remote VPN server.
@@ -37,12 +76,32 @@ AdShield Pro is a non-root Android app that filters DNS requests on-device and i
 - **Check for app updates:** Check GitHub Releases from Home or receive a background update notification when Android runs scheduled work. The app downloads the signed APK and opens Android's installer; users approve installation themselves.
 - **Keep settings on the device:** Settings, custom rules, and activity history are stored locally. Allowed DNS lookups are sent to the upstream DNS provider selected in the app, and that provider's privacy terms apply.
 
+## Building and testing
+
+Everything needed is pinned in the repository (Gradle 9.7.1 wrapper, AGP 9.4.1, Kotlin 2.4.21,
+`compileSdk = 37`, `minSdk = 29`). Install a JDK 17+ and Android SDK Platform 37, then:
+
+```bash
+./gradlew :app:assembleDebug        # debug APK
+./gradlew :app:testDebugUnitTest    # JVM unit test suite
+./gradlew :app:lintDebug            # Android Lint
+```
+
+The JVM suite (61 cases across `AdShieldEngineTestSuite`, `SecurityCenterTestSuite`,
+`BatteryIntelligenceTestSuite` and `CapabilityRegistryTest`) covers DNS
+wire-format parsing, UDP/TCP packet framing and checksums, upstream response validation and cache
+policy, UDP truncation and TCP segmentation limits, the filter rule engine, the browser blocker, and
+in-app update asset selection (release APK over debug/split APKs), the battery power/rate maths and
+its no-fabrication rules, and the capability registry's honesty constraints.
+See [docs/TESTING.md](docs/TESTING.md) for the full matrix, signing requirements and the on-device
+smoke test checklist.
+
 ## Download and project links
 
-- [Source code](https://github.com/hillman3948-cyber/AdShieldPro)
-- [Latest releases and APK downloads](https://github.com/hillman3948-cyber/AdShieldPro/releases)
-- [Privacy policy](https://github.com/hillman3948-cyber/AdShieldPro/blob/main/docs/PRIVACY_POLICY.md)
-- [Report a problem](https://github.com/hillman3948-cyber/AdShieldPro/issues)
+- [Source code](https://github.com/yawiyuson231-oss/AdShieldPro)
+- [Latest releases and APK downloads](https://github.com/yawiyuson231-oss/AdShieldPro/releases)
+- [Privacy policy](https://github.com/yawiyuson231-oss/AdShieldPro/blob/main/docs/PRIVACY_POLICY.md)
+- [Report a problem](https://github.com/yawiyuson231-oss/AdShieldPro/issues)
 
 AdShield Pro is built with **Kotlin, Jetpack Compose (Material 3), Clean Architecture + MVVM, Room SQLite, DataStore, WorkManager, Hilt, and Android `VpnService`**. DNS filtering can reduce requests to known ad, tracking, and malicious domains, but it cannot guarantee protection from every threat.
 

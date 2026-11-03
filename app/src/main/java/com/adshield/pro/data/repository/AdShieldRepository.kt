@@ -100,7 +100,7 @@ class AdShieldRepository @Inject constructor(
                 domain = entity.domain,
                 queryType = entity.queryType,
                 isBlocked = entity.isBlocked,
-                category = entity.category?.let { runCatching { RuleCategory.valueOf(it) }.getOrNull() },
+                category = parseRuleCategoryOrNull(entity.category),
                 matchedRule = entity.matchedRule,
                 sourceList = entity.sourceList,
                 latencyMs = entity.latencyMs,
@@ -114,6 +114,8 @@ class AdShieldRepository @Inject constructor(
     val allTimeTotalQueriesFlow: Flow<Long> = dao.observeAllTimeTotalQueries()
     val allTimeBlockedQueriesFlow: Flow<Long> = dao.observeAllTimeBlockedQueries()
     val allTimeAllowedQueriesFlow: Flow<Long> = dao.observeAllTimeAllowedQueries()
+    /** Malware / phishing / scam blocks recorded by the DNS firewall (feeds the Security Center). */
+    val malwareBlocksFlow: Flow<Long> = dao.observeMalwareBlockCount()
 
     val customRulesFlow: Flow<List<CustomRule>> = dao.observeCustomRules().map { entities ->
         entities.map { it.toDomain() }
@@ -441,23 +443,40 @@ class AdShieldRepository @Inject constructor(
         }
     }
 
+    /** Parses a persisted [RuleCategory] name, or null when the stored value no longer exists. */
+    private fun parseRuleCategoryOrNull(raw: String?): RuleCategory? =
+        raw?.let { name -> RuleCategory.entries.firstOrNull { it.name.equals(name, ignoreCase = true) } }
+
+    /** Parses a persisted [RuleCategory] name, falling back to [RuleCategory.ADS]. */
+    private fun parseRuleCategory(raw: String?): RuleCategory =
+        parseRuleCategoryOrNull(raw) ?: RuleCategory.ADS
+
+    /**
+     * Imports newline-separated rules, skipping invalid lines, duplicates inside the import and
+     * rules that are already stored. Returns the number of rules that were actually inserted, so
+     * the UI can report a truthful count (the old implementation counted parsed lines before the
+     * database write had happened).
+     */
     suspend fun importRulesFromText(content: String): Int = withContext(Dispatchers.IO) {
-        var imported = 0
+        val storedKeys = dao.getAllCustomRulesNow()
+            .mapTo(HashSet()) { entity -> entity.normalizedPattern to entity.ruleType }
+        val batchedKeys = HashSet<Pair<String, String>>()
         val toInsert = ArrayList<CustomRuleEntity>()
         content.lineSequence().forEach { line ->
             val trimmed = line.trim()
             if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("!")) return@forEach
-            val parsed = filterEngine.validateAndParseRuleInput(trimmed).getOrNull()
-            if (parsed != null) {
-                toInsert.add(parsed.toEntity())
-                imported++
+            val parsed = filterEngine.validateAndParseRuleInput(trimmed).getOrNull() ?: return@forEach
+            val entity = parsed.toEntity()
+            val key = entity.normalizedPattern to entity.ruleType
+            if (key !in storedKeys && batchedKeys.add(key)) {
+                toInsert.add(entity)
             }
         }
         if (toInsert.isNotEmpty()) {
             dao.insertCustomRules(toInsert)
             syncCustomRulesToEngine()
         }
-        imported
+        toInsert.size
     }
 
     private suspend fun syncCustomRulesToEngine() {
@@ -540,7 +559,7 @@ class AdShieldRepository @Inject constructor(
                     val assetContent = readBundledDefaultBlocklist()
                     val parsed = filterEngine.parseFilterListContent(
                         assetContent,
-                        RuleCategory.valueOf(source.category),
+                        parseRuleCategory(source.category),
                         source.name
                     ).getOrNull()
                     if (parsed != null) {
@@ -579,8 +598,7 @@ class AdShieldRepository @Inject constructor(
                         if (bodyStr.length > 15_000_000) {
                             throw IllegalStateException("Filter list exceeds safe memory limit (15 MB)")
                         }
-                        val category = runCatching { RuleCategory.valueOf(source.category) }
-                            .getOrDefault(RuleCategory.ADS)
+                        val category = parseRuleCategory(source.category)
                         val parsed = filterEngine.parseFilterListContent(bodyStr, category, source.name)
                             .getOrThrow()
 
@@ -649,7 +667,7 @@ class AdShieldRepository @Inject constructor(
         }
     }
 
-    private fun rebuildActiveFilterListsLocked(sources: List<FilterSourceEntity>) {
+    private suspend fun rebuildActiveFilterListsLocked(sources: List<FilterSourceEntity>) {
         val mergedSubdomains = HashMap<String, FilterRuleEngine.FilterListEntry>(4096)
         val mergedExact = HashMap<String, FilterRuleEngine.FilterListEntry>()
         val mergedWildcards = ArrayList<FilterRuleEngine.WildcardEntry>()
@@ -659,10 +677,10 @@ class AdShieldRepository @Inject constructor(
         // Always load bundled baseline if enabled or if no other source has cached rules yet
         for (source in sources) {
             if (!source.isEnabled) continue
-            val category = runCatching { RuleCategory.valueOf(source.category) }.getOrDefault(RuleCategory.ADS)
+            val category = parseRuleCategory(source.category)
 
             val rawContent: String? = if (source.url.startsWith("asset://")) {
-                readBundledDefaultBlocklist()
+                readBundledBlocklistAsset(bundledAssetFor(source))
             } else {
                 val cachedFile = File(filterCacheDir, "${source.id}.txt")
                 if (cachedFile.exists()) runCatching { cachedFile.readText(Charsets.UTF_8) }.getOrNull() else null
@@ -672,24 +690,26 @@ class AdShieldRepository @Inject constructor(
                 val parsed = filterEngine.parseFilterListContent(rawContent, category, source.name).getOrNull()
                 if (parsed != null) {
                     for ((k, v) in parsed.subdomainRules) {
+                        if (mergedSubdomains.size >= MAX_MERGED_RULES) break
                         mergedSubdomains.putIfAbsent(k, v)
                     }
                     for ((k, v) in parsed.exactRules) {
+                        if (mergedExact.size >= MAX_MERGED_RULES) break
                         mergedExact.putIfAbsent(k, v)
                     }
-                    mergedWildcards.addAll(parsed.wildcardRules)
+                    mergedWildcards.addAll(parsed.wildcardRules.take(MAX_MERGED_WILDCARDS))
                     mergedAllow.addAll(parsed.allowSubdomains)
 
                     if (source.ruleCount == 0) {
-                        repositoryScope.launch {
-                            dao.upsertFilterSource(
-                                source.copy(
-                                    ruleCount = parsed.totalValidRules,
-                                    duplicateCount = parsed.duplicateCount,
-                                    lastUpdatedEpochMs = if (source.lastUpdatedEpochMs == 0L) now else source.lastUpdatedEpochMs
-                                )
+                        // Awaited on purpose: this runs under filterMutex, and a detached
+                        // write could land after a later rebuild and resurrect stale counts.
+                        dao.upsertFilterSource(
+                            source.copy(
+                                ruleCount = parsed.totalValidRules,
+                                duplicateCount = parsed.duplicateCount,
+                                lastUpdatedEpochMs = if (source.lastUpdatedEpochMs == 0L) now else source.lastUpdatedEpochMs
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -703,10 +723,27 @@ class AdShieldRepository @Inject constructor(
         )
     }
 
-    private fun readBundledDefaultBlocklist(): String {
+    private fun readBundledDefaultBlocklist(): String = readBundledBlocklistAsset("default_blocklist.txt")
+
+    private fun readBundledBlocklistAsset(assetName: String): String {
         return runCatching {
-            context.assets.open("default_blocklist.txt").bufferedReader(Charsets.UTF_8).use { it.readText() }
+            context.assets.open(assetName).bufferedReader(Charsets.UTF_8).use { it.readText() }
         }.getOrDefault("")
+    }
+
+    /**
+     * Entry-level devices load the curated lite ad list instead of the 176k-rule one so the
+     * engine snapshot stays inside a small RAM budget. The threat-intel list always loads:
+     * it is what powers both DNS malware blocking and the Security Center link scanner.
+     */
+    private fun bundledAssetFor(source: FilterSourceEntity): String {
+        val assetName = source.url.removePrefix("asset://")
+        return if (assetName == CORE_MAX_ADS_ASSET && isLowRamDevice()) CORE_LITE_ADS_ASSET else assetName
+    }
+
+    private fun isLowRamDevice(): Boolean {
+        val am = context.getSystemService(android.content.Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+        return am?.isLowRamDevice == true
     }
 
     // --- Backup and Restore ---
@@ -748,8 +785,16 @@ class AdShieldRepository @Inject constructor(
                 ).getOrNull()?.copy(isEnabled = rule.isEnabled)?.toEntity()
             }
 
-            dao.clearAllCustomRules()
-            dao.insertCustomRules(validEntities)
+            // Merge: a restore must not delete rules the user created after the backup was
+            // taken. Only rules that are not already stored are inserted.
+            val storedKeys = dao.getAllCustomRulesNow()
+                .mapTo(HashSet()) { entity -> entity.normalizedPattern to entity.ruleType }
+            val newEntities = validEntities.filter { entity ->
+                (entity.normalizedPattern to entity.ruleType) !in storedKeys
+            }
+            if (newEntities.isNotEmpty()) {
+                dao.insertCustomRules(newEntities)
+            }
             syncCustomRulesToEngine()
 
             for (site in backup.browserSiteExceptions) {
@@ -815,6 +860,36 @@ class AdShieldRepository @Inject constructor(
                 isEnabled = true,
                 isPremiumOnly = false,
                 ruleCount = 215,
+                duplicateCount = 0,
+                lastUpdatedEpochMs = now,
+                lastStatusMessage = "Bundled & Active"
+            ),
+            FilterSourceEntity(
+                id = "bundled_core_ads_max",
+                name = "AdShield Core Ads & Trackers (Offline)",
+                description = "176,000+ curated ad, tracker and telemetry domains bundled in the APK (HaGeZi Multi Pro). Works with no internet and covers every app on the device.",
+                url = "asset://$CORE_MAX_ADS_ASSET",
+                licenseName = "GNU GPLv3 (HaGeZi dns-blocklists)",
+                category = RuleCategory.ADS.name,
+                isBuiltIn = true,
+                isEnabled = true,
+                isPremiumOnly = false,
+                ruleCount = 176113,
+                duplicateCount = 0,
+                lastUpdatedEpochMs = now,
+                lastStatusMessage = "Bundled & Active"
+            ),
+            FilterSourceEntity(
+                id = "bundled_core_threats",
+                name = "AdShield Threat Intelligence (Offline)",
+                description = "191,000+ active malware, phishing and scam domains bundled in the APK (HaGeZi TIF). Powers DNS web protection and the Security Center link scanner.",
+                url = "asset://$CORE_THREATS_ASSET",
+                licenseName = "GNU GPLv3 (HaGeZi dns-blocklists)",
+                category = RuleCategory.MALWARE.name,
+                isBuiltIn = true,
+                isEnabled = true,
+                isPremiumOnly = false,
+                ruleCount = 191528,
                 duplicateCount = 0,
                 lastUpdatedEpochMs = now,
                 lastStatusMessage = "Bundled & Active"
@@ -964,6 +1039,18 @@ class AdShieldRepository @Inject constructor(
 
     companion object {
         const val MILLIS_PER_DAY = 86_400_000L
+
+        /**
+         * Hard caps for the merged engine snapshot. The three bundled offline lists total
+         * ~367k domains; the caps keep a runaway remote list from exhausting memory.
+         */
+        const val MAX_MERGED_RULES = 900_000
+        const val MAX_MERGED_WILDCARDS = 5_000
+
+        /** Offline rule sets bundled in the APK (attribution in docs/THIRD_PARTY_NOTICES.md). */
+        const val CORE_MAX_ADS_ASSET = "core_max_ads.txt"
+        const val CORE_LITE_ADS_ASSET = "core_lite_ads.txt"
+        const val CORE_THREATS_ASSET = "core_max_threats.txt"
 
         val FIRST_PARTY_MULTIPLEXED_AD_PACKAGES = setOf(
             "com.google.android.youtube",

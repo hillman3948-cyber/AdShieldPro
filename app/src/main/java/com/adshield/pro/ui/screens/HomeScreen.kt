@@ -93,6 +93,8 @@ import com.adshield.pro.domain.model.VpnRuntimeState
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
 import com.adshield.pro.ui.theme.AlertRed
+import com.adshield.pro.ui.theme.formatInteger
+import com.adshield.pro.ui.theme.formatPercent
 import com.adshield.pro.ui.theme.CyberCyan
 import com.adshield.pro.ui.theme.EmeraldGlow
 import com.adshield.pro.ui.theme.EmeraldPrimary
@@ -529,14 +531,14 @@ fun HomeScreen(
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Total DNS Queries",
-                value = java.text.NumberFormat.getIntegerInstance().format(displayTotal),
+                value = formatInteger(displayTotal),
                 subtitle = "Session: ${vpnState.sessionTotalQueries}",
                 accentColor = CyberCyan
             )
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Blocked Queries",
-                value = java.text.NumberFormat.getIntegerInstance().format(displayBlocked),
+                value = formatInteger(displayBlocked),
                 subtitle = "Ads & Trackers",
                 accentColor = AlertRed
             )
@@ -549,14 +551,14 @@ fun HomeScreen(
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Allowed Queries",
-                value = java.text.NumberFormat.getIntegerInstance().format(displayAllowed),
+                value = formatInteger(displayAllowed),
                 subtitle = "Cached: ${vpnState.sessionCachedQueries}",
                 accentColor = EmeraldPrimary
             )
             DashboardStatCard(
                 modifier = Modifier.weight(1f),
                 title = "Blocking Rate",
-                value = if (displayTotal > 0L) String.format(Locale.getDefault(), "%.1f%%", displayBlockPct) else "—",
+                value = if (displayTotal > 0L) formatPercent(displayBlockPct) else "—",
                 subtitle = if (displayTotal > 0L) "Average latency: ${vpnState.averageLatencyMs} ms" else "No DNS requests yet",
                 accentColor = WarningAmber
             )
