@@ -97,7 +97,7 @@ jobs:
           set -o pipefail
           tools/gradle-ci.sh .ci/lint.log :app:lintDebug
 
-      - name: Assert unit tests actually ran (19 cases)
+      - name: Assert unit tests actually ran (34 cases)
         run: |
           python3 - <<'EOF'
           import glob, sys, xml.etree.ElementTree as ET
@@ -115,7 +115,7 @@ jobs:
                   print('  PASS' if len(case.findall('failure')) == 0 and len(case.findall('error')) == 0
                         else '  FAIL', case.get('name'))
           print(f'tests={total} failures={failures} errors={errors} skipped={skipped}')
-          expected = 19
+          expected = 34
           if total != expected or failures or errors:
               sys.exit(f'expected {expected} passing tests, got total={total} failures={failures} errors={errors}')
           EOF

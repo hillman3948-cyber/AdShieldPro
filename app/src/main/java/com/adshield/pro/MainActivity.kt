@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
@@ -53,6 +54,7 @@ import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
+import com.adshield.pro.ui.screens.SecurityScreen
 import com.adshield.pro.ui.screens.SettingsScreen
 import com.adshield.pro.ui.theme.AdShieldProTheme
 import com.adshield.pro.ui.viewmodel.AdShieldViewModel
@@ -61,6 +63,7 @@ import dagger.hilt.android.AndroidEntryPoint
 enum class MainNavDestination(val label: String, val icon: ImageVector) {
     HOME("Home", Icons.Default.Home),
     AD_BLOCKER("Ad Blocker", Icons.Default.Shield),
+    SECURITY("Security", Icons.Default.Security),
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
     STATISTICS("Statistics", Icons.Default.Analytics),
     SETTINGS("Settings", Icons.Default.Settings)
@@ -110,6 +113,16 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val sandboxResult by viewModel.sandboxTestResult.collectAsStateWithLifecycle()
     val uiFeedback by viewModel.uiFeedbackMessage.collectAsStateWithLifecycle()
     val isCheckingForUpdates by viewModel.isCheckingForUpdates.collectAsStateWithLifecycle()
+
+    // Security Center state
+    val securityPosture by viewModel.securityPosture.collectAsStateWithLifecycle()
+    val malwareBlocks by viewModel.malwareBlocks.collectAsStateWithLifecycle()
+    val appAudits by viewModel.appAudits.collectAsStateWithLifecycle()
+    val isAuditingApps by viewModel.isAuditingApps.collectAsStateWithLifecycle()
+    val urlScanResult by viewModel.urlScanResult.collectAsStateWithLifecycle()
+    val fileScanResult by viewModel.fileScanResult.collectAsStateWithLifecycle()
+    val isScanningSecurity by viewModel.isScanningSecurity.collectAsStateWithLifecycle()
+    val securityHistory by viewModel.securityHistory.collectAsStateWithLifecycle()
 
     // Phone Optimizer & AI Smart Boost states
     val ramSnapshot by viewModel.ramSnapshot.collectAsStateWithLifecycle()
@@ -322,6 +335,21 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     onUpdateBrowserPrivacy = viewModel::updateBrowserPrivacySettings,
                     onAddCustomCosmeticSelector = viewModel::addCustomCosmeticSelector,
                     onShowFeedback = viewModel::showFeedback
+                )
+
+                MainNavDestination.SECURITY -> SecurityScreen(
+                    posture = securityPosture,
+                    vpnState = vpnState,
+                    malwareBlocks = malwareBlocks,
+                    appAudits = appAudits,
+                    isAuditingApps = isAuditingApps,
+                    urlScanResult = urlScanResult,
+                    fileScanResult = fileScanResult,
+                    isScanning = isScanningSecurity,
+                    scanHistory = securityHistory,
+                    onScanUrl = viewModel::scanUrl,
+                    onScanUri = viewModel::scanUri,
+                    onAuditApps = viewModel::auditInstalledApps
                 )
 
                 MainNavDestination.OPTIMIZER -> OptimizerScreen(

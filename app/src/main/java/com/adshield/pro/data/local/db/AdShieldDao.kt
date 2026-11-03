@@ -48,6 +48,9 @@ interface AdShieldDao {
     )
     fun observeSourceEffectiveness(): Flow<List<SourceEffectiveness>>
 
+    @Query("SELECT COUNT(*) FROM dns_logs WHERE is_blocked = 1 AND category = 'MALWARE'")
+    fun observeMalwareBlockCount(): Flow<Long>
+
     @Query("DELETE FROM dns_logs WHERE timestamp_epoch_ms < :cutoffEpochMs")
     suspend fun pruneLogsOlderThan(cutoffEpochMs: Long): Int
 

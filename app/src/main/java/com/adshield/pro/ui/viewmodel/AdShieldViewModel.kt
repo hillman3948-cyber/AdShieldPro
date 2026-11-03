@@ -2,6 +2,7 @@ package com.adshield.pro.ui.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,11 +38,19 @@ import com.adshield.pro.domain.model.SourceEffectiveness
 import com.adshield.pro.domain.model.StorageMetrics
 import com.adshield.pro.domain.model.TimeBucketStat
 import com.adshield.pro.domain.model.VpnRuntimeState
+import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.filter.FilterRuleEngine
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
 import com.adshield.pro.engine.optimizer.SystemOptimizerEngine
+import com.adshield.pro.engine.security.AppRiskAuditor
+import com.adshield.pro.engine.security.ScanKind
+import com.adshield.pro.engine.security.SecurityEngine
+import com.adshield.pro.engine.security.SecurityLevel
+import com.adshield.pro.engine.security.SecurityPosture
+import com.adshield.pro.engine.security.SecurityScanRecord
+import com.adshield.pro.engine.security.UrlThreatScanner
 import com.adshield.pro.service.AdShieldVpnService
 import com.adshield.pro.ui.UpdatePromptActivity
 import com.adshield.pro.update.GitHubReleaseClient
@@ -60,6 +69,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 
 enum class StatsChartRange(val label: String, val days: Int) {
@@ -76,7 +86,8 @@ class AdShieldViewModel @Inject constructor(
     private val filterRuleEngine: FilterRuleEngine,
     private val upstreamDnsResolver: UpstreamDnsResolver,
     val browserContentBlocker: BrowserContentBlocker,
-    private val optimizerEngine: SystemOptimizerEngine
+    private val optimizerEngine: SystemOptimizerEngine,
+    private val securityEngine: SecurityEngine
 ) : ViewModel() {
 
     val vpnState: StateFlow<VpnRuntimeState> = repository.vpnRuntimeState
@@ -182,6 +193,13 @@ class AdShieldViewModel @Inject constructor(
         viewModelScope.launch {
             customRules.collect {
                 refreshRuleConflicts()
+            }
+        }
+        // Security Center: keep the malware-block counter and protection score live.
+        viewModelScope.launch {
+            repository.malwareBlocksFlow.collect { count ->
+                _malwareBlocks.value = count
+                refreshSecurityPosture()
             }
         }
         // Initial Junk quick scan & periodic lightweight telemetry refresh while UI is open
@@ -737,5 +755,128 @@ class AdShieldViewModel @Inject constructor(
             }
             appContext.startService(intent)
         }
+    }
+
+    // --- Security Center (on-device anti-virus / anti-phishing) ---
+
+    private val _malwareBlocks = MutableStateFlow(0L)
+    val malwareBlocks: StateFlow<Long> = _malwareBlocks.asStateFlow()
+
+    private val _securityPosture = MutableStateFlow(
+        SecurityPosture(
+            protectionScore = 0,
+            highRiskApps = 0,
+            threatSignatures = 0,
+            webProtectionActive = false
+        )
+    )
+    val securityPosture: StateFlow<SecurityPosture> = _securityPosture.asStateFlow()
+
+    private val _appAudits = MutableStateFlow<List<AppRiskAuditor.AppRiskAudit>>(emptyList())
+    val appAudits: StateFlow<List<AppRiskAuditor.AppRiskAudit>> = _appAudits.asStateFlow()
+
+    private val _isAuditingApps = MutableStateFlow(false)
+    val isAuditingApps: StateFlow<Boolean> = _isAuditingApps.asStateFlow()
+
+    private val _urlScanResult = MutableStateFlow<UrlThreatScanner.UrlVerdict?>(null)
+    val urlScanResult: StateFlow<UrlThreatScanner.UrlVerdict?> = _urlScanResult.asStateFlow()
+
+    private val _fileScanResult = MutableStateFlow<SecurityScanRecord?>(null)
+    val fileScanResult: StateFlow<SecurityScanRecord?> = _fileScanResult.asStateFlow()
+
+    private val _isScanningSecurity = MutableStateFlow(false)
+    val isScanningSecurity: StateFlow<Boolean> = _isScanningSecurity.asStateFlow()
+
+    private val _securityHistory = MutableStateFlow<List<SecurityScanRecord>>(emptyList())
+    val securityHistory: StateFlow<List<SecurityScanRecord>> = _securityHistory.asStateFlow()
+
+    fun scanUrl(rawUrl: String) {
+        val trimmed = rawUrl.trim()
+        if (trimmed.isEmpty()) {
+            showFeedback("Enter a link to scan.")
+            return
+        }
+        viewModelScope.launch {
+            _isScanningSecurity.value = true
+            val verdict = securityEngine.scanUrl(trimmed)
+            _urlScanResult.value = verdict
+            val record = SecurityScanRecord(
+                id = System.currentTimeMillis(),
+                kind = ScanKind.URL,
+                target = trimmed.take(120),
+                threatLevel = when (verdict.threatLevel) {
+                    UrlThreatScanner.ThreatLevel.DANGEROUS -> SecurityLevel.DANGEROUS
+                    UrlThreatScanner.ThreatLevel.SUSPICIOUS -> SecurityLevel.SUSPICIOUS
+                    else -> SecurityLevel.CLEAN
+                },
+                riskScore = verdict.riskScore,
+                threatName = verdict.findings.firstOrNull(),
+                findings = verdict.findings,
+                recommendation = verdict.recommendation,
+                timestampEpochMs = System.currentTimeMillis()
+            )
+            _securityHistory.value = (listOf(record) + _securityHistory.value).take(30)
+            _isScanningSecurity.value = false
+        }
+    }
+
+    fun scanFile(file: File) {
+        viewModelScope.launch {
+            _isScanningSecurity.value = true
+            val record = securityEngine.scanFile(file)
+            _fileScanResult.value = record
+            _securityHistory.value = (listOf(record) + _securityHistory.value).take(30)
+            refreshSecurityPosture()
+            _isScanningSecurity.value = false
+            showFeedback(scanFeedback(record, record.target))
+        }
+    }
+
+    fun scanUri(uri: Uri, displayName: String) {
+        viewModelScope.launch {
+            _isScanningSecurity.value = true
+            val record = securityEngine.scanUriContent(uri, displayName)
+            if (record != null) {
+                _fileScanResult.value = record
+                _securityHistory.value = (listOf(record) + _securityHistory.value).take(30)
+                showFeedback(scanFeedback(record, displayName))
+            } else {
+                showFeedback("Could not read the selected file for scanning.")
+            }
+            _isScanningSecurity.value = false
+        }
+    }
+
+    fun auditInstalledApps() {
+        if (_isAuditingApps.value) return
+        viewModelScope.launch {
+            _isAuditingApps.value = true
+            val audits = securityEngine.auditInstalledApps()
+            _appAudits.value = audits
+            val flagged = audits.count { it.riskLevel == AppRiskAuditor.RiskLevel.HIGH }
+            refreshSecurityPosture(highRisk = flagged)
+            _isAuditingApps.value = false
+            showFeedback(
+                if (flagged > 0) "Full app audit complete: $flagged high-risk app(s) found — review them in Security."
+                else "Full app audit complete: no high-risk apps detected."
+            )
+        }
+    }
+
+    fun refreshSecurityPosture(highRisk: Int? = null) {
+        val riskApps = highRisk ?: _securityPosture.value.highRiskApps
+        val vpnActive = repository.vpnRuntimeState.value.status == VpnStatus.CONNECTED
+        val signatures = securityEngine.activeThreatSignatureCount()
+        _securityPosture.value = SecurityEngine.buildSecurityPosture(
+            highRiskApps = riskApps,
+            threatSignatures = signatures,
+            vpnActive = vpnActive
+        )
+    }
+
+    private fun scanFeedback(record: SecurityScanRecord, label: String): String = when (record.threatLevel) {
+        SecurityLevel.DANGEROUS -> "THREAT: ${record.threatName ?: label} — do not open or install."
+        SecurityLevel.SUSPICIOUS -> "Suspicious file: ${record.findings.firstOrNull() ?: "risk indicators found"}."
+        else -> "File is clean: no signatures or structural threats found."
     }
 }
