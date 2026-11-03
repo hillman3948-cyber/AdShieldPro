@@ -1,0 +1,33 @@
+{
+ "description": "Popular services that must never be auto-blocked by a candidate detection model.",
+ "domains": [
+  "google.com",
+  "accounts.google.com",
+  "play.googleapis.com",
+  "youtube.com",
+  "gstatic.com",
+  "googleapis.com",
+  "microsoft.com",
+  "login.microsoftonline.com",
+  "apple.com",
+  "icloud.com",
+  "github.com",
+  "cloudflare.com",
+  "wikipedia.org",
+  "paypal.com",
+  "amazon.com",
+  "facebook.com",
+  "whatsapp.com",
+  "signal.org",
+  "example.com",
+  "bpi.com.ph",
+  "gcash.com",
+  "netflix.com",
+  "spotify.com",
+  "zoom.us",
+  "slack.com",
+  "dropbox.com",
+  "adobe.com",
+  "android.com"
+ ]
+}

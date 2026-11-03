@@ -1,0 +1,3850 @@
+{
+ "schema": 1,
+ "created_at": "2026-11-03T07:58:19Z",
+ "description": "Labeled validation corpus. 'active-feed' and 'curated-allowlist' items reflect live indicators; 'held-out-*' items are real IOCs excluded from the bundled feed to measure generalization; 'synthetic-typosquat-fixture' items are clearly labelled test fixtures, NOT live user telemetry. Verified user feedback labels from the local database are added at evaluation time.",
+ "items": [
+  {
+   "domain": "alpineconstructioninc.ca",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cdnnet-whatsapp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "finlab3-deserunt26.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "oxelvian.click",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "skatetimprojects.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "studivia.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vudul.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rhevoncrest.click",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "hausgerat.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kammerjaeger-fischer.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "workinlqxflow.digital",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ankushaedna.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "goodbyeeyesight.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "hellogroupbd.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "finzy4-unde87.sbs",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "pzbhhc.dermals.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "spirebondtron.live",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "jasisgiftshop.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "delivery-horiental.site",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "discordtrust.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cdn.falkloo.cloud",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "nellinteresting.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "aldiuk-market.skylinebooth1.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "dsquared2de.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "w9cvyte89.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "myspotify.help",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "indexeslaughter.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "smartaicapital.pro",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "mozoshop.myshopify.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "odilehomes.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kengraetz.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "degussa-goldgmbh.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "74364kjhuirtyurtuyghrghjfhbfkgreguwebhjrkhgj478674.s3.us-east-1.amazonaws.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "lautsprechersale.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "globaldiscovery.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "bogussleep.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "andal.at",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "de.xynapay.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "btcimediatv96.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "pncontainerlogistik-gmbh.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "hunter-romania.ro",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "homeandtell.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "filibusterdump.info",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "magicwandshop.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "dogalmedical.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "knovazoh.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "phuolhogmxin.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vivobarefootosterreich.at",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "market24prime.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tritravlife.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "coronaklartext.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "qwgruwrtcyxft.store",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "strappingsgmmlazings.info",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "sterivo.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "g8-whatsapp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "webmail-authsecur.kukunochi.cfd",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "glowera.at",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "handmadestoree.cc",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "fintonex.live",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "office-beijing.com.cn",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "spartantool.us",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "fullrushmode.digital",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "frisco-sale.sbs",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "wave-mentor.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "stib-mivb.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rytewerkone.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "apartmany-a-studia-lucky.stayreserveview.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "phonekong.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "bradfordcutlery.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tams-excavating.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tellidex.io",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rtqdgqbttqo.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "zoeyloves.store",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tjosjuihqnxke.online",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "facejonax.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "teieaukuyw.wiki",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "www.crypto2.bnd-group.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "smartklick.biz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "appleads-trk.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "sumeriavgv.digital",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "yd5eoa.sbs",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "simplecoffee.ch",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "appimg-whatsapp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "djmfvliilkkdl.site",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vetectvh.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "6a7eac2034.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "novafin.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ohchat.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "uzaycncmakina.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "findedstore.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cyclingmavic.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "weaveworkingheaviness.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vchllvizn.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "einv.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "marketskillz.co",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "frostedhorizonpath.digital",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "wascontainer.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "merlin-apotheke.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "aldi.applivora.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "media-deals24.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "mullvad.website",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tonxis19.amebaownd.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "alprosolarisdental.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "runtheworld.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "lumirbrin.cyou",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "redflag-check.ru",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "sonibaconsultant.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "nhkja.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "lems.com.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "deliverycandy.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "znmyoj.dermals.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "orileda.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cups-stanley.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kruegers-hausgeraete.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rippnksachy.info",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ielaf.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "netkava.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "brasstrack.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cionzxusdt.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "casashopsale.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "intraspeciesoverskaddting.info",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rabatysale.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "beautykoopje.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "recommendationbredshrimp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "teleyoutho.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "c1.is",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "gasolinaph.cc",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "larendo-store.myshopify.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "dodgers.co.jp",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "aweprotostatic.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "btc-vaultro.live",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kirchner-kollegen.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "earn-matrixpro-system.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "usaoutdoordecor.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "frameneoflomaxplatform.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "psychotherapiehaarlem.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "system-u.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "jewelrydelivery.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "seaemo.re",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "jordanljubljana.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "assisthaboub.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "teleteachp.click",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "pwbhqxoulbmuy.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "cirexouvarin.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "peachyxchic.co",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kavysveta.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "meindl-france.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "librarygooseintoxicate.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "poplardealtcarrying.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rockstareats.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "btcvaultron385.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "nat-s.co",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tktxde.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "eiffage-c3v-gm.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "birchwealthholm.live",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "verwaltung-gmbh.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "machinemerrimentresent.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "whitedescription.pro",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "finapactglobal.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "blue-softs.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "mkpool.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "bitaiprofit.live",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "perahuzurevi.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "valoreprime.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "autoconexion.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "handwerkzeugshop.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "munitax-group.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "jh-machines-nord.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "appscracker.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "haushaltmarkt.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "grandchildsaint.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "adidasspezials.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "wonderealy.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "virtualdiscuss.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rbdsz.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "flydealsportal.online",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "web-url.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "garden-machines-shop.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kkh3e6ylwt.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "workshopskinshowcase.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "bf46dd419c.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "easyconclusions.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "sgvt.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "iid21-usks.my.id",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "tejegzloav.click",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "allegro.dk8xyf28ma72.cyou",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "xd456.xyz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "account-security-information.cafebilal.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "pilatesvallarat.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "bravenfundmere.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "digitalfuturereport.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "590578zugbr8.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "mirellavilla.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "stationspin.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vkonakte.zzz.com.ua",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "rovantar.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "xn--mntig-live-q5a.ch",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "hellenicrecord.space",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "buyheatcore.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ukcedarmeadowpark.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "apexflora.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "merrylane.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "wereldparts.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "heilchannel.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "de-zahlung.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "aeranorie.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "face-vip.ujm.pl",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "gdrsolicitors.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "brickwillow.eu",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "allbirds.com.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ninjakitchenllc.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "classiquesalon1.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "werkgeist.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "kernkapithal.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "office.net.nz",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ffkzp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ursime.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "hantaddvirus.info",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "erkugo.ru",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "gartenkompass.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "alphaletedeutschland.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "edealsclub.net",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "yardigen.store",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "coin-birds.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "segleruhren.de",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ledgerdevicescheck.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "vilora.nl",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "xoven-aisoft.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "casino-posido.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "americancandystores.co.uk",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "ae788.bet",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "stnrjwub.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "eobysuugjotmw.space",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "k2e9u7.ukclugv21zero4vfwq6tz64wpue.cyou",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "gaiabeautyproducts.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "jundeki.shop",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "applestare.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "brv8x8.talagrean.gu.cc",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "starflix-streaming.fr",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "scut.dmiloppsservizoiarubapagamentosucreti.club",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "active-feed",
+   "synthetic": false
+  },
+  {
+   "domain": "dronedeliverywatch.info",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "telecorexo.wiki",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "faze47.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "cq13541.tw1.ru",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "securisesolde.fr",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "lehuuhieu.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "secure.mews2ruck.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "lurotn0de.org",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "pl-ogloszezenia19281991.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "netflix.com.mw",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "scandorahome.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "h148.cn",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "kingmaker-casino.fr",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "bravo-flowdex-engine.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "trackingae.guru",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "bitechchain.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "filmyiseriale24.pl",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "claro-net-emta.aceite.fbiz.com.br",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "rdhrse.qpon",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "fastburnextreme.pl",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "poland-payhub5.eu.cc",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "id575916.click",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "zkbridge.finance",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "allegrolokalnie.produkt-2026-50342.sbs",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "acieswealth.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "msc-cunds.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "nq33z.dorivo.lat",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "xarneloq.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "startekstil.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "anhaengerverleih-mania.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "letabli-ai.live",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "wunderzeit-baby.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "texetmxqpn.help",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "epargne-whisky.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "joograika.xyz",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "starlitcasino.fr",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "peterseidelbooks.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "ezmynhelkwhph.online",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "barbaragurgel.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "ochronaprzedkorozja.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "448868.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "pnw.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "seedandcircle.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "gehack.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "laptop-akkus.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "posteboret.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "clearglov.digital",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "deathcalculator.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "it-emailsettings-support.info",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "vikliv.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "skvaldrevotrade.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "consulting-app.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "cliffsfundmere-ai.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "gopamoja.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "ai-kpn.nl",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "vacamuertainvestment.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "potatoeshandgrip.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "namuvera.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "new-objective6432.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "yyljflz2w2w.6kpbevjpm9ogxz6gg9bjb.cyou",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "szflw.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "psbraga.pt",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "brillapoint.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "olmaa.info",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "xalvorinth.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "noii-dating.top",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "costrocket.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "allegro.pl-oferta84893.cfd",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "rappeplast.click",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "dogrudigital.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "pl-oferta86424.click",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "liste-blanche-google.fyi",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "idn00148.tigoals229.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "wildwaveslogistic.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "live-ledong-pc.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "pharmagiant.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "frequentlyadulatory.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "freemicrosoftpoints.cc",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "storagedelivery.xyz",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "wertovia.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "professionalstudios.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "trubexo.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "ca2865fb41.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "jack-wolfskinpoland.pl",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "luloleu.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "unigetui.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "foodtolerance.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "modestbyt.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "xploitz.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "verseexposurethanksgiving.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "apyeth.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "immediatefund.pro",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "slackastonishing.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "sakunari.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "d24502rd02eo9t.cloudfront.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "membership-spotify-premium.me",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "arcflowbase.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "formoffice.xyz",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "match-wanqiu-live.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "bopyq.myhillcountrygrass.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_tif_mini",
+   "synthetic": false
+  },
+  {
+   "domain": "laviza.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "sultanuhren.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "gartenschritte.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "owrock.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "chourok.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "beautyonthebrink.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "gaborschuhe.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "heizungselement.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "nsk-gmbh.myshopify.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "camcordershops.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "re-hartmann.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "porte-monnaie.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "hannes-mariajuwelier.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "eddiebauershop.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "flawlessshoes.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "carnoxshop.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "coreglp.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "caterpillar-nederland.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "dirtchurchradio.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "digipoint.org",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "pauseimbiergarten.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "handlemylife.info",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "gymiva.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "dimprice.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "oreahome.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "huntingfishingsale.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "immediate-bitcoin.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "themdbuilding.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "utahforkliftcompanyltd.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "mobel-wahls.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "realzonline.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "coinmindz.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "torbeschlagestobgriffe.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "mimicoffee.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "westri.top",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "europa-rk.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "fashionvila.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "aloyogadeutschlande.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "hobbybude.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "at.esrlive.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "otha.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "baywovenco.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "trikotfc.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "alpstep.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "filamentmarkt.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "handtoolsrich.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "eunits.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "musiqueonline.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "helvetus.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "fahrradhandel-krause.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "bigstoregaming.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "techniklager.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "giovannigruppe.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "ss888.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "meindlosterreich.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "morpilotsales.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "lottobulgaria.org",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "sopheria.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "premiumpricepills24hr.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "watch-fakes.to",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "kameratraum.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "bootsprofi.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "eurorxdrugs.cc",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "pharmuno.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "supermarkteonline.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "aghhome.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "maerkischeskinderdorf.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "bms-promaschinen.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "purrkit.shop",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "dogsdreamaustria.at",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "foamr.ch",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "heatingcontainers.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "digixio.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "vmhausgerate.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "web.tyrioncapital.live",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "packmanvape.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "stake-online24.online",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "4rxofficial.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "woin8.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "onlinesupport24.top",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "oppermann-versand.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "birnerforsttechnik.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "spielzeugautowelt.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "solovairshop.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "nexo-ki.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "loberon-official.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "robloxasia.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "footjoyjapan.net",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "dieholzmoebelmacher.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "klima-zuschuss-2026.cc",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "desportartikelrabatt.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "ecxtrade.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "danggood.de",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "spring4sale.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "semipool.store",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "gfjnp.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "tastefulsl.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "pierone-de.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "marivaro.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "kanqiuoneeighteight-online.com",
+   "label": "malicious",
+   "split": "holdout",
+   "origin": "held-out-hagezi_fake_shops",
+   "synthetic": false
+  },
+  {
+   "domain": "accounts.google.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "adobe.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "amazon.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "android.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "apple.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "bankofamerica.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "bpi.com.ph",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "captive.apple.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "chase.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "cisa.gov",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "clients3.google.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "cloudflare.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "connectivitycheck.gstatic.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "dropbox.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "example.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "facebook.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "gcash.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "github.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "gmail.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "google.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "googleapis.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "googleusercontent.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "gov.ph",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "gstatic.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "iana.org",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "icloud.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "instagram.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "live.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "localhost",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "login.microsoftonline.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "microsoft.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "mozilla.org",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "netflix.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "nist.gov",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "office.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "outlook.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "paypal.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "play.google.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "play.googleapis.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "proton.me",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "signal.org",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "slack.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "spotify.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "support.apple.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "wellsfargo.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "whatsapp.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "who.int",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "wikipedia.org",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "www.google.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "www.youtube.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "youtube.com",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "zoom.us",
+   "label": "benign",
+   "split": "validation",
+   "origin": "curated-allowlist",
+   "synthetic": false
+  },
+  {
+   "domain": "0ffice.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "0utlook.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "1ana.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "1ive.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "1nstagram.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "acc0unts.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "ad0be.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "amaz0n.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "andr0id.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "app1e.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "bank0famerica.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "bp1.com.ph",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "c0nnectivitycheck.gstatic.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "c1ients3.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "c1sa.gov",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "captiv3.apple.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "chas3.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "cl0udflare.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "dr0pbox.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "examp1e.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "faceb0ok.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "g0ogle.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "g0ogleapis.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "g0ogleusercontent.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "g0v.ph",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "g1thub.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "gc4sh.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "gmai1.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "gstat1c.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "icl0ud.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "l0gin.microsoftonline.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "m0zilla.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "micr0soft.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "n1st.gov",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "netf1ix.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "p1ay.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "p1ay.googleapis.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "paypa1.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "pr0ton.me",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "s1ack.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "signa1.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "sp0tify.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "supp0rt.apple.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wellsfarg0.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wh0.int",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wh4tsapp.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wikip3dia.org",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-login.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-login.youtube.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-secure.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-secure.youtube.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-verify.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "www-verify.youtube.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wwwupdate.google.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "wwwupdate.youtube.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "y0utube.com",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  },
+  {
+   "domain": "z0om.us",
+   "label": "malicious",
+   "split": "validation",
+   "origin": "synthetic-typosquat-fixture",
+   "synthetic": true
+  }
+ ]
+}
