@@ -9,6 +9,7 @@ import com.adshield.pro.engine.battery.BatterySession
 import com.adshield.pro.engine.battery.BatteryTelemetry
 import com.adshield.pro.engine.platform.DeviceCompatibility
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
