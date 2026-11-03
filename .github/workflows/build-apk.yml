@@ -7,6 +7,7 @@ on:
       - arena/b1d244c1-adshieldpro
     paths-ignore:
       - 'build-logs/**'
+      - 'apk/**'
 
 jobs:
   build:
@@ -70,3 +71,17 @@ jobs:
           name: adshield-aether-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      - name: Publish APK to branch for delivery
+        if: success() && github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p apk
+          APK="$(ls app/build/outputs/apk/debug/*.apk | head -1)"
+          cp "$APK" apk/app-debug.apk
+          sha256sum apk/app-debug.apk | tee apk/app-debug.apk.sha256
+          ls -lh apk/app-debug.apk
+          git config user.name "Arena APK Builder"
+          git config user.email "agent@arena.ai"
+          git add -f apk/app-debug.apk apk/app-debug.apk.sha256
+          git commit -m "Deliver debug APK [skip ci]" || exit 0
+          git push origin HEAD:arena/b1d244c1-adshieldpro
