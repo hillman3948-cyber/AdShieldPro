@@ -30,6 +30,10 @@ val WarningAmber = Color(0xFFF59E0B)
 val CyberCyan = Color(0xFF06B6D4)
 val PurpleAccent = Color(0xFF8B5CF6)
 
+// Security Center accents (phishing / threat-scan surfaces)
+val ElectricBlue = Color(0xFF2E7DFF)
+val SkyBlueGlow = Color(0xFF5AA2FF)
+
 val TextPrimaryDark = Color(0xFFF8FAFC)
 val TextSecondaryDark = Color(0xFF94A3B8)
 

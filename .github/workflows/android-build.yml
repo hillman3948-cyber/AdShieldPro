@@ -58,6 +58,11 @@ jobs:
           chmod +x gradlew tools/gradle-ci.sh
           ./gradlew --version 2>&1 | tee .ci/gradle-version.log
 
+      - name: Verify generated docs match code (capability matrix)
+        run: |
+          chmod +x tools/generate_capability_matrix.py
+          python3 tools/generate_capability_matrix.py --check
+
       - name: Compile Kotlin (fails fast on the AGP 9 / Kotlin 2.4 migration)
         run: |
           set -o pipefail
@@ -90,6 +95,11 @@ jobs:
       - name: JVM unit tests
         run: |
           set -o pipefail
+          # Debug aid: the registry test reads source files from disk, so the working directory
+          # and surround of the test JVM must be visible in the mirrored log.
+          pwd
+          ls -a
+          ls -a app/src/main/java/com/adshield/pro | head -5
           tools/gradle-ci.sh .ci/test.log :app:testDebugUnitTest
 
       - name: Android lint
@@ -97,7 +107,7 @@ jobs:
           set -o pipefail
           tools/gradle-ci.sh .ci/lint.log :app:lintDebug
 
-      - name: Assert unit tests actually ran (19 cases)
+      - name: Assert unit tests actually ran (68 cases)
         run: |
           python3 - <<'EOF'
           import glob, sys, xml.etree.ElementTree as ET
@@ -115,7 +125,7 @@ jobs:
                   print('  PASS' if len(case.findall('failure')) == 0 and len(case.findall('error')) == 0
                         else '  FAIL', case.get('name'))
           print(f'tests={total} failures={failures} errors={errors} skipped={skipped}')
-          expected = 19
+          expected = 68
           if total != expected or failures or errors:
               sys.exit(f'expected {expected} passing tests, got total={total} failures={failures} errors={errors}')
           EOF
@@ -131,6 +141,12 @@ jobs:
           ls -l "$APK"
           sha256sum "$APK"
 
+      # The log-mirror step below commits .ci/ into the branch, so the checkout must never
+      # carry those artifacts (and must not fail when Gradle did not get far enough to write them).
+      - name: Clean CI log mirrors before mirroring
+        if: failure()
+        run: rm -rf .ci-mirror || true
+
       - name: Surface Gradle errors as annotations
         if: failure()
         run: |
@@ -142,7 +158,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: adshield-pro-2.3.0-debug-apk
+          name: adshield-pro-2.4.0-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 

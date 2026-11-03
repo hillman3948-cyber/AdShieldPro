@@ -15,15 +15,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.BackHandler
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -43,7 +52,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,8 +64,11 @@ import com.adshield.pro.domain.model.RuleMatchType
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
+import com.adshield.pro.ui.screens.BatteryScreen
+import com.adshield.pro.ui.screens.CapabilitiesScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
+import com.adshield.pro.ui.screens.SecurityScreen
 import com.adshield.pro.ui.screens.SettingsScreen
 import com.adshield.pro.ui.theme.AdShieldProTheme
 import com.adshield.pro.ui.viewmodel.AdShieldViewModel
@@ -61,9 +77,12 @@ import dagger.hilt.android.AndroidEntryPoint
 enum class MainNavDestination(val label: String, val icon: ImageVector) {
     HOME("Home", Icons.Default.Home),
     AD_BLOCKER("Ad Blocker", Icons.Default.Shield),
+    SECURITY("Security", Icons.Default.Security),
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
+    BATTERY("Battery", Icons.Default.BatteryChargingFull),
     STATISTICS("Statistics", Icons.Default.Analytics),
-    SETTINGS("Settings", Icons.Default.Settings)
+    SETTINGS("Settings", Icons.Default.Settings),
+    STATUS("Status", Icons.Default.VerifiedUser)
 }
 
 @AndroidEntryPoint
@@ -110,6 +129,28 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val sandboxResult by viewModel.sandboxTestResult.collectAsStateWithLifecycle()
     val uiFeedback by viewModel.uiFeedbackMessage.collectAsStateWithLifecycle()
     val isCheckingForUpdates by viewModel.isCheckingForUpdates.collectAsStateWithLifecycle()
+
+    // Security Center state
+    val securityPosture by viewModel.securityPosture.collectAsStateWithLifecycle()
+    val malwareBlocks by viewModel.malwareBlocks.collectAsStateWithLifecycle()
+    val appAudits by viewModel.appAudits.collectAsStateWithLifecycle()
+    val isAuditingApps by viewModel.isAuditingApps.collectAsStateWithLifecycle()
+    val urlScanResult by viewModel.urlScanResult.collectAsStateWithLifecycle()
+    val fileScanResult by viewModel.fileScanResult.collectAsStateWithLifecycle()
+    val isScanningSecurity by viewModel.isScanningSecurity.collectAsStateWithLifecycle()
+    val securityHistory by viewModel.securityHistory.collectAsStateWithLifecycle()
+
+    // Battery Intelligence state
+    val batteryTelemetry by viewModel.batteryTelemetry.collectAsStateWithLifecycle()
+    val batteryHistory by viewModel.batteryHistory.collectAsStateWithLifecycle()
+    val batterySessions by viewModel.batterySessions.collectAsStateWithLifecycle()
+    val batteryDiagnostics by viewModel.batteryDiagnostics.collectAsStateWithLifecycle()
+    val batteryLastDiagnosticAtMs by viewModel.batteryLastDiagnosticAtMs.collectAsStateWithLifecycle()
+    val isDiagnosingBattery by viewModel.isDiagnosingBattery.collectAsStateWithLifecycle()
+    val batteryHealthScore by viewModel.batteryHealthScore.collectAsStateWithLifecycle()
+    val batteryMinutesToFull by viewModel.batteryMinutesToFull.collectAsStateWithLifecycle()
+    val batteryMinutesToEmpty by viewModel.batteryMinutesToEmpty.collectAsStateWithLifecycle()
+    val batteryChargeRate by viewModel.batteryChargeRate.collectAsStateWithLifecycle()
 
     // Phone Optimizer & AI Smart Boost states
     val ramSnapshot by viewModel.ramSnapshot.collectAsStateWithLifecycle()
@@ -235,27 +276,40 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             if (!showAboutScreen) {
+                // Seven destinations do not fit one NavigationBar row on a phone (nor on a
+                // tablet in landscape), so the bar becomes a scrollable row of equal-width
+                // items sized for the narrowest device and widened for tablets/landscape.
+                val barItemWidth = adaptiveBarItemWidth()
                 NavigationBar {
-                    MainNavDestination.entries.forEach { dest ->
-                        NavigationBarItem(
-                            selected = currentTab == dest,
-                            onClick = { currentTab = dest },
-                            icon = {
-                                Icon(
-                                    imageVector = dest.icon,
-                                    contentDescription = dest.label
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = dest.label,
-                                    fontSize = 11.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            },
-                            alwaysShowLabel = true
-                        )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        MainNavDestination.entries.forEach { dest ->
+                            NavigationBarItem(
+                                modifier = Modifier.width(barItemWidth),
+                                selected = currentTab == dest,
+                                onClick = { currentTab = dest },
+                                icon = {
+                                    Icon(
+                                        imageVector = dest.icon,
+                                        contentDescription = dest.label
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = dest.label,
+                                        fontSize = if (barItemWidth < 64.dp) 10.sp else 11.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        textAlign = TextAlign.Center
+                                    )
+                                },
+                                alwaysShowLabel = true
+                            )
+                        }
                     }
                 }
             }
@@ -322,6 +376,39 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     onUpdateBrowserPrivacy = viewModel::updateBrowserPrivacySettings,
                     onAddCustomCosmeticSelector = viewModel::addCustomCosmeticSelector,
                     onShowFeedback = viewModel::showFeedback
+                )
+
+                MainNavDestination.STATUS -> CapabilitiesScreen()
+
+                MainNavDestination.BATTERY -> BatteryScreen(
+                    telemetry = batteryTelemetry,
+                    diagnostics = batteryDiagnostics,
+                    sessions = batterySessions,
+                    history = batteryHistory,
+                    healthScore = batteryHealthScore,
+                    chargeRatePercentPerHour = batteryChargeRate,
+                    minutesToFull = batteryMinutesToFull,
+                    minutesToEmpty = batteryMinutesToEmpty,
+                    isDiagnosing = isDiagnosingBattery,
+                    lastDiagnosticAtMs = batteryLastDiagnosticAtMs,
+                    onDetect = viewModel::runBatteryDiagnosis,
+                    onRefresh = viewModel::refreshBatteryReadings,
+                    onClearSessions = viewModel::clearBatterySessions
+                )
+
+                MainNavDestination.SECURITY -> SecurityScreen(
+                    posture = securityPosture,
+                    vpnState = vpnState,
+                    malwareBlocks = malwareBlocks,
+                    appAudits = appAudits,
+                    isAuditingApps = isAuditingApps,
+                    urlScanResult = urlScanResult,
+                    fileScanResult = fileScanResult,
+                    isScanning = isScanningSecurity,
+                    scanHistory = securityHistory,
+                    onScanUrl = viewModel::scanUrl,
+                    onScanUri = viewModel::scanUri,
+                    onAuditApps = viewModel::auditInstalledApps
                 )
 
                 MainNavDestination.OPTIMIZER -> OptimizerScreen(
@@ -395,4 +482,16 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
             }
         }
     }
+}
+
+/**
+ * Width of one bottom-bar item. Phones get a compact item so all seven destinations fit without
+ * clipping; from 480dp (tablets, unfolded foldables) and larger items grow up to 96dp.
+ */
+@Composable
+private fun adaptiveBarItemWidth(): Dp {
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val count = MainNavDestination.entries.size.coerceAtLeast(1)
+    val available = (screenWidthDp - 8) / count
+    return available.coerceIn(52, 96).dp
 }
