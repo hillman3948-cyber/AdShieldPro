@@ -44,7 +44,7 @@ import com.adshield.pro.R
 import com.adshield.pro.ui.theme.EmeraldGlow
 import com.adshield.pro.ui.theme.EmeraldPrimary
 
-private const val REPOSITORY_URL = "https://github.com/hillman3948-cyber/AdShieldPro"
+private const val REPOSITORY_URL = "https://github.com/yawiyuson231-oss/AdShieldPro"
 
 @Composable
 fun AboutScreen(onBack: () -> Unit) {

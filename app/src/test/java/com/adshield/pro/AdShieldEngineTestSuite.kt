@@ -18,6 +18,7 @@ import com.adshield.pro.engine.dns.DnsPacketCodec
 import com.adshield.pro.engine.dns.IpPacketFraming
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.filter.FilterRuleEngine
+import com.adshield.pro.update.GitHubReleaseClient
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -574,5 +575,25 @@ class AdShieldEngineTestSuite {
         } finally {
             tempDir.deleteRecursively()
         }
+    }
+
+    @Test
+    fun testUpdateAssetSelection_prefersReleaseApkAndSkipsDebugAndSplitApks() {
+        // A release page can list a debug build, split APKs or both before the real APK.
+        val assets = listOf(
+            "app-debug.apk",
+            "AdShieldPro-2.3.0-arm64-v8a-release.apk",
+            "AdShieldPro-2.3.0-release.apk",
+            "AdShieldPro-2.3.0-release.apk.sha256"
+        )
+        val installable = assets.filter { GitHubReleaseClient.isInstallableReleaseApk(it) }
+        assertEquals(listOf("AdShieldPro-2.3.0-release.apk"), installable)
+
+        assertTrue(GitHubReleaseClient.isInstallableReleaseApk("AdShieldPro-2.3.0.apk"))
+        assertTrue(GitHubReleaseClient.isInstallableReleaseApk("adshield-pro-universal-release.APK"))
+        assertFalse(GitHubReleaseClient.isInstallableReleaseApk("app-debug.apk"))
+        assertFalse(GitHubReleaseClient.isInstallableReleaseApk("AdShieldPro-x86_64-release.apk"))
+        assertFalse(GitHubReleaseClient.isInstallableReleaseApk("AdShieldPro-2.3.0-release.apk.sha256"))
+        assertFalse(GitHubReleaseClient.isInstallableReleaseApk("checksums.txt"))
     }
 }

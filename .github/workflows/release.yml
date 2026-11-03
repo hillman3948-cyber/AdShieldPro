@@ -1,0 +1,233 @@
+name: Release APK
+
+# Publishes a signed, R8-minified AdShield Pro build to GitHub Releases.
+#
+# Two entry points:
+#   1. Manual: "Run workflow" on this branch (no tag needed). Reads the version from
+#      app/build.gradle.kts and publishes tag v<versionName>, skipping if it already exists.
+#   2. Tag push: push a tag like v2.3.1 and the same pipeline builds and publishes it.
+#
+# The signing key is generated once and then kept (see "Signing key" below), so every future
+# release can upgrade-install over the previous one.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (default: v<versionName> from app/build.gradle.kts)'
+        required: false
+        default: ''
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Install Android SDK
+        run: |
+          SDKMGR="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMGR" ]; then SDKMGR=sdkmanager; fi
+          yes | "$SDKMGR" --licenses > /dev/null 2>&1 || true
+          for pkg in "platforms;android-37.0" "build-tools;36.0.0" "platform-tools"; do
+            echo "--- $pkg"
+            "$SDKMGR" --install "$pkg" 2>&1 | tail -2 || true
+          done
+          ls "$ANDROID_HOME/platforms"
+
+      - name: Resolve version and tag
+        id: meta
+        run: |
+          set -euo pipefail
+          VERSION_NAME="$(grep -oE 'versionName *= *"[^"]+"' app/build.gradle.kts | head -1 | sed -E 's/.*"([^"]+)"/\1/')"
+          VERSION_CODE="$(grep -oE 'versionCode *= *[0-9]+' app/build.gradle.kts | head -1 | grep -oE '[0-9]+')"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${{ github.ref_name }}"
+          elif [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="v${VERSION_NAME}"
+          fi
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "apk_name=AdShieldPro-${VERSION_NAME}-release.apk" >> "$GITHUB_OUTPUT"
+          echo "Releasing $TAG (versionName=$VERSION_NAME, versionCode=$VERSION_CODE)"
+
+      # Signing key: reuse the key stored in the "release-signing" Actions secret, otherwise
+      # reuse the keystore attached to the latest existing release, otherwise generate one and
+      # attach it to this release so future builds can upgrade-install over it.
+      - name: Prepare signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.ADSHIELD_KEYSTORE_BASE64 }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p .ci
+          KEYSTORE=/tmp/adshield-release.jks
+          STORE_PASS="${ADSHIELD_STORE_PASSWORD:-adshield-release}"
+          export KEYSTORE STORE_PASS
+          if [ -n "${KEYSTORE_B64:-}" ]; then
+            echo "using keystore from ADSHIELD_KEYSTORE_BASE64 secret"
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$KEYSTORE"
+            {
+              echo "ADSHIELD_KEYSTORE_PASSWORD=${ADSHIELD_STORE_PASSWORD:?set the ADSHIELD_STORE_PASSWORD secret alongside the keystore}"
+              echo "ADSHIELD_KEY_ALIAS=${ADSHIELD_KEY_ALIAS:-adshield}"
+              echo "ADSHIELD_KEY_PASSWORD=${ADSHIELD_KEY_PASSWORD:-${ADSHIELD_STORE_PASSWORD}}"
+            } >> "$GITHUB_ENV"
+          else
+            gh release download --pattern 'adshield-release.keystore' --dir /tmp/keystore \
+              --clobber 2>/dev/null || true
+            if [ -s /tmp/keystore/adshield-release.keystore ]; then
+              echo "reusing keystore attached to the latest release"
+              cp /tmp/keystore/adshield-release.keystore "$KEYSTORE"
+              echo "reused=true" >> "$GITHUB_ENV"
+            else
+              echo "generating a new release keystore"
+              keytool -genkeypair -v -keystore "$KEYSTORE" -storetype PKCS12 \
+                -storepass "$STORE_PASS" -keypass "$STORE_PASS" -alias adshield \
+                -keyalg RSA -keysize 4096 -validity 10000 \
+                -dname "CN=AdShield Pro, O=AdShield Pro, C=PH" > /dev/null 2>&1
+              echo "reused=false" >> "$GITHUB_ENV"
+            fi
+            {
+              echo "ADSHIELD_KEYSTORE_PASSWORD=${STORE_PASS}"
+              echo "ADSHIELD_KEY_ALIAS=adshield"
+              echo "ADSHIELD_KEY_PASSWORD=${STORE_PASS}"
+            } >> "$GITHUB_ENV"
+          fi
+          echo "ADSHIELD_KEYSTORE_PATH=${KEYSTORE}" >> "$GITHUB_ENV"
+          keytool -list -keystore "$KEYSTORE" -storepass "$STORE_PASS" | tail -3
+
+      - name: JVM unit tests
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:testDebugUnitTest --no-daemon --console=plain
+
+      - name: Build signed release APK
+        run: |
+          ./gradlew :app:assembleRelease --no-daemon --console=plain
+          ls -l app/build/outputs/apk/release/
+
+      - name: Verify and package APK
+        id: apk
+        run: |
+          set -euo pipefail
+          APK="$(ls app/build/outputs/apk/release/*.apk | head -1)"
+          test -s "$APK"
+          unzip -l "$APK" | grep -q 'AndroidManifest.xml'
+          unzip -l "$APK" | grep -qE 'classes[0-9]*\.dex'
+          unzip -l "$APK" | grep -q 'resources.arsc'
+          OUT="${{ steps.meta.outputs.apk_name }}"
+          cp "$APK" "$OUT"
+          sha256sum "$OUT" | cut -d' ' -f1 > "$OUT.sha256"
+          echo "apk=$OUT" >> "$GITHUB_OUTPUT"
+          ls -l "$OUT"
+          cat "$OUT.sha256"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          APK: ${{ steps.apk.outputs.apk }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "release $TAG already exists: updating its APK assets"
+            gh release upload "$TAG" "$APK" "$APK.sha256" --clobber
+            exit 0
+          fi
+          git config user.name "AdShield Release"
+          git config user.email "release@adshield.local"
+          git tag -f "$TAG" "$GITHUB_SHA"
+          git push -f origin "$TAG" || true
+          cat > /tmp/notes.md <<EOF
+          # AdShield Pro ${{ steps.meta.outputs.version_name }}
+
+          Signed, R8-minified release build from commit \`$GITHUB_SHA\`.
+
+          ## Install
+          1. Download \`$APK\`.
+          2. Allow installing unknown apps for your browser or file manager when Android asks.
+          3. Open the APK and install. Settings, rules and history stay on the device.
+
+          Verify the download if you like: \`sha256sum $APK\` should print
+          \`$(cat "$APK.sha256")\`.
+
+          ## What is in this build
+          - On-device DNS filtering over Android VpnService (no root): ad, tracker and threat lists,
+            custom block/allow rules, protection modes, background list sync.
+          - Privacy Browser with request filtering, tracking-parameter stripping and pop-up blocking.
+          - Activity, statistics and per-app DNS analytics; AI Smart Boost, storage cleaning,
+            Game Booster and battery/thermal tools — all local, no cloud AI.
+          - In-app update checks against this repository's own releases.
+
+          ## Notes
+          - \`versionCode ${{ steps.meta.outputs.version_code }}\`, \`minSdk 29\`, \`targetSdk 36\`.
+          - Built and verified by the "Release APK" workflow (unit tests, APK structure checks).
+          - The signing key is attached below as \`adshield-release.keystore\` so future releases
+            can upgrade-install over this one. Treat it as a secret: anyone with it can sign an
+            app Android will accept as an update.
+          EOF
+          gh release create "$TAG" "$APK" "$APK.sha256" \
+            --title "AdShield Pro ${{ steps.meta.outputs.version_name }}" \
+            --notes-file /tmp/notes.md \
+            --target "$GITHUB_SHA"
+
+      - name: Attach signing key for future upgrades
+        if: env.reused == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: gh release upload "$TAG" "$ADSHIELD_KEYSTORE_PATH#adshield-release.keystore" --clobber
+
+      # Best effort: Pages has to be switched on once by a repository admin
+      # (Settings -> Pages -> Source: GitHub Actions). Do not fail a good release over it.
+      - name: Publish the website (GitHub Pages)
+        if: success()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          W="$(mktemp -d)"
+          cp -r docs/. "$W/"
+          cd "$W"
+          git init -q
+          git checkout -q -b gh-pages
+          git config user.name "AdShield Release"
+          git config user.email "release@adshield.local"
+          git add -A
+          git commit -qm "Website: AdShield Pro ${{ steps.meta.outputs.version_name }}" || true
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+
+      - name: Upload workflow artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adshield-pro-${{ steps.meta.outputs.version_name }}-release
+          path: |
+            AdShieldPro-*-release.apk
+            AdShieldPro-*-release.apk.sha256
+          if-no-files-found: warn

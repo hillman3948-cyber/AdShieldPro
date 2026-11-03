@@ -9,7 +9,7 @@ plugins {
 
 val githubUpdateRepository = providers.gradleProperty("githubUpdateRepository")
     .orElse(providers.environmentVariable("GITHUB_UPDATE_REPOSITORY"))
-    .orElse("hillman3948-cyber/AdShieldPro")
+    .orElse("yawiyuson231-oss/AdShieldPro")
     .get()
 val escapedGithubUpdateRepository = githubUpdateRepository.replace("\\", "\\\\").replace("\"", "\\\"")
 val releaseKeystorePath = providers.gradleProperty("adshieldKeystorePath")
