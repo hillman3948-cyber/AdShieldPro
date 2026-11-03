@@ -34,11 +34,11 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
 > Task :app:extractReleaseVersionControlInfo
-> Task :app:compressReleaseAssets
 > Task :app:collectReleaseDependencies
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
+> Task :app:compressReleaseAssets
 > Task :app:writeReleaseSigningConfigVersions
 > Task :app:kspReleaseKotlin
 > Task :app:compileReleaseKotlin
@@ -58,9 +58,9 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 > Task :app:hiltJavaCompileRelease
 > Task :app:processReleaseJavaRes
 > Task :app:transformReleaseClassesWithAsm
+> Task :app:mergeReleaseJavaResource
 > Task :app:generateReleaseLintVitalReportModel
 > Task :app:mergeReleaseGeneratedProguardFiles
-> Task :app:mergeReleaseJavaResource
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:produceReleaseComposeMapping
 > Task :app:reportReleaseComposeMappingErrors
@@ -78,6 +78,6 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 
 [Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
-BUILD SUCCESSFUL in 3m 16s
+BUILD SUCCESSFUL in 3m 12s
 57 actionable tasks: 39 executed, 18 from cache
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html

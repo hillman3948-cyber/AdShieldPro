@@ -32,13 +32,7 @@ Daemon will be stopped at the end of the build
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:kspDebugUnitTestKotlin
-
 > Task :app:compileDebugUnitTestKotlin
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/CapabilityRegistryTest.kt:37:35 Java type mismatch: inferred type is 'File?', but 'File' was expected.
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/CapabilityRegistryTest.kt:37:42 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/CapabilityRegistryTest.kt:37:42 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/CapabilityRegistryTest.kt:37:42 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
-
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:hiltCollectClassesDebugUnitTest
@@ -137,7 +131,7 @@ CapabilityRegistryTest > testNoCapabilityClaimsCloudAiOrChargeControl PASSED
 CapabilityRegistryTest > testEveryCapabilityHasUniqueIdAndHonestStatus PASSED
 
 CapabilityRegistryTest > testImplementedCapabilitiesPointAtRealCode FAILED
-    java.lang.AssertionError at CapabilityRegistryTest.kt:61
+    java.lang.AssertionError at CapabilityRegistryTest.kt:47
 
 CapabilityRegistryTest > testUnavailableCapabilitiesClaimNoCode PASSED
 
@@ -172,8 +166,6 @@ SecurityCenterTestSuite > testFileScanner_detectsZipSlipArchive PASSED
 SecurityCenterTestSuite > testFileScanner_flagsMacroOfficeDocuments PASSED
 
 61 tests completed, 1 failed
-
-[Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
 FAILURE: Build failed with an exception.
 
@@ -331,5 +323,5 @@ Caused by: org.gradle.api.internal.exceptions.MarkedVerificationException: There
 	... 30 more
 
 
-BUILD FAILED in 26s
+BUILD FAILED in 24s
 33 actionable tasks: 7 executed, 2 from cache, 24 up-to-date
