@@ -97,7 +97,7 @@ jobs:
           set -o pipefail
           tools/gradle-ci.sh .ci/lint.log :app:lintDebug
 
-      - name: Assert unit tests actually ran (54 cases)
+      - name: Assert unit tests actually ran (56 cases)
         run: |
           python3 - <<'EOF'
           import glob, sys, xml.etree.ElementTree as ET
@@ -115,7 +115,7 @@ jobs:
                   print('  PASS' if len(case.findall('failure')) == 0 and len(case.findall('error')) == 0
                         else '  FAIL', case.get('name'))
           print(f'tests={total} failures={failures} errors={errors} skipped={skipped}')
-          expected = 54
+          expected = 56
           if total != expected or failures or errors:
               sys.exit(f'expected {expected} passing tests, got total={total} failures={failures} errors={errors}')
           EOF
@@ -130,6 +130,12 @@ jobs:
           echo "APK: $APK"
           ls -l "$APK"
           sha256sum "$APK"
+
+      # The log-mirror step below commits .ci/ into the branch, so the checkout must never
+      # carry those artifacts (and must not fail when Gradle did not get far enough to write them).
+      - name: Clean CI log mirrors before mirroring
+        if: failure()
+        run: rm -rf .ci-mirror || true
 
       - name: Surface Gradle errors as annotations
         if: failure()

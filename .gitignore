@@ -22,3 +22,6 @@ signing.properties
 # Node dependencies and logs
 node_modules/
 npm-debug.log*
+
+# CI log mirrors live in the branch only for failed runs; never build from them
+.ci-mirror/

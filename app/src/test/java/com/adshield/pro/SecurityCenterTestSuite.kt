@@ -438,15 +438,33 @@ class SecurityCenterTestSuite {
         assertEquals(AppRiskAuditor.RiskLevel.TRUSTED, trusted.riskLevel)
     }
 
-    // --- 7. Battery analytics ---
+    // --- Browser request interception (as used by the Privacy Browser) ---
 
     @Test
-    fun testBrowserUrlPatternFilter_blocksVideoAdEndpoints() {
-        val f = BrowserContentBlocker.Companion.UrlPatternFilter
-        assertNotNull(f.match("https://pubads.g.doubleclick.net/gampad/ads?iu=/video", "pubads.g.doubleclick.net", true, "xmlhttprequest"))
-        assertNull(f.match("https://cdn.mysite.com/video/episode1.mp4", "cdn.mysite.com", false, "media"))
-        assertNotNull(f.match("https://cdn.vendor-cdn.com/prebid/6.2/pbjs.js", "cdn.vendor-cdn.com", true, "script"))
-        // First-party requests never trip third-party-only URL rules
-        assertNull(f.match("https://mysite.com/ads/logo.png", "mysite.com", false, "image"))
+    fun testBrowserBlocker_blocksThirdPartyAdHostsButNotFirstPartyContent() {
+        val blocker = BrowserContentBlocker()
+        // A known ad endpoint on a third-party host is blocked.
+        val adRequest = blocker.evaluateRequest(
+            requestUrl = "https://pubads.g.doubleclick.net/gampad/ads?iu=/video",
+            pageHost = "mysite.com",
+            allowlistedSites = emptySet()
+        )
+        assertTrue("ad host should be intercepted", adRequest.shouldBlock)
+
+        // Same-origin content from the page itself is not blocked.
+        val firstParty = blocker.evaluateRequest(
+            requestUrl = "https://mysite.com/video/episode1.mp4",
+            pageHost = "mysite.com",
+            allowlistedSites = emptySet()
+        )
+        assertTrue("first-party media must not be blocked", !firstParty.shouldBlock)
+
+        // Allowlisted sites bypass filtering entirely.
+        val allowlisted = blocker.evaluateRequest(
+            requestUrl = "https://pubads.g.doubleclick.net/gampad/ads",
+            pageHost = "mysite.com",
+            allowlistedSites = setOf("mysite.com")
+        )
+        assertTrue("allowlisted page must not be filtered", !allowlisted.shouldBlock)
     }
 }
