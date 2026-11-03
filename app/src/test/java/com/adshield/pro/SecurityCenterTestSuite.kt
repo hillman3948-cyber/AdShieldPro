@@ -442,7 +442,18 @@ class SecurityCenterTestSuite {
 
     @Test
     fun testBrowserBlocker_blocksThirdPartyAdHostsButNotFirstPartyContent() {
-        val blocker = BrowserContentBlocker()
+        val engine = FilterRuleEngine()
+        engine.updateFilterListRules(
+            subdomainRules = engine.parseFilterListContent(
+                "||doubleclick.net^\n||pubads.g.doubleclick.net^",
+                RuleCategory.ADS,
+                "test list"
+            ).getOrThrow().subdomainRules,
+            exactRules = emptyMap(),
+            wildcardRules = emptyList(),
+            allowSubdomains = emptySet()
+        )
+        val blocker = BrowserContentBlocker(engine)
         // A known ad endpoint on a third-party host is blocked.
         val adRequest = blocker.evaluateRequest(
             requestUrl = "https://pubads.g.doubleclick.net/gampad/ads?iu=/video",
