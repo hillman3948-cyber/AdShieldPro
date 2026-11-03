@@ -25,3 +25,7 @@ npm-debug.log*
 
 # CI log mirrors live in the branch only for failed runs; never build from them
 .ci-mirror/
+
+# Python bytecode from repo tooling
+__pycache__/
+tools/__pycache__/
