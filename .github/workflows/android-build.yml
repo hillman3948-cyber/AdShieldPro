@@ -95,6 +95,11 @@ jobs:
       - name: JVM unit tests
         run: |
           set -o pipefail
+          # Debug aid: the registry test reads source files from disk, so the working directory
+          # and surround of the test JVM must be visible in the mirrored log.
+          pwd
+          ls -a
+          ls -a app/src/main/java/com/adshield/pro | head -5
           tools/gradle-ci.sh .ci/test.log :app:testDebugUnitTest
 
       - name: Android lint
