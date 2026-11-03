@@ -139,6 +139,7 @@ Removing it made the project cross-platform.
 |---|---|
 | `./gradlew assembleDebug --no-daemon --stacktrace` | **success** (3m20s cold, 59s cached) |
 | `./gradlew testDebugUnitTest` (informational) | **success** — includes `AetherEngineTestSuite` + the existing `AdShieldEngineTestSuite` under real Gradle/Hilt/Room |
+| `./gradlew lintDebug` (informational) | **success** — final CI run 41614578883 (2m24s) passed assemble + unit tests + lint |
 | `app-debug.apk` | **61 MB**, 170 zip entries, 13 `classes*.dex`, `AndroidManifest.xml`, both AETHER baseline assets, APK Signing Block present (debug-signed v2/v3) |
 | Manifest | package `com.adshield.pro.debug`, version `2.2.5-debug` (code 20205), minSdk 29, targetSdk 36 |
 
@@ -147,9 +148,9 @@ The APK is delivered at `apk/app-debug.apk` with `apk/app-debug.apk.sha256`
 also uploads it as the `adshield-aether-debug-apk` Actions artifact; branch delivery
 is opt-in via the `deliver_to_branch` dispatch input.
 
-**Still not executed:** `./gradlew lintDebug`, an emulator/physical-device install,
-IPv4-only / IPv6-only / dual-stack, network-switch recovery, battery impact and
-per-app VPN exclusion behavior. No claim of passing those tests is made here.
+**Still not executed:** an emulator/physical-device install, IPv4-only / IPv6-only /
+dual-stack, network-switch recovery, battery impact and per-app VPN exclusion
+behavior. No claim of passing those tests is made here.
 
 ## 7. Known gaps (documented, not hidden)
 
@@ -158,6 +159,6 @@ per-app VPN exclusion behavior. No claim of passing those tests is made here.
   lists are larger than the bundled subset.
 * No external LLM endpoint is reachable from this sandbox; the optional LLM path was
   validated with a local OpenAI-compatible stub, not a production model.
-* `lintDebug` and **physical-device / emulator** tests are still pending; the APK and `testDebugUnitTest` now build and pass on CI.
+* **Physical-device / emulator** tests are still pending; `assembleDebug`, `testDebugUnitTest` and `lintDebug` now build and pass on CI.
 * Application-level bandwidth, HTTPS contents and third-party browser internals are
   outside the observable scope of a DNS-only architecture.
