@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Home
@@ -52,6 +53,7 @@ import com.adshield.pro.domain.model.RuleMatchType
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
+import com.adshield.pro.ui.screens.BatteryScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
 import com.adshield.pro.ui.screens.SecurityScreen
@@ -65,6 +67,7 @@ enum class MainNavDestination(val label: String, val icon: ImageVector) {
     AD_BLOCKER("Ad Blocker", Icons.Default.Shield),
     SECURITY("Security", Icons.Default.Security),
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
+    BATTERY("Battery", Icons.Default.BatteryChargingFull),
     STATISTICS("Statistics", Icons.Default.Analytics),
     SETTINGS("Settings", Icons.Default.Settings)
 }
@@ -123,6 +126,18 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
     val fileScanResult by viewModel.fileScanResult.collectAsStateWithLifecycle()
     val isScanningSecurity by viewModel.isScanningSecurity.collectAsStateWithLifecycle()
     val securityHistory by viewModel.securityHistory.collectAsStateWithLifecycle()
+
+    // Battery Intelligence state
+    val batteryTelemetry by viewModel.batteryTelemetry.collectAsStateWithLifecycle()
+    val batteryHistory by viewModel.batteryHistory.collectAsStateWithLifecycle()
+    val batterySessions by viewModel.batterySessions.collectAsStateWithLifecycle()
+    val batteryDiagnostics by viewModel.batteryDiagnostics.collectAsStateWithLifecycle()
+    val batteryLastDiagnosticAtMs by viewModel.batteryLastDiagnosticAtMs.collectAsStateWithLifecycle()
+    val isDiagnosingBattery by viewModel.isDiagnosingBattery.collectAsStateWithLifecycle()
+    val batteryHealthScore by viewModel.batteryHealthScore.collectAsStateWithLifecycle()
+    val batteryMinutesToFull by viewModel.batteryMinutesToFull.collectAsStateWithLifecycle()
+    val batteryMinutesToEmpty by viewModel.batteryMinutesToEmpty.collectAsStateWithLifecycle()
+    val batteryChargeRate by viewModel.batteryChargeRate.collectAsStateWithLifecycle()
 
     // Phone Optimizer & AI Smart Boost states
     val ramSnapshot by viewModel.ramSnapshot.collectAsStateWithLifecycle()
@@ -335,6 +350,22 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     onUpdateBrowserPrivacy = viewModel::updateBrowserPrivacySettings,
                     onAddCustomCosmeticSelector = viewModel::addCustomCosmeticSelector,
                     onShowFeedback = viewModel::showFeedback
+                )
+
+                MainNavDestination.BATTERY -> BatteryScreen(
+                    telemetry = batteryTelemetry,
+                    diagnostics = batteryDiagnostics,
+                    sessions = batterySessions,
+                    history = batteryHistory,
+                    healthScore = batteryHealthScore,
+                    chargeRatePercentPerHour = batteryChargeRate,
+                    minutesToFull = batteryMinutesToFull,
+                    minutesToEmpty = batteryMinutesToEmpty,
+                    isDiagnosing = isDiagnosingBattery,
+                    lastDiagnosticAtMs = batteryLastDiagnosticAtMs,
+                    onDetect = viewModel::runBatteryDiagnosis,
+                    onRefresh = viewModel::refreshBatteryReadings,
+                    onClearSessions = viewModel::clearBatterySessions
                 )
 
                 MainNavDestination.SECURITY -> SecurityScreen(

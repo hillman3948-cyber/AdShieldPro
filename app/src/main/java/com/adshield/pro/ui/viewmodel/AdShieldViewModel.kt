@@ -39,6 +39,11 @@ import com.adshield.pro.domain.model.StorageMetrics
 import com.adshield.pro.domain.model.TimeBucketStat
 import com.adshield.pro.domain.model.VpnRuntimeState
 import com.adshield.pro.domain.model.VpnStatus
+import com.adshield.pro.data.repository.BatteryIntelligenceRepository
+import com.adshield.pro.engine.battery.BatteryDiagnostic
+import com.adshield.pro.engine.battery.BatteryDiagnostics
+import com.adshield.pro.engine.battery.BatterySession
+import com.adshield.pro.engine.battery.BatteryTelemetry
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.filter.FilterRuleEngine
@@ -87,7 +92,8 @@ class AdShieldViewModel @Inject constructor(
     private val upstreamDnsResolver: UpstreamDnsResolver,
     val browserContentBlocker: BrowserContentBlocker,
     private val optimizerEngine: SystemOptimizerEngine,
-    private val securityEngine: SecurityEngine
+    private val securityEngine: SecurityEngine,
+    private val batteryRepository: BatteryIntelligenceRepository
 ) : ViewModel() {
 
     val vpnState: StateFlow<VpnRuntimeState> = repository.vpnRuntimeState
@@ -878,5 +884,67 @@ class AdShieldViewModel @Inject constructor(
         SecurityLevel.DANGEROUS -> "THREAT: ${record.threatName ?: label} — do not open or install."
         SecurityLevel.SUSPICIOUS -> "Suspicious file: ${record.findings.firstOrNull() ?: "risk indicators found"}."
         else -> "File is clean: no signatures or structural threats found."
+    }
+
+    // --- Battery Intelligence (real hardware telemetry only) ---
+
+    val batteryTelemetry: StateFlow<BatteryTelemetry> = batteryRepository.telemetry
+    val batteryHistory: StateFlow<List<BatteryDiagnostics.Sample>> = batteryRepository.history
+    val batterySessions: StateFlow<List<BatterySession>> = batteryRepository.sessions
+    val batteryDiagnostics: StateFlow<List<BatteryDiagnostic>> = batteryRepository.diagnostics
+    val batteryLastDiagnosticAtMs: StateFlow<Long> = batteryRepository.lastDiagnosticAtMs
+
+    private val _isDiagnosingBattery = MutableStateFlow(false)
+    val isDiagnosingBattery: StateFlow<Boolean> = _isDiagnosingBattery.asStateFlow()
+
+    private val _batteryHealthScore = MutableStateFlow(batteryRepository.healthScore())
+    val batteryHealthScore: StateFlow<Int> = _batteryHealthScore.asStateFlow()
+
+    private val _batteryMinutesToFull = MutableStateFlow<Int?>(null)
+    val batteryMinutesToFull: StateFlow<Int?> = _batteryMinutesToFull.asStateFlow()
+
+    private val _batteryMinutesToEmpty = MutableStateFlow<Int?>(null)
+    val batteryMinutesToEmpty: StateFlow<Int?> = _batteryMinutesToEmpty.asStateFlow()
+
+    private val _batteryChargeRate = MutableStateFlow<Float?>(null)
+    val batteryChargeRate: StateFlow<Float?> = _batteryChargeRate.asStateFlow()
+
+    private fun refreshBatteryDerived() {
+        _batteryHealthScore.value = batteryRepository.healthScore()
+        _batteryChargeRate.value = batteryRepository.chargeRatePercentPerHour()
+        _batteryMinutesToFull.value = batteryRepository.minutesToFull()
+        _batteryMinutesToEmpty.value = batteryRepository.minutesToEmpty()
+    }
+
+    /** Runs the on-device diagnostic chain against live readings. */
+    fun runBatteryDiagnosis() {
+        if (_isDiagnosingBattery.value) return
+        viewModelScope.launch {
+            _isDiagnosingBattery.value = true
+            // Sample the sensors once more so the report reflects "now" rather than the last broadcast.
+            batteryRepository.runDiagnostics()
+            refreshBatteryDerived()
+            val worst = batteryRepository.diagnostics.value.maxByOrNull { it.severity.ordinal }
+            showFeedback(
+                when (worst?.severity) {
+                    null -> "Battery diagnostic complete."
+                    com.adshield.pro.engine.battery.BatteryDiagnosticSeverity.CRITICAL ->
+                        "Battery alert: ${worst.title}."
+                    com.adshield.pro.engine.battery.BatteryDiagnosticSeverity.WARNING ->
+                        "Battery diagnostic: ${worst.title}."
+                    else -> "Battery diagnostic complete — no faults found in the measured readings."
+                }
+            )
+            _isDiagnosingBattery.value = false
+        }
+    }
+
+    fun refreshBatteryReadings() {
+        batteryRepository.telemetry.value.let { refreshBatteryDerived() }
+    }
+
+    fun clearBatterySessions() {
+        batteryRepository.clearSessions()
+        showFeedback("Battery session history cleared.")
     }
 }
