@@ -5,9 +5,13 @@ on:
   push:
     branches:
       - arena/b1d244c1-adshieldpro
+    paths-ignore:
+      - 'build-logs/**'
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -39,13 +43,22 @@ jobs:
           set -o pipefail
           ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee gradle-assemble.log
 
-      - name: Upload Gradle log on failure
+      - name: Surface Gradle errors as annotations
         if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-build-log
-          path: gradle-assemble.log
-          if-no-files-found: warn
+        run: |
+          grep -E "FAILURE:|error:|^e: |What went wrong|Execution failed|Caused by|Unresolved reference|Could not|not found" gradle-assemble.log \
+            | head -12 | while IFS= read -r line; do echo "::error::$line"; done || true
+
+      - name: Publish Gradle log to branch for inspection
+        if: failure() && github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p build-logs
+          cp gradle-assemble.log build-logs/gradle-assemble.log
+          git config user.name "Arena APK Builder"
+          git config user.email "agent@arena.ai"
+          git add build-logs/gradle-assemble.log
+          git commit -m "APK build log [skip ci]" || exit 0
+          git push origin HEAD:arena/b1d244c1-adshieldpro
 
       - name: JVM unit tests (informational)
         continue-on-error: true
