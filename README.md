@@ -5,9 +5,10 @@
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 ## Website and downloads
 
-- **Project website:** [docs/index.html](docs/index.html) — deployed to GitHub Pages by
-  [`.github/workflows/deploy-website.yml`](.github/workflows/deploy-website.yml)
-  (enable Pages → "GitHub Actions" once in repository settings).
+- **Project website:** <https://yawiyuson231-oss.github.io/AdShieldPro/> — source in
+  [docs/](docs), deployed by [`.github/workflows/deploy-website.yml`](.github/workflows/deploy-website.yml).
+  One-time setup: repository **Settings → Pages → Source: GitHub Actions** (a repository admin has
+  to click it once; the deploy workflow reports it if it is still off).
 - **Direct APK download:** [latest AdShield Pro release](https://github.com/yawiyuson231-oss/AdShieldPro/releases/latest)
 - [Browse all GitHub releases](https://github.com/yawiyuson231-oss/AdShieldPro/releases)
 
