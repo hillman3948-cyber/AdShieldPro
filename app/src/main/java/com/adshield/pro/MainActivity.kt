@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -54,6 +55,7 @@ import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
 import com.adshield.pro.ui.screens.BatteryScreen
+import com.adshield.pro.ui.screens.CapabilitiesScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
 import com.adshield.pro.ui.screens.SecurityScreen
@@ -69,7 +71,8 @@ enum class MainNavDestination(val label: String, val icon: ImageVector) {
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
     BATTERY("Battery", Icons.Default.BatteryChargingFull),
     STATISTICS("Statistics", Icons.Default.Analytics),
-    SETTINGS("Settings", Icons.Default.Settings)
+    SETTINGS("Settings", Icons.Default.Settings),
+    STATUS("Status", Icons.Default.VerifiedUser)
 }
 
 @AndroidEntryPoint
@@ -351,6 +354,8 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                     onAddCustomCosmeticSelector = viewModel::addCustomCosmeticSelector,
                     onShowFeedback = viewModel::showFeedback
                 )
+
+                MainNavDestination.STATUS -> CapabilitiesScreen()
 
                 MainNavDestination.BATTERY -> BatteryScreen(
                     telemetry = batteryTelemetry,
