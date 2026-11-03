@@ -1,0 +1,53 @@
+name: Deploy website
+
+# Publishes docs/ (the project website) to GitHub Pages.
+# Runs on every change to docs/ and can be triggered by hand.
+# Safe to re-run: the job is idempotent and only needs the default token.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'arena/**'
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-website.yml'
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check the site files are present
+        run: |
+          test -s docs/index.html
+          grep -q "AdShield Pro" docs/index.html
+          ls -l docs/index.html docs/PRIVACY_POLICY.md
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to Pages
+        id: pages
+        uses: actions/deploy-pages@v4

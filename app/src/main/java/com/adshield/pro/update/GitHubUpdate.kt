@@ -49,21 +49,38 @@ object GitHubReleaseClient {
             val patch = match.groupValues[3].toIntOrNull() ?: return null
             if (minor > 99 || patch > 99) return null
             val assets = json.optJSONArray("assets") ?: return null
-            var apk: String? = null
-            var digest: String? = null
-            for (i in 0 until assets.length()) {
-                val asset = assets.optJSONObject(i) ?: continue
-                if (asset.optString("name").endsWith(".apk", true)) {
-                    apk = asset.optString("browser_download_url")
-                    digest = asset.optString("digest").takeIf { it.startsWith("sha256:", true) }?.substringAfter(":")
-                    break
-                }
-            }
+            // Releases may list more than one APK (debug builds, per-ABI splits). Prefer a single
+            // release/universal APK and never pick a debug or split artifact: installing one of
+            // those over the installed release build fails or downgrades what the user runs.
+            val candidates = (0 until assets.length())
+                .mapNotNull { assets.optJSONObject(it) }
+                .map { it to it.optString("name") }
+                .filter { (_, name) -> isInstallableReleaseApk(name) }
+            val chosen = candidates.firstOrNull { (_, name) ->
+                name.contains("release", true) || name.contains("universal", true)
+            } ?: candidates.firstOrNull()
+            val apk = chosen?.first?.optString("browser_download_url")
+            val digest = chosen?.first?.optString("digest")
+                ?.takeIf { it.startsWith("sha256:", true) }?.substringAfter(":")
             val trustedUrl = apk?.takeIf { it.startsWith("https://github.com/") && it.contains("/releases/download/") } ?: return null
             val notes = json.optString("body").takeUnless { it == "null" }?.trim().orEmpty()
                 .take(1800).ifBlank { "Performance improvements and protection updates." }
             return GitHubRelease(tag, tag.removePrefix("v"), major * 10000 + minor * 100 + patch, trustedUrl, digest, notes)
         }
+    }
+
+    private val SPLIT_ABI = Regex("""[-_](arm64[-_]?v8a|armeabi[-_]?v7a|x86|x86_64)(?=[-_.])""")
+
+    /**
+     * True for APK assets the in-app updater is allowed to install. Debug builds and per-ABI
+     * split APKs are rejected because they cannot replace the installed release package.
+     */
+    fun isInstallableReleaseApk(name: String): Boolean {
+        val lower = name.trim().lowercase()
+        if (!lower.endsWith(".apk")) return false
+        if (lower.contains("debug")) return false
+        if (SPLIT_ABI.containsMatchIn(lower)) return false
+        return true
     }
 }
 

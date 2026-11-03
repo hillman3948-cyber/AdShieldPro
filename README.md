@@ -5,9 +5,30 @@
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 ## Website and downloads
 
-- **Project website:** [https://adshieldpro-docs.vercel.app](https://adshieldpro-docs.vercel.app/)
-- **Direct APK download:** [latest AdShield Pro release](https://github.com/hillman3948-cyber/AdShieldPro/releases/latest)
-- [Browse all GitHub releases](https://github.com/hillman3948-cyber/AdShieldPro/releases)
+- **Project website:** [docs/index.html](docs/index.html) — deployed to GitHub Pages by
+  [`.github/workflows/deploy-website.yml`](.github/workflows/deploy-website.yml)
+  (enable Pages → "GitHub Actions" once in repository settings).
+- **Direct APK download:** [latest AdShield Pro release](https://github.com/yawiyuson231-oss/AdShieldPro/releases/latest)
+- [Browse all GitHub releases](https://github.com/yawiyuson231-oss/AdShieldPro/releases)
+
+### Publishing a release
+
+Every published build comes from one pipeline, [`.github/workflows/release.yml`](.github/workflows/release.yml):
+
+```bash
+# build the version currently in app/build.gradle.kts and publish tag v<versionName>
+gh workflow run "Release APK" --ref main
+
+# or publish a specific version: bump versionCode/versionName, commit, then
+git tag v2.3.1 && git push origin v2.3.1
+```
+
+The workflow runs the JVM unit tests, builds the R8-minified release APK, checks its structure,
+publishes it to GitHub Releases with a SHA-256 checksum, uploads `adshield-release.keystore` for
+future upgrade installs, and refreshes the GitHub Pages site. Re-running it for an existing tag
+replaces that release's APK assets instead of failing or creating a duplicate release.
+To sign with your own key instead, add repository secrets `ADSHIELD_KEYSTORE_BASE64`,
+`ADSHIELD_STORE_PASSWORD`, and optionally `ADSHIELD_KEY_ALIAS` / `ADSHIELD_KEY_PASSWORD`.
 
 ## App screenshots
 
@@ -50,18 +71,19 @@ Everything needed is pinned in the repository (Gradle 9.7.1 wrapper, AGP 9.4.1, 
 ./gradlew :app:lintDebug            # Android Lint
 ```
 
-The JVM suite (`app/src/test/java/com/adshield/pro/AdShieldEngineTestSuite.kt`) covers DNS wire-format
-parsing, UDP/TCP packet framing and checksums, upstream response validation and cache policy, UDP
-truncation and TCP segmentation limits, the filter rule engine and the browser blocker.
+The JVM suite (`app/src/test/java/com/adshield/pro/AdShieldEngineTestSuite.kt`, 19 cases) covers DNS
+wire-format parsing, UDP/TCP packet framing and checksums, upstream response validation and cache
+policy, UDP truncation and TCP segmentation limits, the filter rule engine, the browser blocker, and
+in-app update asset selection (release APK over debug/split APKs).
 See [docs/TESTING.md](docs/TESTING.md) for the full matrix, signing requirements and the on-device
 smoke test checklist.
 
 ## Download and project links
 
-- [Source code](https://github.com/hillman3948-cyber/AdShieldPro)
-- [Latest releases and APK downloads](https://github.com/hillman3948-cyber/AdShieldPro/releases)
-- [Privacy policy](https://github.com/hillman3948-cyber/AdShieldPro/blob/main/docs/PRIVACY_POLICY.md)
-- [Report a problem](https://github.com/hillman3948-cyber/AdShieldPro/issues)
+- [Source code](https://github.com/yawiyuson231-oss/AdShieldPro)
+- [Latest releases and APK downloads](https://github.com/yawiyuson231-oss/AdShieldPro/releases)
+- [Privacy policy](https://github.com/yawiyuson231-oss/AdShieldPro/blob/main/docs/PRIVACY_POLICY.md)
+- [Report a problem](https://github.com/yawiyuson231-oss/AdShieldPro/issues)
 
 AdShield Pro is built with **Kotlin, Jetpack Compose (Material 3), Clean Architecture + MVVM, Room SQLite, DataStore, WorkManager, Hilt, and Android `VpnService`**. DNS filtering can reduce requests to known ad, tracking, and malicious domains, but it cannot guarantee protection from every threat.
 

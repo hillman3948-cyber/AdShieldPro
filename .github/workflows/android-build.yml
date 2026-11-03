@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - arena/dfe56e37-adshieldpro
       - main
+      - 'arena/**'
   pull_request:
     branches:
       - main
@@ -97,7 +97,7 @@ jobs:
           set -o pipefail
           tools/gradle-ci.sh .ci/lint.log :app:lintDebug
 
-      - name: Assert unit tests actually ran (18 cases)
+      - name: Assert unit tests actually ran (19 cases)
         run: |
           python3 - <<'EOF'
           import glob, sys, xml.etree.ElementTree as ET
@@ -115,7 +115,7 @@ jobs:
                   print('  PASS' if len(case.findall('failure')) == 0 and len(case.findall('error')) == 0
                         else '  FAIL', case.get('name'))
           print(f'tests={total} failures={failures} errors={errors} skipped={skipped}')
-          expected = 18
+          expected = 19
           if total != expected or failures or errors:
               sys.exit(f'expected {expected} passing tests, got total={total} failures={failures} errors={errors}')
           EOF
@@ -162,7 +162,7 @@ jobs:
       # The Actions log endpoint is not reachable from every environment, so the
       # raw logs are mirrored into this branch under .ci/ as well.
       - name: Mirror logs into the branch (only when something failed)
-        if: failure() && github.event_name != 'pull_request'
+        if: failure() && github.event_name == 'push'
         continue-on-error: true
         run: |
           git config user.name "AdShield CI"
