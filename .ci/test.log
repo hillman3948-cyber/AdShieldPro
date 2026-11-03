@@ -28,156 +28,36 @@ Daemon will be stopped at the end of the build
 > Task :app:transformDebugClassesWithAsm UP-TO-DATE
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:javaPreCompileDebugUnitTest FROM-CACHE
 > Task :app:bundleDebugClassesToCompileJar
-> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:kspDebugUnitTestKotlin
+
 > Task :app:compileDebugUnitTestKotlin
-> Task :app:processDebugUnitTestJavaRes
-> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
-> Task :app:hiltCollectClassesDebugUnitTest
-> Task :app:hiltAggregateDepsDebugUnitTest FROM-CACHE
-> Task :app:hiltJavaCompileDebugUnitTest NO-SOURCE
-> Task :app:transformDebugUnitTestClassesWithAsm
+e: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/BatteryIntelligenceTestSuite.kt:419:9 Unresolved reference 'assertFalse'.
+e: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/BatteryIntelligenceTestSuite.kt:422:9 Unresolved reference 'assertFalse'.
 
-> Task :app:testDebugUnitTest FAILED
+> Task :app:compileDebugUnitTestKotlin FAILED
 
-AdShieldEngineTestSuite > testCacheKeysAreScopedToTheActiveResolver PASSED
-
-AdShieldEngineTestSuite > testFilterRuleEngine_precedenceModesWildcardsAndConflictDetection PASSED
-
-AdShieldEngineTestSuite > testBrowserContentBlocker_sanitizesTrackingParamsAndEvaluatesRequests PASSED
-
-AdShieldEngineTestSuite > testJunkCleaner_sha256DuplicateDetection PASSED
-
-AdShieldEngineTestSuite > testDatabaseMigrationVersion PASSED
-
-AdShieldEngineTestSuite > testUdpResponseIsTruncatedWithTcBitWhenItExceedsTheTunnelMtu PASSED
-
-AdShieldEngineTestSuite > testLargeTcpDnsAnswersAreSegmentedToFitTheTunnelMtu PASSED
-
-AdShieldEngineTestSuite > testUpstreamResponsesMustEchoTheTransactionIdAndBeResponses PASSED
-
-AdShieldEngineTestSuite > testOnlyNoerrorAndNxdomainAnswersAreCacheable PASSED
-
-AdShieldEngineTestSuite > testUpstreamServerListIncludesIpv6FallbackOnlyWhenEnabled PASSED
-
-AdShieldEngineTestSuite > testDnsPacketCodec_synthesizesNxdomainAndZeroIpSinkholeResponses PASSED
-
-AdShieldEngineTestSuite > testFilterValidation_rejectsMalformedDomainsHtmlAndBroadWildcards PASSED
-
-AdShieldEngineTestSuite > testRegression_malformedDnsPacketsAndCompressionLoopsRejectedSafely PASSED
-
-AdShieldEngineTestSuite > testUdpPayloadCapacityMatchesIpVersionHeaders PASSED
-
-AdShieldEngineTestSuite > testIpv4AndIpv6_udpAndTcpFramingAndChecksums PASSED
-
-AdShieldEngineTestSuite > testDnsPacketParser_parsesStandardIpv4AAndIpv6AaaaQueries PASSED
-
-AdShieldEngineTestSuite > testThirdPartyDetectionRespectsLabelBoundaries PASSED
-
-AdShieldEngineTestSuite > testUpdateAssetSelection_prefersReleaseApkAndSkipsDebugAndSplitApks PASSED
-
-AdShieldEngineTestSuite > testAiSmartBoostPredictor_detectsBottlenecksAndReadinessScoreAccurately PASSED
-
-BatteryIntelligenceTestSuite > testCapacityHealth_isNullUnlessBothCountersExist PASSED
-
-BatteryIntelligenceTestSuite > testSession_metricsDerivedFromStoredValues PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_flagsRealMeasuredCapacityLoss PASSED
-
-BatteryIntelligenceTestSuite > testWattsFromMilliAmpsAndMillivolts_conversionIsExact PASSED
-
-BatteryIntelligenceTestSuite > testCurrentSign_isNormalisedPerVendorConvention PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_hotBatteryIsCritical_andColdIsWarned PASSED
-
-BatteryIntelligenceTestSuite > testFahrenheitConversion_matchesReferenceScreenshot PASSED
-
-BatteryIntelligenceTestSuite > testHealthScore_dropsWithRealWearSignals PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_lowChargePowerCallsOutCableOrCharger PASSED
-
-BatteryIntelligenceTestSuite > testDrainRate_andRuntimeProjection PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_neverInventsCapacityDegradationWithoutCounters PASSED
-
-BatteryIntelligenceTestSuite > testMinutesToFull_isNullWhenFullOrNotMeasurable PASSED
-
-BatteryIntelligenceTestSuite > testChargeRate_isMeasuredFromRealSamplesOnly PASSED
-
-BatteryIntelligenceTestSuite > testPower_isVoltageTimesMeasuredCurrent_andNeverInvented PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_repeatedDropoutsAreFlagged PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_slowChargingIsExplainedWithEvidence PASSED
-
-BatteryIntelligenceTestSuite > testReadingSources_areLabelledForTheUi PASSED
-
-BatteryIntelligenceTestSuite > testVoltageStability_needsEnoughSamplesAndReportsSpread PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_missingTemperatureIsReportedAsNotExposed PASSED
-
-BatteryIntelligenceTestSuite > testInterruptions_countOnlyRealChargingDropouts PASSED
-
-BatteryIntelligenceTestSuite > testChargeRate_returnsNullWhenEvidenceIsInsufficient PASSED
-
-BatteryIntelligenceTestSuite > testDiagnostics_needsTimeBeforeJudgingChargeSpeed PASSED
-
-CapabilityRegistryTest > testSummaryCountsMatchTheRegistry PASSED
-
-CapabilityRegistryTest > testNoCapabilityClaimsCloudAiOrChargeControl PASSED
-
-CapabilityRegistryTest > testEveryCapabilityHasUniqueIdAndHonestStatus PASSED
-
-CapabilityRegistryTest > testImplementedCapabilitiesPointAtRealCode FAILED
-    java.lang.AssertionError at CapabilityRegistryTest.kt:47
-
-CapabilityRegistryTest > testUnavailableCapabilitiesClaimNoCode PASSED
-
-SecurityCenterTestSuite > testUrlScanner_flagsTyposquatting PASSED
-
-SecurityCenterTestSuite > testUrlScanner_flagsPhishingPatterns PASSED
-
-SecurityCenterTestSuite > testApkAnalyzer_axmlParser_extractsPackageAndPermissions PASSED
-
-SecurityCenterTestSuite > testApkAnalyzer_flagsSmsInterceptionDropperProfile PASSED
-
-SecurityCenterTestSuite > testFileScanner_cleanFilePasses PASSED
-
-SecurityCenterTestSuite > testBrowserBlocker_blocksThirdPartyAdHostsButNotFirstPartyContent PASSED
-
-SecurityCenterTestSuite > testAppAuditor_flagsAccessibilitySmsTrojanProfile PASSED
-
-SecurityCenterTestSuite > testFileScanner_detectsPolyglotExecutableInImage PASSED
-
-SecurityCenterTestSuite > testUrlScanner_usesKnownThreatLookup PASSED
-
-SecurityCenterTestSuite > testUrlScanner_cleanUrlPasses PASSED
-
-SecurityCenterTestSuite > testFileScanner_detectsEicarTestSignature PASSED
-
-SecurityCenterTestSuite > testFilterEngine_blocksSubdomainsAndHonoursExceptions PASSED
-
-SecurityCenterTestSuite > testUrlScanner_flagsEmbeddedCredentialsAndRawIpLogins PASSED
-
-SecurityCenterTestSuite > testFileScanner_detectsZipSlipArchive PASSED
-
-SecurityCenterTestSuite > testFileScanner_flagsMacroOfficeDocuments PASSED
-
-61 tests completed, 1 failed
+[Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':app:testDebugUnitTest'.
-> There were failing tests. See the report at: file:///home/runner/work/AdShieldPro/AdShieldPro/app/build/reports/tests/testDebugUnitTest/index.html
+Execution failed for task ':app:compileDebugUnitTestKotlin' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Kotlin compiler: UNRESOLVED_REFERENCE
+       Kotlin compiler error
+         Unresolved reference 'assertFalse'.
+         Location: /home/runner/work/AdShieldPro/AdShieldPro/app/src/test/java/com/adshield/pro/BatteryIntelligenceTestSuite.kt line 419
 
 * Try:
+> Run with --info or --debug option to get more log output.
 > Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
 
 * Exception is:
-org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:testDebugUnitTest'.
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:compileDebugUnitTestKotlin' (registered by plugin 'com.android.internal.application').
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:135)
 	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:288)
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:133)
@@ -211,15 +91,24 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:tes
 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:65)
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
-Caused by: org.gradle.api.internal.exceptions.MarkedVerificationException: There were failing tests. See the report at: file:///home/runner/work/AdShieldPro/AdShieldPro/app/build/reports/tests/testDebugUnitTest/index.html
-	at org.gradle.api.tasks.testing.AbstractTestTask.executeTests(AbstractTestTask.java:616)
-	at org.gradle.api.tasks.testing.Test.executeTests(Test.java:772)
-	at com.android.build.gradle.tasks.factory.AndroidUnitTest.executeTests(AndroidUnitTest.java:204)
-	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
-	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.doExecute(StandardTaskAction.java:58)
-	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
-	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
-	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:259)
+Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:273)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:132)
+	at org.gradle.internal.Factories$1.create(Factories.java:30)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.lambda$withoutLocksBlocking$0(DefaultWorkerLeaseService.java:412)
+	at org.gradle.internal.work.ResourceLockStatistics$1.measure(ResourceLockStatistics.java:43)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocksBlocking(DefaultWorkerLeaseService.java:407)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.blocking(DefaultWorkerLeaseService.java:257)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.blocking(DefaultWorkerLeaseService.java:239)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$1(DefaultAsyncWorkTracker.java:128)
+	at org.gradle.internal.Factories$1.create(Factories.java:30)
+	at org.gradle.internal.resources.AbstractResourceLockRegistry.whileDisallowingLockChanges(AbstractResourceLockRegistry.java:51)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.whileDisallowingProjectLockChanges(DefaultWorkerLeaseService.java:262)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:127)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:93)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:79)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:67)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:267)
 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
@@ -321,7 +210,42 @@ Caused by: org.gradle.api.internal.exceptions.MarkedVerificationException: There
 	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:68)
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
 	... 30 more
+Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Unresolved reference 'assertFalse'.
+	at org.jetbrains.kotlin.gradle.plugin.diagnostics.DefaultCompilerDiagnosticsProblemsReporter.reportCompilerMessage(CompilerDiagnosticsProblemsReporter.kt:63)
+	at org.jetbrains.kotlin.compilerRunner.btapi.ProblemsApiCompilerMessageRenderer.replayTo(ProblemsApiCompilerMessageRenderer.kt:88)
+	at org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork.execute(BuildToolsApiCompilationWork.kt:251)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:68)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:103)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$1(DefaultWorkerExecutor.java:169)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:191)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$600(DefaultConditionalExecutionQueue.java:112)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:168)
+	at org.gradle.internal.Factories$1.create(Factories.java:30)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.lambda$runAndReleaseLocks$0(DefaultWorkerLeaseService.java:302)
+	at org.gradle.internal.work.ResourceLockStatistics$1.measure(ResourceLockStatistics.java:43)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAndReleaseLocks(DefaultWorkerLeaseService.java:300)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocksAcquired(DefaultWorkerLeaseService.java:296)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:288)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:131)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:137)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:163)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:125)
+	... 2 more
 
 
-BUILD FAILED in 24s
-33 actionable tasks: 7 executed, 2 from cache, 24 up-to-date
+BUILD FAILED in 20s
+29 actionable tasks: 4 executed, 1 from cache, 24 up-to-date
