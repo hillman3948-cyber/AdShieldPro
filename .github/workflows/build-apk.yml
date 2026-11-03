@@ -21,16 +21,15 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept SDK licenses
-        run: yes | sdkmanager --licenses > /dev/null || true
-
-      - name: Install Android 36 platform and build tools
+      - name: Configure preinstalled Android SDK
         run: |
-          sdkmanager --install "platforms;android-36" "platform-tools" "build-tools;35.0.0" > /dev/null
-          sdkmanager --install "build-tools;36.0.0" > /dev/null || true
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          SDKMGR="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMGR" ]; then SDKMGR=sdkmanager; fi
+          yes | "$SDKMGR" --licenses > /dev/null || true
+          "$SDKMGR" --install "platforms;android-36" "platform-tools" "build-tools;35.0.0" > /dev/null || true
+          "$SDKMGR" --install "build-tools;36.0.0" > /dev/null || true
+          "$SDKMGR" --list_installed | grep -E "android-36|build-tools" || true
 
       - name: Make gradlew executable
         run: chmod +x gradlew
