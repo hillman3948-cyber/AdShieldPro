@@ -1,0 +1,4 @@
+# AETHER AI backend dependencies.
+# Only one third-party package: used for Ed25519 signed threat intelligence
+# and AES-256-GCM encryption of sensitive local notes/transcripts.
+cryptography>=41,<60

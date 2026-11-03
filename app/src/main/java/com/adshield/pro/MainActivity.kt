@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -51,6 +52,7 @@ import com.adshield.pro.domain.model.RuleMatchType
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.ui.screens.ActivityScreen
 import com.adshield.pro.ui.screens.AdBlockerHubScreen
+import com.adshield.pro.ui.screens.AetherScreen
 import com.adshield.pro.ui.screens.HomeScreen
 import com.adshield.pro.ui.screens.OptimizerScreen
 import com.adshield.pro.ui.screens.SettingsScreen
@@ -63,6 +65,7 @@ enum class MainNavDestination(val label: String, val icon: ImageVector) {
     AD_BLOCKER("Ad Blocker", Icons.Default.Shield),
     OPTIMIZER("Optimizer", Icons.Default.Bolt),
     STATISTICS("Statistics", Icons.Default.Analytics),
+    AETHER("Aether AI", Icons.Default.AutoAwesome),
     SETTINGS("Settings", Icons.Default.Settings)
 }
 
@@ -377,6 +380,8 @@ fun AdShieldMainApp(viewModel: AdShieldViewModel) {
                         )
                     }
                 )
+
+                MainNavDestination.AETHER -> AetherScreen()
 
                 MainNavDestination.SETTINGS -> SettingsScreen(
                     showAboutScreen = showAboutScreen,

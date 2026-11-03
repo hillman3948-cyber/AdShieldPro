@@ -22,3 +22,20 @@ signing.properties
 # Node dependencies and logs
 node_modules/
 npm-debug.log*
+
+# AETHER AI runtime state (keys, tokens, database, caches)
+.venv/
+__pycache__/
+*.pyc
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+aether/data/
+aether/intel/feed.runtime.json
+aether/intel/feed.runtime.json.sig
+aether/intel/trusted_keys/runtime-*.pem
+.env
+
+# Public Ed25519 verification keys for signed feeds ARE committed (private keys
+# live in aether/data/keys and stay ignored via `aether/data/` above).
+!aether/intel/trusted_keys/*.pem

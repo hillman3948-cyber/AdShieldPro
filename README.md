@@ -1,6 +1,44 @@
 # AdShield Pro 2.2.5 — Android DNS Ad & Tracker Protection
 
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
+
+## AETHER AI — OMNISHIELD X INFINITY (new)
+
+This branch upgrades the existing DNS architecture into a working, privacy-first
+cybersecurity ecosystem. All existing AdShield Pro functionality is preserved; AETHER
+is additive.
+
+- **On-device Android integration:** `AdShieldVpnService` now runs
+  `AetherThreatEngine.analyze()` on every DNS query, after the original
+  `FilterRuleEngine` check. Confirmed intelligence from a bundled subset of the signed
+  real threat feed is auto-blocked (user-toggleable); suspicious heuristics are only
+  flagged; analysis errors fail open so DNS keeps working. A new **Aether AI** tab
+  provides investigation, assistant, lessons, permission-based settings, approved
+  expiring allowlisting and safe rollback.
+- **Working backend + live dashboard:** `bash aether/run.sh` serves an authenticated
+  JSON API and a 10-view dashboard at port 8000. It includes real DNS wire lookups with
+  measured latency/bytes, anomaly detection, signed threat intelligence with automatic
+  verified updates, encrypted audit logs with a hash chain, a tool-using assistant,
+  privacy analysis, graded lessons and a validated model-improvement pipeline.
+- **Real, measurable detection:** 14,419 indicators from four evidence-linked public
+  sources; validation precision 1.000 / recall 0.929 / FP rate 0.000 on a labeled
+  corpus. Held-out real IOC recall (0.020) is reported honestly rather than hidden.
+- **44 automated tests pass** (`python3 aether/run_tests.py` — requires the venv from
+  `aether/run.sh`), covering signed-feed tampering, detection, policy/rollback, audit
+  integrity, prompt injection, encryption, CSRF/scopes and full HTTP integration.
+
+Start here: [`aether/README.md`](aether/README.md) ·
+[module docs & limitations](docs/aether/MODULES.md) ·
+[API reference](docs/aether/API.md) ·
+[security design](docs/aether/SECURITY.md) ·
+[cross-platform notes](docs/aether/CROSS_PLATFORM.md) ·
+[test results](docs/aether/TEST_RESULTS.md).
+
+> AETHER is an explainable, versioned rule engine plus a tool-using assistant — not a
+> claim of general artificial intelligence or guaranteed prevention. It never executes
+> files, inspects HTTPS payloads, performs offensive actions, or claims universal
+> application-level ad blocking where the OS forbids it.
+
 ## Website and downloads
 
 - **Project website:** [https://adshieldpro-docs.vercel.app](https://adshieldpro-docs.vercel.app/)

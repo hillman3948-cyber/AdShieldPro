@@ -2,6 +2,8 @@ package com.adshield.pro.di
 
 import android.content.Context
 import androidx.room.Room
+import com.adshield.pro.aether.AetherPolicy
+import com.adshield.pro.aether.SharedPreferencesAetherPolicyStore
 import com.adshield.pro.data.local.db.AdShieldDao
 import com.adshield.pro.data.local.db.AdShieldDatabase
 import dagger.Module
@@ -34,5 +36,12 @@ object AppModule {
     @Singleton
     fun provideAdShieldDao(database: AdShieldDatabase): AdShieldDao {
         return database.adShieldDao()
+    }
+
+    /** AETHER AI on-device policy store (user-approved allowlist + rollback snapshots). */
+    @Provides
+    @Singleton
+    fun provideAetherPolicy(@ApplicationContext context: Context): AetherPolicy {
+        return AetherPolicy(SharedPreferencesAetherPolicyStore(context))
     }
 }

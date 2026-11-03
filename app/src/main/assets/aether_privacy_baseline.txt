@@ -1,0 +1,36 @@
+# AETHER AI on-device privacy baseline (trackers/ads/telemetry, NOT malware)
+# generated_at=2026-11-03T07:58:19Z  feed_version=20261103T075819Z
+# Format: category|domain|source_id|observed_at|confidence
+ad|doubleclick.net|curated_privacy_baseline|2026-11-03T07:58:19Z|0.95
+tracker|google-analytics.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.95
+tracker|googletagmanager.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+ad|googlesyndication.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+ad|googleadservices.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+ad|adservice.google.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|facebook.net|curated_privacy_baseline|2026-11-03T07:58:19Z|0.92
+tracker|connect.facebook.net|curated_privacy_baseline|2026-11-03T07:58:19Z|0.92
+tracker|scorecardresearch.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+tracker|quantserve.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+ad|adnxs.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.9
+ad|criteo.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+ad|taboola.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+ad|outbrain.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|hotjar.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.88
+tracker|fullstory.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.88
+tracker|segment.io|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|amplitude.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|mixpanel.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|branch.io|curated_privacy_baseline|2026-11-03T07:58:19Z|0.82
+tracker|appsflyer.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+tracker|adjust.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.85
+telemetry|bugsnag.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+telemetry|sentry.io|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+telemetry|telemetry.mozilla.org|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+telemetry|data.microsoft.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.78
+telemetry|device-metrics-us.amazon.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.78
+url_shortener|bit.ly|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+url_shortener|tinyurl.com|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+url_shortener|t.co|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+url_shortener|goo.gl|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+url_shortener|cutt.ly|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8
+url_shortener|rebrand.ly|curated_privacy_baseline|2026-11-03T07:58:19Z|0.8

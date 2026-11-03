@@ -61,7 +61,12 @@ data class AppSettingsState(
     val gameBoosterTempWarningCelsius: Int = 41,
     val gameSessionRecords: List<GameSessionRecord> = emptyList(),
     val batteryMode: BatteryMode = BatteryMode.SMART_AUTOMATIC,
-    val lastSmartBoostEpochMs: Long = 0L
+    val lastSmartBoostEpochMs: Long = 0L,
+    // --- AETHER AI on-device protection settings ---
+    val aetherEnabled: Boolean = true,
+    val aetherAutoBlockConfirmed: Boolean = true,
+    val aetherPrivacyLevel: String = "balanced", // minimal | balanced | strict
+    val aetherExplainLevel: String = "beginner" // beginner | intermediate | professional
 )
 
 enum class DarkThemePreference(val label: String) {
@@ -117,6 +122,12 @@ class UserPreferencesRepository @Inject constructor(
         val GAME_SESSIONS_JSON = stringPreferencesKey("game_sessions_json")
         val BATTERY_MODE = stringPreferencesKey("battery_mode")
         val LAST_SMART_BOOST_MS = longPreferencesKey("last_smart_boost_epoch_ms")
+
+        // AETHER AI keys
+        val AETHER_ENABLED = booleanPreferencesKey("aether_enabled")
+        val AETHER_AUTO_BLOCK_CONFIRMED = booleanPreferencesKey("aether_auto_block_confirmed")
+        val AETHER_PRIVACY_LEVEL = stringPreferencesKey("aether_privacy_level")
+        val AETHER_EXPLAIN_LEVEL = stringPreferencesKey("aether_explain_level")
     }
 
     val settingsFlow: Flow<AppSettingsState> = context.adShieldDataStore.data.map { prefs ->
@@ -189,7 +200,11 @@ class UserPreferencesRepository @Inject constructor(
             gameBoosterTempWarningCelsius = prefs[Keys.GAME_TEMP_WARNING_C] ?: 41,
             gameSessionRecords = gameSessions,
             batteryMode = batteryMode,
-            lastSmartBoostEpochMs = prefs[Keys.LAST_SMART_BOOST_MS] ?: 0L
+            lastSmartBoostEpochMs = prefs[Keys.LAST_SMART_BOOST_MS] ?: 0L,
+            aetherEnabled = prefs[Keys.AETHER_ENABLED] ?: true,
+            aetherAutoBlockConfirmed = prefs[Keys.AETHER_AUTO_BLOCK_CONFIRMED] ?: true,
+            aetherPrivacyLevel = prefs[Keys.AETHER_PRIVACY_LEVEL] ?: "balanced",
+            aetherExplainLevel = prefs[Keys.AETHER_EXPLAIN_LEVEL] ?: "beginner"
         )
     }
 
@@ -371,6 +386,22 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun setBatteryMode(mode: BatteryMode) {
         context.adShieldDataStore.edit { prefs ->
             prefs[Keys.BATTERY_MODE] = mode.name
+        }
+    }
+
+    // --- AETHER AI settings -------------------------------------------------
+
+    suspend fun updateAetherSettings(
+        enabled: Boolean,
+        autoBlockConfirmed: Boolean,
+        privacyLevel: String,
+        explanationLevel: String
+    ) {
+        context.adShieldDataStore.edit { prefs ->
+            prefs[Keys.AETHER_ENABLED] = enabled
+            prefs[Keys.AETHER_AUTO_BLOCK_CONFIRMED] = autoBlockConfirmed
+            prefs[Keys.AETHER_PRIVACY_LEVEL] = if (privacyLevel in setOf("minimal", "balanced", "strict")) privacyLevel else "balanced"
+            prefs[Keys.AETHER_EXPLAIN_LEVEL] = if (explanationLevel in setOf("beginner", "intermediate", "professional")) explanationLevel else "beginner"
         }
     }
 }

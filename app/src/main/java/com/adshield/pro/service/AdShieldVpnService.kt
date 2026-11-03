@@ -18,8 +18,11 @@ import android.os.ParcelFileDescriptor
 import androidx.core.app.NotificationCompat
 import com.adshield.pro.MainActivity
 import com.adshield.pro.R
+import com.adshield.pro.aether.AetherPolicy
+import com.adshield.pro.aether.AetherThreatEngine
 import com.adshield.pro.data.local.preferences.UserPreferencesRepository
 import com.adshield.pro.data.repository.AdShieldRepository
+import com.adshield.pro.domain.model.RuleCategory
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.engine.dns.DnsPacketCodec
 import com.adshield.pro.engine.dns.IpPacketFraming
@@ -58,6 +61,8 @@ class AdShieldVpnService : VpnService() {
     @Inject lateinit var preferencesRepository: UserPreferencesRepository
     @Inject lateinit var filterRuleEngine: FilterRuleEngine
     @Inject lateinit var upstreamDnsResolver: UpstreamDnsResolver
+    @Inject lateinit var aetherEngine: AetherThreatEngine
+    @Inject lateinit var aetherPolicy: AetherPolicy
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var vpnInterface: ParcelFileDescriptor? = null
@@ -383,6 +388,34 @@ class AdShieldVpnService : VpnService() {
             )
             maybeRefreshNotificationCounter()
             return blockedBytes
+        }
+
+        // AETHER AI — real-time analysis on the same DNS request path. Existing
+        // FilterRuleEngine behavior above is preserved; AETHER only blocks when
+        // a bundled, signed-feed indicator is CONFIRMED (or strict privacy mode
+        // is explicitly chosen). Analysis errors fail open so DNS keeps working.
+        val aetherVerdict = aetherEngine.analyze(query.questionDomain, currentSettings, aetherPolicy)
+        if (aetherVerdict.shouldBlock) {
+            val mode = filterRuleEngine.getCurrentSnapshot().protectionMode
+            val aetherBlockedBytes = DnsPacketCodec.buildBlockedResponse(
+                query = query,
+                sinkholeZeroIp = mode.blockSinkholeZeroIp
+            )
+            repository.recordDnsQueryEvent(
+                domain = query.questionDomain,
+                queryType = query.qTypeName,
+                isBlocked = true,
+                category = if (aetherVerdict.classification == "privacy_risk") RuleCategory.TRACKERS else RuleCategory.MALWARE,
+                matchedRule = aetherVerdict.signals.firstOrNull()?.id ?: "aether_intel",
+                sourceList = "AETHER AI: ${aetherVerdict.classification} (${aetherVerdict.reasonCode})",
+                latencyMs = 0,
+                protocolUsed = "AETHER ${aetherVerdict.rulesetVersion}",
+                fromCache = false,
+                appPackageName = app?.packageName,
+                appName = app?.label
+            )
+            maybeRefreshNotificationCounter()
+            return aetherBlockedBytes
         }
 
         // Allowed domain: resolve via configured DoH / DoT / Protected UDP-TCP resolver
