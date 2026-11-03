@@ -1,10 +1,12 @@
-# AdShield Pro 2.2.5 — Android DNS Ad & Tracker Protection
+# AdShield Pro 2.3.0 — Android DNS Ad & Tracker Protection
+
+[![Android build & test](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml/badge.svg)](https://github.com/yawiyuson231-oss/AdShieldPro/actions/workflows/android-build.yml)
 
 AdShield Pro is a non-root Android app that filters DNS requests on-device and includes a built-in privacy browser and device-maintenance tools. It is built with Kotlin, Jetpack Compose (Material 3), Room, DataStore, WorkManager, Hilt, and Android `VpnService`.
 ## Website and downloads
 
 - **Project website:** [https://adshieldpro-docs.vercel.app](https://adshieldpro-docs.vercel.app/)
-- **Direct APK download — v2.2.5:** [AdShield-Pro-2.2.5.apk](https://github.com/hillman3948-cyber/AdShieldPro/releases/download/v2.2.5/AdShield-Pro-2.2.5.apk)
+- **Direct APK download:** [latest AdShield Pro release](https://github.com/hillman3948-cyber/AdShieldPro/releases/latest)
 - [Browse all GitHub releases](https://github.com/hillman3948-cyber/AdShieldPro/releases)
 
 ## App screenshots
@@ -36,6 +38,23 @@ AdShield Pro is a non-root Android app that filters DNS requests on-device and i
 - **Use Game Booster and battery modes:** Select games and choose AdShield workload profiles that adjust its cache, background filter sync, and local logging behavior. Battery and thermal tools show device readings and can adapt AdShield's own background work; they do not override Android's system-wide power controls.
 - **Check for app updates:** Check GitHub Releases from Home or receive a background update notification when Android runs scheduled work. The app downloads the signed APK and opens Android's installer; users approve installation themselves.
 - **Keep settings on the device:** Settings, custom rules, and activity history are stored locally. Allowed DNS lookups are sent to the upstream DNS provider selected in the app, and that provider's privacy terms apply.
+
+## Building and testing
+
+Everything needed is pinned in the repository (Gradle 9.7.1 wrapper, AGP 9.4.1, Kotlin 2.4.21,
+`compileSdk = 37`, `minSdk = 29`). Install a JDK 17+ and Android SDK Platform 37, then:
+
+```bash
+./gradlew :app:assembleDebug        # debug APK
+./gradlew :app:testDebugUnitTest    # JVM unit test suite
+./gradlew :app:lintDebug            # Android Lint
+```
+
+The JVM suite (`app/src/test/java/com/adshield/pro/AdShieldEngineTestSuite.kt`) covers DNS wire-format
+parsing, UDP/TCP packet framing and checksums, upstream response validation and cache policy, UDP
+truncation and TCP segmentation limits, the filter rule engine and the browser blocker.
+See [docs/TESTING.md](docs/TESTING.md) for the full matrix, signing requirements and the on-device
+smoke test checklist.
 
 ## Download and project links
 

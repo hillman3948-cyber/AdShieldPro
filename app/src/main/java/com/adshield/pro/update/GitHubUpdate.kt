@@ -98,7 +98,7 @@ class GitHubUpdateWorker @AssistedInject constructor(
             }
             val pending = PendingIntent.getActivity(applicationContext, release.code, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             notifications.notify(ID, NotificationCompat.Builder(applicationContext, CHANNEL)
-                .setSmallIcon(R.drawable.ic_shield_logo)
+                .setSmallIcon(R.drawable.ic_notification_shield)
                 .setContentTitle("AdShield Pro " + release.name + " is available")
                 .setContentText("Tap to review the update and release notes.")
                 .setContentIntent(pending).setAutoCancel(true).build())

@@ -1,0 +1,174 @@
+name: Android build & test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - arena/dfe56e37-adshieldpro
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Install Android SDK (API 37 ships as 37.0 / 37.1 / 37.2)
+        run: |
+          mkdir -p .ci
+          SDKMGR="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMGR" ]; then SDKMGR=sdkmanager; fi
+          {
+            echo "ANDROID_HOME=$ANDROID_HOME"
+            "$SDKMGR" --version 2>&1 | head -3
+            echo "--- available API 37 platforms in the repository ---"
+            "$SDKMGR" --list 2>/dev/null | grep -E "platforms;android-3[6-9]\.[0-9]" | head -10
+            yes | "$SDKMGR" --licenses > /dev/null 2>&1 || true
+            for pkg in "platforms;android-37.0" "platforms;android-37.2" "build-tools;36.0.0" "platform-tools"; do
+              echo "--- installing $pkg ---"
+              "$SDKMGR" --install "$pkg" 2>&1 | tail -4 || true
+            done
+            echo "--- platforms ---"
+            ls "$ANDROID_HOME/platforms" 2>/dev/null | grep -E "^android-3[5-9]" || ls "$ANDROID_HOME/platforms"
+            echo "--- build-tools ---"
+            ls "$ANDROID_HOME/build-tools" 2>/dev/null
+          } 2>&1 | tee .ci/sdk.log
+          ls "$ANDROID_HOME/platforms" | grep -qE "^android-37" || { echo "::error::no API 37 platform available"; exit 1; }
+
+      - name: Gradle & JDK versions
+        run: |
+          chmod +x gradlew tools/gradle-ci.sh
+          ./gradlew --version 2>&1 | tee .ci/gradle-version.log
+
+      - name: Compile Kotlin (fails fast on the AGP 9 / Kotlin 2.4 migration)
+        run: |
+          set -o pipefail
+          tools/gradle-ci.sh .ci/compile.log :app:compileDebugKotlin
+
+      - name: Assemble debug APK
+        run: |
+          set -o pipefail
+          tools/gradle-ci.sh .ci/assemble.log :app:assembleDebug
+
+      - name: Release build with R8 + resource shrinking (throwaway keystore)
+        run: |
+          set -o pipefail
+          keytool -genkeypair -v -keystore /tmp/ci-release.jks -storepass cionly123 \
+            -alias ci -keypass cionly123 -keyalg RSA -keysize 2048 -validity 30 \
+            -dname "CN=AdShield CI, OU=CI, O=AdShield, C=PH" > /dev/null 2>&1
+          export ADSHIELD_KEYSTORE_PATH=/tmp/ci-release.jks
+          export ADSHIELD_KEYSTORE_PASSWORD=cionly123
+          export ADSHIELD_KEY_ALIAS=ci
+          export ADSHIELD_KEY_PASSWORD=cionly123
+          tools/gradle-ci.sh .ci/release.log :app:assembleRelease
+          APK="$(ls app/build/outputs/apk/release/*.apk | head -1)"
+          test -s "$APK"
+          unzip -l "$APK" | grep -q 'AndroidManifest.xml'
+          unzip -l "$APK" | grep -qE 'classes[0-9]*\.dex'
+          echo "release APK: $APK"
+          ls -l "$APK"
+          sha256sum "$APK"
+
+      - name: JVM unit tests
+        run: |
+          set -o pipefail
+          tools/gradle-ci.sh .ci/test.log :app:testDebugUnitTest
+
+      - name: Android lint
+        run: |
+          set -o pipefail
+          tools/gradle-ci.sh .ci/lint.log :app:lintDebug
+
+      - name: Assert unit tests actually ran (18 cases)
+        run: |
+          python3 - <<'EOF'
+          import glob, sys, xml.etree.ElementTree as ET
+          files = glob.glob('app/build/test-results/testDebugUnitTest/TEST-*.xml')
+          if not files:
+              sys.exit('no JUnit XML produced: the test task did not run any tests')
+          total = failures = errors = skipped = 0
+          for path in files:
+              root = ET.parse(path).getroot()
+              total += int(root.get('tests', 0))
+              failures += int(root.get('failures', 0))
+              errors += int(root.get('errors', 0))
+              skipped += int(root.get('skipped', 0))
+              for case in root.iter('testcase'):
+                  print('  PASS' if len(case.findall('failure')) == 0 and len(case.findall('error')) == 0
+                        else '  FAIL', case.get('name'))
+          print(f'tests={total} failures={failures} errors={errors} skipped={skipped}')
+          expected = 18
+          if total != expected or failures or errors:
+              sys.exit(f'expected {expected} passing tests, got total={total} failures={failures} errors={errors}')
+          EOF
+
+      - name: Assert the debug APK is a real, installable package
+        run: |
+          APK="$(ls app/build/outputs/apk/debug/*.apk | head -1)"
+          test -s "$APK"
+          unzip -l "$APK" | grep -q 'AndroidManifest.xml'
+          unzip -l "$APK" | grep -qE 'classes[0-9]*\.dex'
+          unzip -l "$APK" | grep -q 'resources.arsc'
+          echo "APK: $APK"
+          ls -l "$APK"
+          sha256sum "$APK"
+
+      - name: Surface Gradle errors as annotations
+        if: failure()
+        run: |
+          cat .ci/*.log 2>/dev/null \
+            | grep -E "^e: |FAILURE:|What went wrong|Execution failed|Caused by|Unresolved reference|Could not (resolve|find)|error:" \
+            | head -20 | while IFS= read -r line; do echo "::error::$line"; done || true
+
+      - name: Upload debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adshield-pro-2.3.0-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload reports
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-reports
+          path: |
+            .ci/**
+            app/build/reports/tests/**
+            app/build/reports/lint-results-debug.*
+            app/build/test-results/**
+          if-no-files-found: ignore
+
+      # The Actions log endpoint is not reachable from every environment, so the
+      # raw logs are mirrored into this branch under .ci/ as well.
+      - name: Mirror logs into the branch (only when something failed)
+        if: failure() && github.event_name != 'pull_request'
+        continue-on-error: true
+        run: |
+          git config user.name "AdShield CI"
+          git config user.email "ci@adshield.local"
+          git add -f .ci || exit 0
+          git diff --cached --quiet && exit 0
+          git commit -m "CI logs [skip ci]"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME" || true
+          git push origin "HEAD:$GITHUB_REF_NAME" || true

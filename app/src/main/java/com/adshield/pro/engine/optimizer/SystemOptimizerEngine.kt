@@ -204,7 +204,28 @@ class SystemOptimizerEngine @Inject constructor(
     @Volatile
     private var activeGamingPackage: String? = null
 
-    fun isGamingSessionActive(): Boolean = activeGamingPackage != null
+    @Volatile
+    private var gamingSessionStartedAtMs: Long = 0L
+
+    /**
+     * A game session is treated as active for at most [GAMING_SESSION_TIMEOUT_MS]. Without this
+     * bound the flag set by Game Booster would stay true for the whole process lifetime and
+     * permanently suppress scheduled maintenance.
+     */
+    fun isGamingSessionActive(): Boolean {
+        val packageName = activeGamingPackage
+        if (packageName == null) return false
+        if (isGamingSessionExpired(gamingSessionStartedAtMs, System.currentTimeMillis())) {
+            endGamingSession()
+            return false
+        }
+        return true
+    }
+
+    fun endGamingSession() {
+        activeGamingPackage = null
+        gamingSessionStartedAtMs = 0L
+    }
 
     // --- 1. REAL-TIME SYSTEM SNAPSHOTS (RAM, STORAGE, BATTERY & THERMAL) ---
 
@@ -784,6 +805,7 @@ class SystemOptimizerEngine @Inject constructor(
         // 5. Record session and launch game if specified
         if (!packageName.isNullOrBlank()) {
             activeGamingPackage = packageName
+            gamingSessionStartedAtMs = System.currentTimeMillis()
             val ram = readRamSnapshot()
             preferencesRepository.recordGameSession(
                 GameSessionRecord(
@@ -858,6 +880,16 @@ class SystemOptimizerEngine @Inject constructor(
         }
         actions.add("Active VPN ad-blocking tunnel was preserved without interruption.")
         actions
+    }
+
+    companion object {
+        /** Game Booster sessions older than this are considered finished. */
+        const val GAMING_SESSION_TIMEOUT_MS = 6L * 60L * 60L * 1000L
+
+        fun isGamingSessionExpired(startedAtMs: Long, nowMs: Long): Boolean {
+            if (startedAtMs <= 0L) return true
+            return nowMs - startedAtMs >= GAMING_SESSION_TIMEOUT_MS
+        }
     }
 
     // --- 6. ONE-TAP AI SMART BOOST & DASHBOARD "OPTIMIZE NOW" PIPELINE ---

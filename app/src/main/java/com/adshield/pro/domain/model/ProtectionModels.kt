@@ -165,4 +165,12 @@ data class DnsResolverConfig(
 
     val activeSecondaryIpv4: String
         get() = if (preset == DnsProviderPreset.CUSTOM) customSecondaryIpv4.ifBlank { preset.secondaryIpv4 } else preset.secondaryIpv4
+
+    /** Primary IPv6 resolver address, used for IPv6-only networks and as a fallback. */
+    val activePrimaryIpv6: String
+        get() = preset.primaryIpv6
+
+    /** Secondary IPv6 resolver address, used for IPv6-only networks and as a fallback. */
+    val activeSecondaryIpv6: String
+        get() = preset.secondaryIpv6
 }

@@ -1,4 +1,4 @@
-# AdShield Pro v2.1 — Privacy Policy & Google Play Data Safety Disclosure
+# AdShield Pro v2.3 — Privacy Policy & Google Play Data Safety Disclosure
 
 **Effective Date:** October 24, 2026  
 **Application:** AdShield Pro (`com.adshield.pro`)

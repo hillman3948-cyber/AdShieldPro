@@ -33,6 +33,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
@@ -85,8 +87,15 @@ class AdShieldVpnService : VpnService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_STOP_VPN -> {
-                serviceScope.launch {
-                    preferencesRepository.setVpnShouldRemainActive(false)
+                // The user explicitly turned protection off: this must be durable before
+                // stopSelf() tears down the service scope, otherwise the pending DataStore
+                // write is cancelled and protection would silently come back after a reboot.
+                runCatching {
+                    runBlocking {
+                        withTimeout(SHUTDOWN_PERSIST_TIMEOUT_MS) {
+                            preferencesRepository.setVpnShouldRemainActive(false)
+                        }
+                    }
                 }
                 stopVpnTunnel()
                 stopSelf()
@@ -248,7 +257,12 @@ class AdShieldVpnService : VpnService() {
         val dnsQuery = DnsPacketCodec.parseQuery(udpPacket.payload) ?: return
         val app = resolveDnsOwner(IpPacketFraming.PROTOCOL_UDP, udpPacket)
         val dnsResponseBytes = processDnsQuery(dnsQuery, app)
-        val responseIpPacket = IpPacketFraming.buildUdpResponsePacket(udpPacket, dnsResponseBytes)
+        // Encrypted upstream transports can return answers far larger than the tunnel MTU.
+        // Anything that does not fit is replaced by a TC=1 answer so the stub resolver retries
+        // over TCP (handled below) instead of the client silently timing out.
+        val udpCapacity = IpPacketFraming.udpPayloadCapacity(udpPacket.ipVersion, VPN_MTU)
+        val udpSafeResponse = DnsPacketCodec.fitResponseToUdpLimit(dnsQuery, dnsResponseBytes, udpCapacity)
+        val responseIpPacket = IpPacketFraming.buildUdpResponsePacket(udpPacket, udpSafeResponse)
         writeToTunSafe(outputStream, responseIpPacket)
     }
 
@@ -289,14 +303,16 @@ class AdShieldVpnService : VpnService() {
                     tcpDnsPayload[1] = (dnsResp.size and 0xFF).toByte()
                     System.arraycopy(dnsResp, 0, tcpDnsPayload, 2, dnsResp.size)
 
-                    val respSegment = IpPacketFraming.buildTcpResponsePacket(
+                    // Large DNS answers must be segmented so every packet fits the tunnel MTU;
+                    // a single oversized packet with DF set is dropped by the IP stack.
+                    val segments = IpPacketFraming.buildTcpResponseSegments(
                         request = tcpPacket,
-                        seqNum = tcpPacket.acknowledgmentNumber,
+                        startSeqNum = tcpPacket.acknowledgmentNumber,
                         ackNum = (tcpPacket.sequenceNumber + tcpPacket.payload.size) and 0xFFFFFFFFL,
-                        flags = IpPacketFraming.TCP_FLAG_PSH or IpPacketFraming.TCP_FLAG_ACK,
-                        tcpPayload = tcpDnsPayload
+                        tcpPayload = tcpDnsPayload,
+                        maxSegmentPayloadBytes = IpPacketFraming.tcpPayloadCapacity(tcpPacket.ipVersion, VPN_MTU)
                     )
-                    writeToTunSafe(outputStream, respSegment)
+                    segments.forEach { segment -> writeToTunSafe(outputStream, segment) }
                 }
             }
         }
@@ -535,7 +551,7 @@ class AdShieldVpnService : VpnService() {
         val content = "Blocked ${state.sessionBlockedQueries} of ${state.sessionTotalQueries} DNS queries • ${state.resolverConfig.protocol.name}"
 
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_shield_logo)
+            .setSmallIcon(R.drawable.ic_notification_shield)
             .setContentTitle(title)
             .setContentText(content)
             .setOngoing(true)
@@ -604,6 +620,7 @@ class AdShieldVpnService : VpnService() {
         private const val NOTIFICATION_ID = 2001
 
         private const val VPN_MTU = 1500
+        private const val SHUTDOWN_PERSIST_TIMEOUT_MS = 1_500L
         private const val MAX_PACKET_SIZE = 32767
 
         const val VIRTUAL_IPV4_CLIENT = "10.215.173.1"

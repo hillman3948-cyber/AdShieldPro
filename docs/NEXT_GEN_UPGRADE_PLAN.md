@@ -46,6 +46,12 @@ The public [BlockAds Android repository](https://github.com/pass-with-high-score
 1. **Correctness and privacy (done in this update):** repair IPv6 setup, prevent encrypted DNS downgrade, disable automatic app-data backup, correct privacy disclosures.
 2. **Release integrity (done in source; credentials remain operator-provided):** update target/tooling baseline; refuse debug-signed release; require production verifier URL.
 3. **Build and regression validation (partly verified):** `testDebugUnitTest`, `assembleDebug`, and `lintDebug` passed on AGP 8.9.3 / API 36; API 36 was installed by the build tool. No Android device is attached (`adb devices` is empty), so physical install/upgrade, IPv4-only/dual-stack, network-switch, battery, and memory checks remain pending. No performance superiority claim without a reproducible comparison against the reference.
+> **Status (2.3.0):** the compatibility pass described in item 4 has been done — AGP 9.4.1 /
+> Gradle 9.7.1 / Kotlin 2.4.21 / `compileSdk 37` and the full AndroidX + Compose 2026.09.00
+> generation are in place, together with the new adaptive launcher icon and the repository
+> fixes listed in `docs/UPGRADE.md`. See that document for what was executed and what still
+> needs a machine with an Android SDK.
+
 4. **Product follow-up:** complete a screen-by-screen UX refresh; audit optimizer copy against actual Android APIs; improve resolver/VPN diagnostics; add accessibility/navigation checks; then prioritize search, Quick Settings tile/widget, and Filipino strings. Lint reports newer versions for 21 AndroidX/Test libraries plus AGP 9.4.1; update those in a separate compatibility pass because the larger upgrades need migration and regression checks.
 5. **Store readiness:** finish VPN and special-use foreground-service declarations, privacy/data-safety answers, signed AAB, and user testing. Do not submit until these external items are complete.
 

@@ -100,7 +100,7 @@ class AdShieldRepository @Inject constructor(
                 domain = entity.domain,
                 queryType = entity.queryType,
                 isBlocked = entity.isBlocked,
-                category = entity.category?.let { runCatching { RuleCategory.valueOf(it) }.getOrNull() },
+                category = parseRuleCategoryOrNull(entity.category),
                 matchedRule = entity.matchedRule,
                 sourceList = entity.sourceList,
                 latencyMs = entity.latencyMs,
@@ -441,23 +441,40 @@ class AdShieldRepository @Inject constructor(
         }
     }
 
+    /** Parses a persisted [RuleCategory] name, or null when the stored value no longer exists. */
+    private fun parseRuleCategoryOrNull(raw: String?): RuleCategory? =
+        raw?.let { name -> RuleCategory.entries.firstOrNull { it.name.equals(name, ignoreCase = true) } }
+
+    /** Parses a persisted [RuleCategory] name, falling back to [RuleCategory.ADS]. */
+    private fun parseRuleCategory(raw: String?): RuleCategory =
+        parseRuleCategoryOrNull(raw) ?: RuleCategory.ADS
+
+    /**
+     * Imports newline-separated rules, skipping invalid lines, duplicates inside the import and
+     * rules that are already stored. Returns the number of rules that were actually inserted, so
+     * the UI can report a truthful count (the old implementation counted parsed lines before the
+     * database write had happened).
+     */
     suspend fun importRulesFromText(content: String): Int = withContext(Dispatchers.IO) {
-        var imported = 0
+        val storedKeys = dao.getAllCustomRulesNow()
+            .mapTo(HashSet()) { entity -> entity.normalizedPattern to entity.ruleType }
+        val batchedKeys = HashSet<Pair<String, String>>()
         val toInsert = ArrayList<CustomRuleEntity>()
         content.lineSequence().forEach { line ->
             val trimmed = line.trim()
             if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("!")) return@forEach
-            val parsed = filterEngine.validateAndParseRuleInput(trimmed).getOrNull()
-            if (parsed != null) {
-                toInsert.add(parsed.toEntity())
-                imported++
+            val parsed = filterEngine.validateAndParseRuleInput(trimmed).getOrNull() ?: return@forEach
+            val entity = parsed.toEntity()
+            val key = entity.normalizedPattern to entity.ruleType
+            if (key !in storedKeys && batchedKeys.add(key)) {
+                toInsert.add(entity)
             }
         }
         if (toInsert.isNotEmpty()) {
             dao.insertCustomRules(toInsert)
             syncCustomRulesToEngine()
         }
-        imported
+        toInsert.size
     }
 
     private suspend fun syncCustomRulesToEngine() {
@@ -540,7 +557,7 @@ class AdShieldRepository @Inject constructor(
                     val assetContent = readBundledDefaultBlocklist()
                     val parsed = filterEngine.parseFilterListContent(
                         assetContent,
-                        RuleCategory.valueOf(source.category),
+                        parseRuleCategory(source.category),
                         source.name
                     ).getOrNull()
                     if (parsed != null) {
@@ -579,8 +596,7 @@ class AdShieldRepository @Inject constructor(
                         if (bodyStr.length > 15_000_000) {
                             throw IllegalStateException("Filter list exceeds safe memory limit (15 MB)")
                         }
-                        val category = runCatching { RuleCategory.valueOf(source.category) }
-                            .getOrDefault(RuleCategory.ADS)
+                        val category = parseRuleCategory(source.category)
                         val parsed = filterEngine.parseFilterListContent(bodyStr, category, source.name)
                             .getOrThrow()
 
@@ -649,7 +665,7 @@ class AdShieldRepository @Inject constructor(
         }
     }
 
-    private fun rebuildActiveFilterListsLocked(sources: List<FilterSourceEntity>) {
+    private suspend fun rebuildActiveFilterListsLocked(sources: List<FilterSourceEntity>) {
         val mergedSubdomains = HashMap<String, FilterRuleEngine.FilterListEntry>(4096)
         val mergedExact = HashMap<String, FilterRuleEngine.FilterListEntry>()
         val mergedWildcards = ArrayList<FilterRuleEngine.WildcardEntry>()
@@ -659,7 +675,7 @@ class AdShieldRepository @Inject constructor(
         // Always load bundled baseline if enabled or if no other source has cached rules yet
         for (source in sources) {
             if (!source.isEnabled) continue
-            val category = runCatching { RuleCategory.valueOf(source.category) }.getOrDefault(RuleCategory.ADS)
+            val category = parseRuleCategory(source.category)
 
             val rawContent: String? = if (source.url.startsWith("asset://")) {
                 readBundledDefaultBlocklist()
@@ -681,15 +697,15 @@ class AdShieldRepository @Inject constructor(
                     mergedAllow.addAll(parsed.allowSubdomains)
 
                     if (source.ruleCount == 0) {
-                        repositoryScope.launch {
-                            dao.upsertFilterSource(
-                                source.copy(
-                                    ruleCount = parsed.totalValidRules,
-                                    duplicateCount = parsed.duplicateCount,
-                                    lastUpdatedEpochMs = if (source.lastUpdatedEpochMs == 0L) now else source.lastUpdatedEpochMs
-                                )
+                        // Awaited on purpose: this runs under filterMutex, and a detached
+                        // write could land after a later rebuild and resurrect stale counts.
+                        dao.upsertFilterSource(
+                            source.copy(
+                                ruleCount = parsed.totalValidRules,
+                                duplicateCount = parsed.duplicateCount,
+                                lastUpdatedEpochMs = if (source.lastUpdatedEpochMs == 0L) now else source.lastUpdatedEpochMs
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -748,8 +764,16 @@ class AdShieldRepository @Inject constructor(
                 ).getOrNull()?.copy(isEnabled = rule.isEnabled)?.toEntity()
             }
 
-            dao.clearAllCustomRules()
-            dao.insertCustomRules(validEntities)
+            // Merge: a restore must not delete rules the user created after the backup was
+            // taken. Only rules that are not already stored are inserted.
+            val storedKeys = dao.getAllCustomRulesNow()
+                .mapTo(HashSet()) { entity -> entity.normalizedPattern to entity.ruleType }
+            val newEntities = validEntities.filter { entity ->
+                (entity.normalizedPattern to entity.ruleType) !in storedKeys
+            }
+            if (newEntities.isNotEmpty()) {
+                dao.insertCustomRules(newEntities)
+            }
             syncCustomRulesToEngine()
 
             for (site in backup.browserSiteExceptions) {

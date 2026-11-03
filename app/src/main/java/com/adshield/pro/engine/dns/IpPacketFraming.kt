@@ -268,6 +268,57 @@ object IpPacketFraming {
         )
     }
 
+    /**
+     * Splits a TCP payload into segments that each fit inside one TUN MTU and returns the
+     * ready-to-write IP packets with correctly advancing sequence numbers.
+     *
+     * A DNS-over-TCP answer can legitimately be several kilobytes. Emitting it as a single
+     * IP packet would exceed the tunnel MTU with DF set, the kernel drops it and the stub
+     * resolver only sees a stalled connection, so the answer is segmented instead.
+     */
+    fun buildTcpResponseSegments(
+        request: ParsedTransportPacket.TcpPacket,
+        startSeqNum: Long,
+        ackNum: Long,
+        tcpPayload: ByteArray,
+        maxSegmentPayloadBytes: Int
+    ): List<ByteArray> {
+        if (tcpPayload.isEmpty()) {
+            return listOf(
+                buildTcpResponsePacket(request, startSeqNum, ackNum, TCP_FLAG_ACK or TCP_FLAG_PSH)
+            )
+        }
+        val segmentSize = maxSegmentPayloadBytes.coerceAtLeast(1)
+        val packets = ArrayList<ByteArray>((tcpPayload.size / segmentSize) + 1)
+        var offset = 0
+        var sequence = startSeqNum and 0xFFFFFFFFL
+        while (offset < tcpPayload.size) {
+            val chunkLength = minOf(segmentSize, tcpPayload.size - offset)
+            val chunk = tcpPayload.copyOfRange(offset, offset + chunkLength)
+            packets.add(
+                buildTcpResponsePacket(
+                    request = request,
+                    seqNum = sequence,
+                    ackNum = ackNum,
+                    flags = TCP_FLAG_PSH or TCP_FLAG_ACK,
+                    tcpPayload = chunk
+                )
+            )
+            sequence = (sequence + chunkLength) and 0xFFFFFFFFL
+            offset += chunkLength
+        }
+        return packets
+    }
+
+    /**
+     * Maximum TCP payload per segment that fits inside one TUN MTU
+     * (IP header + 20-byte TCP header removed).
+     */
+    fun tcpPayloadCapacity(ipVersion: Int, mtu: Int = 1500): Int {
+        val ipHeaderLen = if (ipVersion == 4) 20 else 40
+        return (mtu - ipHeaderLen - 20).coerceAtLeast(1)
+    }
+
     private fun wrapInIpHeader(
         ipVersion: Int,
         srcIp: ByteArray,
@@ -307,6 +358,17 @@ object IpPacketFraming {
             System.arraycopy(transportSegment, 0, packet, 40, transportSegment.size)
             packet
         }
+    }
+
+    /**
+     * Maximum DNS payload that fits inside one UDP datagram on a TUN interface with [mtu]
+     * bytes, for IPv4 (20-byte header) or IPv6 (40-byte header). Used to decide when an
+     * upstream answer has to be truncated before it is written back to the tunnel.
+     */
+    fun udpPayloadCapacity(ipVersion: Int, mtu: Int = 1500): Int {
+        val ipHeaderLen = if (ipVersion == 4) 20 else 40
+        val udpHeaderLen = 8
+        return (mtu - ipHeaderLen - udpHeaderLen).coerceAtLeast(12)
     }
 
     /**

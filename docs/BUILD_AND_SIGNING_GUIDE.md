@@ -1,16 +1,16 @@
-# AdShield Pro v2.1 — APK & Signed AAB Release Build Instructions
+# AdShield Pro v2.3 — APK & Signed AAB Release Build Instructions
 
 ## 1. Environment Prerequisites
 
-- **JDK:** Java 17 or Java 21
-- **Android SDK:** API 36 (`compileSdk = 36`, `targetSdk = 36`, `minSdk = 29`); install with `sdkmanager "platforms;android-36"` if missing.
-- **Gradle:** Gradle 8.11.1 Wrapper (`.\gradlew.bat`)
+- **JDK:** Java 17 or Java 21 (AGP 9.4 requires JDK 17+)
+- **Android SDK:** API 37 (`compileSdk = 37`, `targetSdk = 36`, `minSdk = 29`); install with `sdkmanager "platforms;android-37"` if missing.
+- **Gradle:** Gradle 9.7.1 Wrapper (`.\gradlew.bat`), AGP 9.4.1, Kotlin 2.4.21
 
 ---
 
 ## 2. Building Debug & Release APKs (Deliverable 15)
 
-Run from `C:\Users\hillm\OneDrive\Desktop\PROJECT`:
+Run from the repository root (where `gradlew.bat` and `settings.gradle.kts` live):
 
 ### Build Debug APK
 ```powershell

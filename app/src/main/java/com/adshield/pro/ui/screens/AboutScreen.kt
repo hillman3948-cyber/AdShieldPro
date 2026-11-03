@@ -17,9 +17,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.SystemUpdateAlt
@@ -85,7 +85,7 @@ fun AboutScreen(onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back to settings")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to settings")
             }
             Spacer(Modifier.width(8.dp))
             Text("About", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -212,7 +212,7 @@ fun AboutScreen(onBack: () -> Unit) {
                             )
                         }
                         Icon(
-                            imageVector = Icons.Default.ChevronRight,
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = "Open ${link.title}",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)

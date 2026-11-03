@@ -4,6 +4,9 @@ import com.adshield.pro.data.local.db.AdShieldDatabase
 import com.adshield.pro.domain.model.BatteryThermalSnapshot
 import com.adshield.pro.domain.model.BottleneckSeverity
 import com.adshield.pro.domain.model.ProtectionMode
+import com.adshield.pro.domain.model.DnsProtocol
+import com.adshield.pro.domain.model.DnsProviderPreset
+import com.adshield.pro.domain.model.DnsResolverConfig
 import com.adshield.pro.domain.model.RamSnapshot
 import com.adshield.pro.domain.model.RuleCategory
 import com.adshield.pro.domain.model.RuleConflictReport
@@ -13,6 +16,7 @@ import com.adshield.pro.domain.model.StorageMetrics
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.dns.DnsPacketCodec
 import com.adshield.pro.engine.dns.IpPacketFraming
+import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.filter.FilterRuleEngine
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
 import org.junit.Assert.assertArrayEquals
@@ -310,6 +314,151 @@ class AdShieldEngineTestSuite {
         )
         assertNotNull(script)
         assertTrue(script!!.contains(".custom-sponsored-slot"))
+    }
+
+    // --- Regression tests for UDP truncation, upstream validation and cache policy ---
+
+    @Test
+    fun testUdpResponseIsTruncatedWithTcBitWhenItExceedsTheTunnelMtu() {
+        val query = DnsPacketCodec.parseQuery(
+            buildRawDnsQueryPacket(txId = 0x2A2A, domain = "big.example.com")
+        )!!
+        val fits = DnsPacketCodec.buildBlockedResponse(query, sinkholeZeroIp = true)
+        assertArrayEquals(fits, DnsPacketCodec.fitResponseToUdpLimit(query, fits, 1472))
+
+        val oversized = fits + ByteArray(4000)
+        val truncated = DnsPacketCodec.fitResponseToUdpLimit(query, oversized, 512)
+        assertTrue("truncated answer must fit the limit", truncated.size <= 512)
+        assertEquals(0x2A2A, ((truncated[0].toInt() and 0xFF) shl 8) or (truncated[1].toInt() and 0xFF))
+        val flags = ((truncated[2].toInt() and 0xFF) shl 8) or (truncated[3].toInt() and 0xFF)
+        assertTrue("QR must stay set", (flags and 0x8000) != 0)
+        assertTrue("TC must be set so the resolver retries over TCP", (flags and 0x0200) != 0)
+        assertEquals(0, flags and 0x000F)
+        assertEquals(0, ((truncated[6].toInt() and 0xFF) shl 8) or (truncated[7].toInt() and 0xFF))
+        assertEquals(1, ((truncated[4].toInt() and 0xFF) shl 8) or (truncated[5].toInt() and 0xFF))
+
+        val tiny = DnsPacketCodec.fitResponseToUdpLimit(query, oversized, 12)
+        assertEquals(12, tiny.size)
+        assertEquals(0, ((tiny[4].toInt() and 0xFF) shl 8) or (tiny[5].toInt() and 0xFF))
+    }
+
+    @Test
+    fun testUdpPayloadCapacityMatchesIpVersionHeaders() {
+        assertEquals(1472, IpPacketFraming.udpPayloadCapacity(4, 1500))
+        assertEquals(1452, IpPacketFraming.udpPayloadCapacity(6, 1500))
+    }
+
+    @Test
+    fun testUpstreamResponsesMustEchoTheTransactionIdAndBeResponses() {
+        val rawQuery = buildRawDnsQueryPacket(txId = 0x1234)
+        val query = DnsPacketCodec.parseQuery(rawQuery)!!
+        val answer = DnsPacketCodec.buildBlockedResponse(query, sinkholeZeroIp = false)
+        assertTrue(UpstreamDnsResolver.isValidDnsResponseForQuery(0x1234, answer))
+        assertFalse(UpstreamDnsResolver.isValidDnsResponseForQuery(0x9999, answer))
+        assertFalse(UpstreamDnsResolver.isValidDnsResponseForQuery(0x1234, rawQuery))
+        assertFalse(UpstreamDnsResolver.isValidDnsResponseForQuery(0x1234, ByteArray(4)))
+        val notAResponse = answer.copyOf()
+        notAResponse[2] = 0x01
+        assertFalse(UpstreamDnsResolver.isValidDnsResponseForQuery(0x1234, notAResponse))
+        assertEquals(0x1234, UpstreamDnsResolver.transactionIdOf(rawQuery))
+    }
+
+    @Test
+    fun testOnlyNoerrorAndNxdomainAnswersAreCacheable() {
+        val query = DnsPacketCodec.parseQuery(buildRawDnsQueryPacket())!!
+        assertTrue(UpstreamDnsResolver.shouldCacheDnsResponse(DnsPacketCodec.buildBlockedResponse(query, false)))
+        assertTrue(UpstreamDnsResolver.shouldCacheDnsResponse(DnsPacketCodec.buildBlockedResponse(query, true)))
+        assertFalse(UpstreamDnsResolver.shouldCacheDnsResponse(DnsPacketCodec.buildServFailResponse(query)))
+
+        val refused = DnsPacketCodec.buildServFailResponse(query).copyOf()
+        refused[3] = ((refused[3].toInt() and 0xF0) or 5).toByte()
+        assertFalse(UpstreamDnsResolver.shouldCacheDnsResponse(refused))
+
+        val truncated = DnsPacketCodec.buildBlockedResponse(query, true).copyOf()
+        truncated[2] = (truncated[2].toInt() or 0x02).toByte()
+        assertFalse(UpstreamDnsResolver.shouldCacheDnsResponse(truncated))
+    }
+
+    @Test
+    fun testCacheKeysAreScopedToTheActiveResolver() {
+        val query = DnsPacketCodec.parseQuery(buildRawDnsQueryPacket(domain = "cache.example.com"))!!
+        val cloudflare = DnsResolverConfig(preset = DnsProviderPreset.CLOUDFLARE, protocol = DnsProtocol.DOH)
+        val quad9 = DnsResolverConfig(preset = DnsProviderPreset.QUAD9, protocol = DnsProtocol.DOH)
+        val cloudflareKey = UpstreamDnsResolver.buildCacheKey(query, cloudflare)
+        assertTrue(cloudflareKey.endsWith("|cache.example.com:1:1"))
+        assertFalse(cloudflareKey == UpstreamDnsResolver.buildCacheKey(query, quad9))
+        assertFalse(cloudflareKey == UpstreamDnsResolver.buildCacheKey(query, cloudflare.copy(protocol = DnsProtocol.DOT)))
+    }
+
+    @Test
+    fun testThirdPartyDetectionRespectsLabelBoundaries() {
+        val blocker = BrowserContentBlocker(FilterRuleEngine())
+        assertTrue(blocker.isSameOrSubdomainOf("a.example.com", "example.com"))
+        assertTrue(blocker.isSameOrSubdomainOf("example.com", "example.com"))
+        assertFalse(blocker.isSameOrSubdomainOf("evilexample.com", "example.com"))
+
+        val decision = blocker.evaluateRequest(
+            requestUrl = "https://notexample.com/pagead/banner.js",
+            pageHost = "example.com",
+            allowlistedSites = emptySet()
+        )
+        assertTrue(decision.shouldBlock)
+    }
+
+    @Test
+    fun testLargeTcpDnsAnswersAreSegmentedToFitTheTunnelMtu() {
+        assertEquals(1460, IpPacketFraming.tcpPayloadCapacity(4, 1500))
+        assertEquals(1440, IpPacketFraming.tcpPayloadCapacity(6, 1500))
+
+        val request = IpPacketFraming.ParsedTransportPacket.TcpPacket(
+            ipVersion = 4,
+            sourceAddress = byteArrayOf(10, 215.toByte(), 173.toByte(), 1),
+            destinationAddress = byteArrayOf(10, 215.toByte(), 173.toByte(), 2),
+            sourcePort = 51000,
+            destinationPort = 53,
+            sequenceNumber = 1000L,
+            acknowledgmentNumber = 2000L,
+            flags = IpPacketFraming.TCP_FLAG_ACK,
+            windowSize = 65535,
+            payload = byteArrayOf(0, 0)
+        )
+        val payload = ByteArray(3000) { (it % 251).toByte() }
+        val segments = IpPacketFraming.buildTcpResponseSegments(
+            request = request,
+            startSeqNum = 2000L,
+            ackNum = 1002L,
+            tcpPayload = payload,
+            maxSegmentPayloadBytes = IpPacketFraming.tcpPayloadCapacity(4, 1500)
+        )
+        assertEquals(3, segments.size)
+        var rebuilt = ByteArray(0)
+        var expectedSeq = 2000L
+        for (packet in segments) {
+            assertTrue("segment must fit the tunnel MTU", packet.size <= 1500)
+            val parsed = IpPacketFraming.parseIpPacket(packet) as IpPacketFraming.ParsedTransportPacket.TcpPacket
+            assertEquals(expectedSeq, parsed.sequenceNumber)
+            expectedSeq += parsed.payload.size
+            rebuilt += parsed.payload
+        }
+        assertArrayEquals(payload, rebuilt)
+    }
+
+    @Test
+    fun testUpstreamServerListIncludesIpv6FallbackOnlyWhenEnabled() {
+        val cloudflare = DnsResolverConfig(preset = DnsProviderPreset.CLOUDFLARE, enableIpv6 = true)
+        val servers = UpstreamDnsResolver.upstreamUdpTcpServers(cloudflare)
+        assertEquals(4, servers.size)
+        assertEquals(listOf("1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"), servers)
+
+        val ipv4OnlyServers = UpstreamDnsResolver.upstreamUdpTcpServers(cloudflare.copy(enableIpv6 = false))
+        assertEquals(listOf("1.1.1.1", "1.0.0.1"), ipv4OnlyServers)
+
+        val custom = DnsResolverConfig(
+            preset = DnsProviderPreset.CUSTOM,
+            customPrimaryIpv4 = "192.0.2.10",
+            customSecondaryIpv4 = "192.0.2.11"
+        )
+        assertEquals("192.0.2.10", UpstreamDnsResolver.upstreamUdpTcpServers(custom).first())
     }
 
     @Test
