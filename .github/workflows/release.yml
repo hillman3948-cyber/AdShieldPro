@@ -89,6 +89,8 @@ jobs:
           STORE_PASS="${ADSHIELD_STORE_PASSWORD:-adshield-release}"
           export KEYSTORE STORE_PASS
           if [ -n "${KEYSTORE_B64:-}" ]; then
+            STORE_PASS="${ADSHIELD_STORE_PASSWORD:?set ADSHIELD_STORE_PASSWORD next to ADSHIELD_KEYSTORE_BASE64}"
+            export STORE_PASS
             echo "using keystore from ADSHIELD_KEYSTORE_BASE64 secret"
             printf '%s' "$KEYSTORE_B64" | base64 -d > "$KEYSTORE"
             {
@@ -97,11 +99,15 @@ jobs:
               echo "ADSHIELD_KEY_PASSWORD=${ADSHIELD_KEY_PASSWORD:-${ADSHIELD_STORE_PASSWORD}}"
             } >> "$GITHUB_ENV"
           else
-            gh release download --pattern 'adshield-release.keystore' --dir /tmp/keystore \
+            # Pattern is a glob: it matches the .keystore name and the .jks name an earlier run used.
+            gh release download --pattern 'adshield-release.*' --dir /tmp/keystore \
               --clobber 2>/dev/null || true
-            if [ -s /tmp/keystore/adshield-release.keystore ]; then
-              echo "reusing keystore attached to the latest release"
-              cp /tmp/keystore/adshield-release.keystore "$KEYSTORE"
+            FOUND="$(ls /tmp/keystore/adshield-release.* 2>/dev/null | head -1 || true)"
+            if [ -n "$FOUND" ] && [ -s "$FOUND" ]; then
+              echo "reusing keystore attached to the latest release: $FOUND"
+              cp "$FOUND" "$KEYSTORE"
+              STORE_PASS="${ADSHIELD_STORE_PASSWORD:-adshield-release}"
+              echo "STORE_PASS=${STORE_PASS}" >> "$GITHUB_ENV"
               echo "reused=true" >> "$GITHUB_ENV"
             else
               echo "generating a new release keystore"
@@ -200,7 +206,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.meta.outputs.tag }}
-        run: gh release upload "$TAG" "$ADSHIELD_KEYSTORE_PATH#adshield-release.keystore" --clobber
+        run: |
+          cp "$ADSHIELD_KEYSTORE_PATH" /tmp/adshield-release.keystore
+          gh release upload "$TAG" /tmp/adshield-release.keystore --clobber
 
       # Best effort: Pages has to be switched on once by a repository admin
       # (Settings -> Pages -> Source: GitHub Actions). Do not fail a good release over it.
