@@ -33,8 +33,19 @@ class CapabilityRegistryTest {
                 candidates.joinToString { it.absolutePath })
     }
 
-    /** Repository root (parent of the app module), for capabilities implemented outside src/. */
-    private val repoRoot: File by lazy { sourceRoot.parentFile.parentFile.parentFile.parentFile }
+    /**
+     * Repository root, for capabilities implemented outside src/ (CI workflow, tools).
+     * Found by walking up from the package directory until a directory that contains both the
+     * app module and .github is reached, so an off-by-one in the depth cannot break the build.
+     */
+    private val repoRoot: File by lazy {
+        var dir: File? = sourceRoot
+        while (dir != null) {
+            if (File(dir, "app").isDirectory && File(dir, ".github").isDirectory) return@lazy dir
+            dir = dir.parentFile
+        }
+        throw AssertionError("could not locate the repository root above ${sourceRoot.absolutePath}")
+    }
 
     /** Resolves a registry code pointer, which may live either in the app sources or in CI/tools. */
     private fun codeFile(path: String): File =
