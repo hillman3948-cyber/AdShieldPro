@@ -1,0 +1,4071 @@
+{
+  "schemaVersion": "2035.1",
+  "generatedNote": "Static public-domain / CC0 / CC-BY reference geography and infrastructure baseline for offline World Monitor boot. Never treated as live sensor observations.",
+  "countries": [
+    {
+      "iso2": "PH",
+      "iso3": "PHL",
+      "num": "608",
+      "name": "Philippines",
+      "capital": "Manila",
+      "lat": 14.5995,
+      "lon": 120.9842,
+      "population": 117337368,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AF",
+      "iso3": "AFG",
+      "num": "",
+      "name": "Afghanistan",
+      "capital": "Kabul",
+      "lat": 34.5553,
+      "lon": 69.2075,
+      "population": 42239854,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AX",
+      "iso3": "ALA",
+      "name": "Aland Islands",
+      "capital": "Mariehamn",
+      "lat": 60.0973,
+      "lon": 19.9348,
+      "population": 30500,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "AL",
+      "iso3": "ALB",
+      "num": "",
+      "name": "Albania",
+      "capital": "Tirana",
+      "lat": 41.3275,
+      "lon": 19.8187,
+      "population": 2745972,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DZ",
+      "iso3": "DZA",
+      "num": "",
+      "name": "Algeria",
+      "capital": "Algiers",
+      "lat": 36.7538,
+      "lon": 3.0588,
+      "population": 45606480,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AD",
+      "iso3": "AND",
+      "num": "",
+      "name": "Andorra",
+      "capital": "Andorra la Vella",
+      "lat": 42.5063,
+      "lon": 1.5218,
+      "population": 80088,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AO",
+      "iso3": "AGO",
+      "num": "",
+      "name": "Angola",
+      "capital": "Luanda",
+      "lat": -8.839,
+      "lon": 13.2894,
+      "population": 36684202,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AI",
+      "iso3": "AIA",
+      "name": "Anguilla",
+      "capital": "The Valley",
+      "lat": 18.217,
+      "lon": -63.0578,
+      "population": 15900,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "AQ",
+      "iso3": "ATA",
+      "name": "Antarctica (McMurdo)",
+      "capital": "McMurdo Station",
+      "lat": -77.8419,
+      "lon": 166.6863,
+      "population": 1250,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "AG",
+      "iso3": "ATG",
+      "num": "",
+      "name": "Antigua and Barbuda",
+      "capital": "St. John's",
+      "lat": 17.1174,
+      "lon": -61.8468,
+      "population": 94298,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AR",
+      "iso3": "ARG",
+      "num": "032",
+      "name": "Argentina",
+      "capital": "Buenos Aires",
+      "lat": -34.6037,
+      "lon": -58.3816,
+      "population": 46654581,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AM",
+      "iso3": "ARM",
+      "num": "",
+      "name": "Armenia",
+      "capital": "Yerevan",
+      "lat": 40.1792,
+      "lon": 44.4991,
+      "population": 2777970,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AW",
+      "iso3": "ABW",
+      "name": "Aruba",
+      "capital": "Oranjestad",
+      "lat": 12.5092,
+      "lon": -70.0086,
+      "population": 106500,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "AU",
+      "iso3": "AUS",
+      "num": "036",
+      "name": "Australia",
+      "capital": "Canberra",
+      "lat": -35.2809,
+      "lon": 149.13,
+      "population": 26638544,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AT",
+      "iso3": "AUT",
+      "num": "",
+      "name": "Austria",
+      "capital": "Vienna",
+      "lat": 48.2082,
+      "lon": 16.3738,
+      "population": 9132383,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AZ",
+      "iso3": "AZE",
+      "num": "",
+      "name": "Azerbaijan",
+      "capital": "Baku",
+      "lat": 40.4093,
+      "lon": 49.8671,
+      "population": 10412651,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BS",
+      "iso3": "BHS",
+      "num": "",
+      "name": "Bahamas",
+      "capital": "Nassau",
+      "lat": 25.0443,
+      "lon": -77.3504,
+      "population": 412623,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BH",
+      "iso3": "BHR",
+      "num": "",
+      "name": "Bahrain",
+      "capital": "Manama",
+      "lat": 26.2285,
+      "lon": 50.586,
+      "population": 1485509,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BD",
+      "iso3": "BGD",
+      "num": "",
+      "name": "Bangladesh",
+      "capital": "Dhaka",
+      "lat": 23.8103,
+      "lon": 90.4125,
+      "population": 172954319,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BB",
+      "iso3": "BRB",
+      "num": "",
+      "name": "Barbados",
+      "capital": "Bridgetown",
+      "lat": 13.1132,
+      "lon": -59.5988,
+      "population": 281995,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BY",
+      "iso3": "BLR",
+      "num": "",
+      "name": "Belarus",
+      "capital": "Minsk",
+      "lat": 53.9006,
+      "lon": 27.559,
+      "population": 9178298,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BE",
+      "iso3": "BEL",
+      "num": "",
+      "name": "Belgium",
+      "capital": "Brussels",
+      "lat": 50.8503,
+      "lon": 4.3517,
+      "population": 11686140,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BZ",
+      "iso3": "BLZ",
+      "num": "",
+      "name": "Belize",
+      "capital": "Belmopan",
+      "lat": 17.251,
+      "lon": -88.759,
+      "population": 410825,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BJ",
+      "iso3": "BEN",
+      "num": "",
+      "name": "Benin",
+      "capital": "Porto-Novo",
+      "lat": 6.4969,
+      "lon": 2.6289,
+      "population": 13712828,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BM",
+      "iso3": "BMU",
+      "name": "Bermuda",
+      "capital": "Hamilton",
+      "lat": 32.2949,
+      "lon": -64.783,
+      "population": 64000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "BT",
+      "iso3": "BTN",
+      "num": "",
+      "name": "Bhutan",
+      "capital": "Thimphu",
+      "lat": 27.4728,
+      "lon": 89.6393,
+      "population": 787424,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BO",
+      "iso3": "BOL",
+      "num": "",
+      "name": "Bolivia",
+      "capital": "La Paz",
+      "lat": -16.4897,
+      "lon": -68.1193,
+      "population": 12388571,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BA",
+      "iso3": "BIH",
+      "num": "",
+      "name": "Bosnia and Herzegovina",
+      "capital": "Sarajevo",
+      "lat": 43.8563,
+      "lon": 18.4131,
+      "population": 3210847,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BW",
+      "iso3": "BWA",
+      "num": "",
+      "name": "Botswana",
+      "capital": "Gaborone",
+      "lat": -24.6282,
+      "lon": 25.9231,
+      "population": 2675352,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BR",
+      "iso3": "BRA",
+      "num": "076",
+      "name": "Brazil",
+      "capital": "Brasilia",
+      "lat": -15.7975,
+      "lon": -47.8919,
+      "population": 216422446,
+      "popYear": 2024
+    },
+    {
+      "iso2": "VG",
+      "iso3": "VGB",
+      "name": "British Virgin Islands",
+      "capital": "Road Town",
+      "lat": 18.4286,
+      "lon": -64.6185,
+      "population": 31500,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "BN",
+      "iso3": "BRN",
+      "num": "",
+      "name": "Brunei",
+      "capital": "Bandar Seri Begawan",
+      "lat": 4.9031,
+      "lon": 114.9398,
+      "population": 452524,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BG",
+      "iso3": "BGR",
+      "num": "",
+      "name": "Bulgaria",
+      "capital": "Sofia",
+      "lat": 42.6977,
+      "lon": 23.3219,
+      "population": 6447710,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BF",
+      "iso3": "BFA",
+      "num": "",
+      "name": "Burkina Faso",
+      "capital": "Ouagadougou",
+      "lat": 12.3714,
+      "lon": -1.5197,
+      "population": 23251485,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BI",
+      "iso3": "BDI",
+      "num": "",
+      "name": "Burundi",
+      "capital": "Gitega",
+      "lat": -3.4264,
+      "lon": 29.9306,
+      "population": 13238559,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CV",
+      "iso3": "CPV",
+      "num": "",
+      "name": "Cabo Verde",
+      "capital": "Praia",
+      "lat": 14.933,
+      "lon": -23.5133,
+      "population": 598682,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KH",
+      "iso3": "KHM",
+      "num": "",
+      "name": "Cambodia",
+      "capital": "Phnom Penh",
+      "lat": 11.5564,
+      "lon": 104.9282,
+      "population": 16944826,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CM",
+      "iso3": "CMR",
+      "num": "",
+      "name": "Cameroon",
+      "capital": "Yaounde",
+      "lat": 3.848,
+      "lon": 11.5021,
+      "population": 28647293,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CA",
+      "iso3": "CAN",
+      "num": "124",
+      "name": "Canada",
+      "capital": "Ottawa",
+      "lat": 45.4215,
+      "lon": -75.6972,
+      "population": 40097761,
+      "popYear": 2024
+    },
+    {
+      "iso2": "BQ",
+      "iso3": "BES",
+      "name": "Caribbean Netherlands",
+      "capital": "Kralendijk",
+      "lat": 12.1443,
+      "lon": -68.2655,
+      "population": 27700,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "KY",
+      "iso3": "CYM",
+      "name": "Cayman Islands",
+      "capital": "George Town",
+      "lat": 19.2866,
+      "lon": -81.3744,
+      "population": 69300,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "CF",
+      "iso3": "CAF",
+      "num": "",
+      "name": "Central African Republic",
+      "capital": "Bangui",
+      "lat": 4.3947,
+      "lon": 18.5582,
+      "population": 5742315,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TD",
+      "iso3": "TCD",
+      "num": "",
+      "name": "Chad",
+      "capital": "N'Djamena",
+      "lat": 12.1348,
+      "lon": 15.0557,
+      "population": 18278568,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CL",
+      "iso3": "CHL",
+      "num": "152",
+      "name": "Chile",
+      "capital": "Santiago",
+      "lat": -33.4489,
+      "lon": -70.6693,
+      "population": 19629590,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CN",
+      "iso3": "CHN",
+      "num": "156",
+      "name": "China",
+      "capital": "Beijing",
+      "lat": 39.9042,
+      "lon": 116.4074,
+      "population": 1410710000,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CX",
+      "iso3": "CXR",
+      "name": "Christmas Island",
+      "capital": "Flying Fish Cove",
+      "lat": -10.4207,
+      "lon": 105.6791,
+      "population": 1690,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "CO",
+      "iso3": "COL",
+      "num": "170",
+      "name": "Colombia",
+      "capital": "Bogota",
+      "lat": 4.711,
+      "lon": -74.0721,
+      "population": 52085168,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KM",
+      "iso3": "COM",
+      "num": "",
+      "name": "Comoros",
+      "capital": "Moroni",
+      "lat": -11.7172,
+      "lon": 43.2473,
+      "population": 852075,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CK",
+      "iso3": "COK",
+      "name": "Cook Islands",
+      "capital": "Avarua",
+      "lat": -21.207,
+      "lon": -159.775,
+      "population": 17000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "CR",
+      "iso3": "CRI",
+      "num": "",
+      "name": "Costa Rica",
+      "capital": "San Jose",
+      "lat": 9.9281,
+      "lon": -84.0907,
+      "population": 5212173,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CI",
+      "iso3": "CIV",
+      "num": "",
+      "name": "Cote d'Ivoire",
+      "capital": "Yamoussoukro",
+      "lat": 6.8276,
+      "lon": -5.2893,
+      "population": 28873034,
+      "popYear": 2024
+    },
+    {
+      "iso2": "HR",
+      "iso3": "HRV",
+      "num": "",
+      "name": "Croatia",
+      "capital": "Zagreb",
+      "lat": 45.815,
+      "lon": 15.9819,
+      "population": 3853200,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CU",
+      "iso3": "CUB",
+      "num": "",
+      "name": "Cuba",
+      "capital": "Havana",
+      "lat": 23.1136,
+      "lon": -82.3666,
+      "population": 11194449,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CW",
+      "iso3": "CUW",
+      "name": "Curacao",
+      "capital": "Willemstad",
+      "lat": 12.1084,
+      "lon": -68.9335,
+      "population": 192000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "CY",
+      "iso3": "CYP",
+      "num": "",
+      "name": "Cyprus",
+      "capital": "Nicosia",
+      "lat": 35.1856,
+      "lon": 33.3823,
+      "population": 1260138,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CZ",
+      "iso3": "CZE",
+      "num": "",
+      "name": "Czechia",
+      "capital": "Prague",
+      "lat": 50.0755,
+      "lon": 14.4378,
+      "population": 10873689,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CD",
+      "iso3": "COD",
+      "num": "",
+      "name": "DR Congo",
+      "capital": "Kinshasa",
+      "lat": -4.4419,
+      "lon": 15.2663,
+      "population": 102262808,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DK",
+      "iso3": "DNK",
+      "num": "",
+      "name": "Denmark",
+      "capital": "Copenhagen",
+      "lat": 55.6761,
+      "lon": 12.5683,
+      "population": 5946952,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DJ",
+      "iso3": "DJI",
+      "num": "",
+      "name": "Djibouti",
+      "capital": "Djibouti",
+      "lat": 11.5721,
+      "lon": 43.1456,
+      "population": 1136455,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DM",
+      "iso3": "DMA",
+      "num": "",
+      "name": "Dominica",
+      "capital": "Roseau",
+      "lat": 15.3092,
+      "lon": -61.3794,
+      "population": 73040,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DO",
+      "iso3": "DOM",
+      "num": "",
+      "name": "Dominican Republic",
+      "capital": "Santo Domingo",
+      "lat": 18.4861,
+      "lon": -69.9312,
+      "population": 11332972,
+      "popYear": 2024
+    },
+    {
+      "iso2": "EC",
+      "iso3": "ECU",
+      "num": "",
+      "name": "Ecuador",
+      "capital": "Quito",
+      "lat": -0.1807,
+      "lon": -78.4678,
+      "population": 18190484,
+      "popYear": 2024
+    },
+    {
+      "iso2": "EG",
+      "iso3": "EGY",
+      "num": "818",
+      "name": "Egypt",
+      "capital": "Cairo",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "population": 112716598,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SV",
+      "iso3": "SLV",
+      "num": "",
+      "name": "El Salvador",
+      "capital": "San Salvador",
+      "lat": 13.6929,
+      "lon": -89.2182,
+      "population": 6364943,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GQ",
+      "iso3": "GNQ",
+      "num": "",
+      "name": "Equatorial Guinea",
+      "capital": "Malabo",
+      "lat": 3.7504,
+      "lon": 8.7371,
+      "population": 1714671,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ER",
+      "iso3": "ERI",
+      "num": "",
+      "name": "Eritrea",
+      "capital": "Asmara",
+      "lat": 15.3229,
+      "lon": 38.9251,
+      "population": 3748901,
+      "popYear": 2024
+    },
+    {
+      "iso2": "EE",
+      "iso3": "EST",
+      "num": "",
+      "name": "Estonia",
+      "capital": "Tallinn",
+      "lat": 59.437,
+      "lon": 24.7536,
+      "population": 1366491,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SZ",
+      "iso3": "SWZ",
+      "num": "",
+      "name": "Eswatini",
+      "capital": "Mbabane",
+      "lat": -26.3054,
+      "lon": 31.1367,
+      "population": 1210822,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ET",
+      "iso3": "ETH",
+      "num": "",
+      "name": "Ethiopia",
+      "capital": "Addis Ababa",
+      "lat": 9.032,
+      "lon": 38.7469,
+      "population": 126527060,
+      "popYear": 2024
+    },
+    {
+      "iso2": "FK",
+      "iso3": "FLK",
+      "name": "Falkland Islands",
+      "capital": "Stanley",
+      "lat": -51.6977,
+      "lon": -57.8517,
+      "population": 3780,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "FO",
+      "iso3": "FRO",
+      "name": "Faroe Islands",
+      "capital": "Torshavn",
+      "lat": 62.0079,
+      "lon": -6.79,
+      "population": 54000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "FJ",
+      "iso3": "FJI",
+      "num": "",
+      "name": "Fiji",
+      "capital": "Suva",
+      "lat": -18.1416,
+      "lon": 178.4419,
+      "population": 936375,
+      "popYear": 2024
+    },
+    {
+      "iso2": "FI",
+      "iso3": "FIN",
+      "num": "246",
+      "name": "Finland",
+      "capital": "Helsinki",
+      "lat": 60.1699,
+      "lon": 24.9384,
+      "population": 5584264,
+      "popYear": 2024
+    },
+    {
+      "iso2": "FR",
+      "iso3": "FRA",
+      "num": "250",
+      "name": "France",
+      "capital": "Paris",
+      "lat": 48.8566,
+      "lon": 2.3522,
+      "population": 68170228,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GF",
+      "iso3": "GUF",
+      "name": "French Guiana",
+      "capital": "Cayenne",
+      "lat": 4.9224,
+      "lon": -52.3135,
+      "population": 312000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "PF",
+      "iso3": "PYF",
+      "num": "",
+      "name": "French Polynesia",
+      "capital": "Papeete",
+      "lat": -17.5516,
+      "lon": -149.5585,
+      "population": 308872,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GA",
+      "iso3": "GAB",
+      "num": "",
+      "name": "Gabon",
+      "capital": "Libreville",
+      "lat": 0.4162,
+      "lon": 9.4673,
+      "population": 2436566,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GM",
+      "iso3": "GMB",
+      "num": "",
+      "name": "Gambia",
+      "capital": "Banjul",
+      "lat": 13.4549,
+      "lon": -16.579,
+      "population": 2773168,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GE",
+      "iso3": "GEO",
+      "num": "",
+      "name": "Georgia",
+      "capital": "Tbilisi",
+      "lat": 41.7151,
+      "lon": 44.8271,
+      "population": 3728282,
+      "popYear": 2024
+    },
+    {
+      "iso2": "DE",
+      "iso3": "DEU",
+      "num": "276",
+      "name": "Germany",
+      "capital": "Berlin",
+      "lat": 52.52,
+      "lon": 13.405,
+      "population": 84482267,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GH",
+      "iso3": "GHA",
+      "num": "",
+      "name": "Ghana",
+      "capital": "Accra",
+      "lat": 5.6037,
+      "lon": -0.187,
+      "population": 34121985,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GI",
+      "iso3": "GIB",
+      "name": "Gibraltar",
+      "capital": "Gibraltar",
+      "lat": 36.1408,
+      "lon": -5.3536,
+      "population": 32700,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "GR",
+      "iso3": "GRC",
+      "num": "",
+      "name": "Greece",
+      "capital": "Athens",
+      "lat": 37.9838,
+      "lon": 23.7275,
+      "population": 10361295,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GL",
+      "iso3": "GRL",
+      "num": "",
+      "name": "Greenland",
+      "capital": "Nuuk",
+      "lat": 64.1835,
+      "lon": -51.7216,
+      "population": 56643,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GD",
+      "iso3": "GRD",
+      "num": "",
+      "name": "Grenada",
+      "capital": "St. George's",
+      "lat": 12.0561,
+      "lon": -61.7488,
+      "population": 126183,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GP",
+      "iso3": "GLP",
+      "name": "Guadeloupe",
+      "capital": "Basse-Terre",
+      "lat": 15.9985,
+      "lon": -61.7255,
+      "population": 396000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "GU",
+      "iso3": "GUM",
+      "num": "",
+      "name": "Guam",
+      "capital": "Hagatna",
+      "lat": 13.4757,
+      "lon": 144.7489,
+      "population": 172952,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GT",
+      "iso3": "GTM",
+      "num": "",
+      "name": "Guatemala",
+      "capital": "Guatemala City",
+      "lat": 14.6349,
+      "lon": -90.5069,
+      "population": 18092026,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GG",
+      "iso3": "GGY",
+      "name": "Guernsey",
+      "capital": "Saint Peter Port",
+      "lat": 49.4554,
+      "lon": -2.5369,
+      "population": 64000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "GN",
+      "iso3": "GIN",
+      "num": "",
+      "name": "Guinea",
+      "capital": "Conakry",
+      "lat": 9.6412,
+      "lon": -13.5784,
+      "population": 14190612,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GW",
+      "iso3": "GNB",
+      "num": "",
+      "name": "Guinea-Bissau",
+      "capital": "Bissau",
+      "lat": 11.8636,
+      "lon": -15.5977,
+      "population": 2150842,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GY",
+      "iso3": "GUY",
+      "num": "",
+      "name": "Guyana",
+      "capital": "Georgetown",
+      "lat": 6.8013,
+      "lon": -58.1551,
+      "population": 813834,
+      "popYear": 2024
+    },
+    {
+      "iso2": "HT",
+      "iso3": "HTI",
+      "num": "",
+      "name": "Haiti",
+      "capital": "Port-au-Prince",
+      "lat": 18.5944,
+      "lon": -72.3074,
+      "population": 11724763,
+      "popYear": 2024
+    },
+    {
+      "iso2": "HN",
+      "iso3": "HND",
+      "num": "",
+      "name": "Honduras",
+      "capital": "Tegucigalpa",
+      "lat": 14.0723,
+      "lon": -87.1921,
+      "population": 10593798,
+      "popYear": 2024
+    },
+    {
+      "iso2": "HK",
+      "iso3": "HKG",
+      "num": "",
+      "name": "Hong Kong",
+      "capital": "Hong Kong",
+      "lat": 22.3193,
+      "lon": 114.1694,
+      "population": 7536100,
+      "popYear": 2024
+    },
+    {
+      "iso2": "HU",
+      "iso3": "HUN",
+      "num": "",
+      "name": "Hungary",
+      "capital": "Budapest",
+      "lat": 47.4979,
+      "lon": 19.0402,
+      "population": 9589872,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IS",
+      "iso3": "ISL",
+      "num": "",
+      "name": "Iceland",
+      "capital": "Reykjavik",
+      "lat": 64.1466,
+      "lon": -21.9426,
+      "population": 393600,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IN",
+      "iso3": "IND",
+      "num": "356",
+      "name": "India",
+      "capital": "New Delhi",
+      "lat": 28.6139,
+      "lon": 77.209,
+      "population": 1428627663,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ID",
+      "iso3": "IDN",
+      "num": "360",
+      "name": "Indonesia",
+      "capital": "Jakarta",
+      "lat": -6.2088,
+      "lon": 106.8456,
+      "population": 277534122,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IR",
+      "iso3": "IRN",
+      "num": "",
+      "name": "Iran",
+      "capital": "Tehran",
+      "lat": 35.6892,
+      "lon": 51.389,
+      "population": 89172767,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IQ",
+      "iso3": "IRQ",
+      "num": "",
+      "name": "Iraq",
+      "capital": "Baghdad",
+      "lat": 33.3152,
+      "lon": 44.3661,
+      "population": 45504560,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IE",
+      "iso3": "IRL",
+      "num": "",
+      "name": "Ireland",
+      "capital": "Dublin",
+      "lat": 53.3498,
+      "lon": -6.2603,
+      "population": 5255017,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IM",
+      "iso3": "IMN",
+      "name": "Isle of Man",
+      "capital": "Douglas",
+      "lat": 54.1523,
+      "lon": -4.4861,
+      "population": 84700,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "IL",
+      "iso3": "ISR",
+      "num": "376",
+      "name": "Israel",
+      "capital": "Jerusalem",
+      "lat": 31.7683,
+      "lon": 35.2137,
+      "population": 9756700,
+      "popYear": 2024
+    },
+    {
+      "iso2": "IT",
+      "iso3": "ITA",
+      "num": "380",
+      "name": "Italy",
+      "capital": "Rome",
+      "lat": 41.9028,
+      "lon": 12.4964,
+      "population": 58761146,
+      "popYear": 2024
+    },
+    {
+      "iso2": "JM",
+      "iso3": "JAM",
+      "num": "",
+      "name": "Jamaica",
+      "capital": "Kingston",
+      "lat": 18.0179,
+      "lon": -76.8099,
+      "population": 2825544,
+      "popYear": 2024
+    },
+    {
+      "iso2": "JP",
+      "iso3": "JPN",
+      "num": "392",
+      "name": "Japan",
+      "capital": "Tokyo",
+      "lat": 35.6762,
+      "lon": 139.6503,
+      "population": 124516650,
+      "popYear": 2024
+    },
+    {
+      "iso2": "JE",
+      "iso3": "JEY",
+      "name": "Jersey",
+      "capital": "Saint Helier",
+      "lat": 49.1868,
+      "lon": -2.1066,
+      "population": 103600,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "JO",
+      "iso3": "JOR",
+      "num": "",
+      "name": "Jordan",
+      "capital": "Amman",
+      "lat": 31.9454,
+      "lon": 35.9284,
+      "population": 11337052,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KZ",
+      "iso3": "KAZ",
+      "num": "",
+      "name": "Kazakhstan",
+      "capital": "Astana",
+      "lat": 51.1694,
+      "lon": 71.4491,
+      "population": 19606633,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KE",
+      "iso3": "KEN",
+      "num": "404",
+      "name": "Kenya",
+      "capital": "Nairobi",
+      "lat": -1.2921,
+      "lon": 36.8219,
+      "population": 55100586,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KI",
+      "iso3": "KIR",
+      "num": "",
+      "name": "Kiribati",
+      "capital": "Tarawa",
+      "lat": 1.329,
+      "lon": 172.979,
+      "population": 133515,
+      "popYear": 2024
+    },
+    {
+      "iso2": "XK",
+      "iso3": "XKX",
+      "num": "",
+      "name": "Kosovo",
+      "capital": "Pristina",
+      "lat": 42.6629,
+      "lon": 21.1655,
+      "population": 1761985,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KW",
+      "iso3": "KWT",
+      "num": "",
+      "name": "Kuwait",
+      "capital": "Kuwait City",
+      "lat": 29.3759,
+      "lon": 47.9774,
+      "population": 4310108,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KG",
+      "iso3": "KGZ",
+      "num": "",
+      "name": "Kyrgyzstan",
+      "capital": "Bishkek",
+      "lat": 42.8746,
+      "lon": 74.5698,
+      "population": 7004000,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LA",
+      "iso3": "LAO",
+      "num": "",
+      "name": "Laos",
+      "capital": "Vientiane",
+      "lat": 17.9757,
+      "lon": 102.6331,
+      "population": 7633779,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LV",
+      "iso3": "LVA",
+      "num": "",
+      "name": "Latvia",
+      "capital": "Riga",
+      "lat": 56.9496,
+      "lon": 24.1052,
+      "population": 1883008,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LB",
+      "iso3": "LBN",
+      "num": "",
+      "name": "Lebanon",
+      "capital": "Beirut",
+      "lat": 33.8938,
+      "lon": 35.5018,
+      "population": 5353930,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LS",
+      "iso3": "LSO",
+      "num": "",
+      "name": "Lesotho",
+      "capital": "Maseru",
+      "lat": -29.3151,
+      "lon": 27.4869,
+      "population": 2330318,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LR",
+      "iso3": "LBR",
+      "num": "",
+      "name": "Liberia",
+      "capital": "Monrovia",
+      "lat": 6.3156,
+      "lon": -10.8074,
+      "population": 5418377,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LY",
+      "iso3": "LBY",
+      "num": "",
+      "name": "Libya",
+      "capital": "Tripoli",
+      "lat": 32.8872,
+      "lon": 13.1913,
+      "population": 6888388,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LI",
+      "iso3": "LIE",
+      "num": "",
+      "name": "Liechtenstein",
+      "capital": "Vaduz",
+      "lat": 47.141,
+      "lon": 9.5209,
+      "population": 39584,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LT",
+      "iso3": "LTU",
+      "num": "",
+      "name": "Lithuania",
+      "capital": "Vilnius",
+      "lat": 54.6872,
+      "lon": 25.2797,
+      "population": 2871897,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LU",
+      "iso3": "LUX",
+      "num": "",
+      "name": "Luxembourg",
+      "capital": "Luxembourg",
+      "lat": 49.6116,
+      "lon": 6.1319,
+      "population": 668606,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MO",
+      "iso3": "MAC",
+      "num": "",
+      "name": "Macau",
+      "capital": "Macau",
+      "lat": 22.1987,
+      "lon": 113.5439,
+      "population": 704149,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MG",
+      "iso3": "MDG",
+      "num": "",
+      "name": "Madagascar",
+      "capital": "Antananarivo",
+      "lat": -18.8792,
+      "lon": 47.5079,
+      "population": 30325732,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MW",
+      "iso3": "MWI",
+      "num": "",
+      "name": "Malawi",
+      "capital": "Lilongwe",
+      "lat": -13.9626,
+      "lon": 33.7741,
+      "population": 20931751,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MY",
+      "iso3": "MYS",
+      "num": "458",
+      "name": "Malaysia",
+      "capital": "Kuala Lumpur",
+      "lat": 3.139,
+      "lon": 101.6869,
+      "population": 34308525,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MV",
+      "iso3": "MDV",
+      "num": "",
+      "name": "Maldives",
+      "capital": "Male",
+      "lat": 4.1755,
+      "lon": 73.5093,
+      "population": 521021,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ML",
+      "iso3": "MLI",
+      "num": "",
+      "name": "Mali",
+      "capital": "Bamako",
+      "lat": 12.6392,
+      "lon": -8.0029,
+      "population": 23293698,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MT",
+      "iso3": "MLT",
+      "num": "",
+      "name": "Malta",
+      "capital": "Valletta",
+      "lat": 35.8989,
+      "lon": 14.5146,
+      "population": 542051,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MH",
+      "iso3": "MHL",
+      "num": "",
+      "name": "Marshall Islands",
+      "capital": "Majuro",
+      "lat": 7.1164,
+      "lon": 171.1858,
+      "population": 41996,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MQ",
+      "iso3": "MTQ",
+      "name": "Martinique",
+      "capital": "Fort-de-France",
+      "lat": 14.6161,
+      "lon": -61.0588,
+      "population": 367000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "MR",
+      "iso3": "MRT",
+      "num": "",
+      "name": "Mauritania",
+      "capital": "Nouakchott",
+      "lat": 18.0735,
+      "lon": -15.9582,
+      "population": 4862989,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MU",
+      "iso3": "MUS",
+      "num": "",
+      "name": "Mauritius",
+      "capital": "Port Louis",
+      "lat": -20.1609,
+      "lon": 57.5012,
+      "population": 1261041,
+      "popYear": 2024
+    },
+    {
+      "iso2": "YT",
+      "iso3": "MYT",
+      "name": "Mayotte",
+      "capital": "Mamoudzou",
+      "lat": -12.7806,
+      "lon": 45.2278,
+      "population": 326000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "MX",
+      "iso3": "MEX",
+      "num": "484",
+      "name": "Mexico",
+      "capital": "Mexico City",
+      "lat": 19.4326,
+      "lon": -99.1332,
+      "population": 128455567,
+      "popYear": 2024
+    },
+    {
+      "iso2": "FM",
+      "iso3": "FSM",
+      "num": "",
+      "name": "Micronesia",
+      "capital": "Palikir",
+      "lat": 6.9248,
+      "lon": 158.161,
+      "population": 115224,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MD",
+      "iso3": "MDA",
+      "num": "",
+      "name": "Moldova",
+      "capital": "Chisinau",
+      "lat": 47.0105,
+      "lon": 28.8638,
+      "population": 2512758,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MC",
+      "iso3": "MCO",
+      "num": "",
+      "name": "Monaco",
+      "capital": "Monaco",
+      "lat": 43.7384,
+      "lon": 7.4246,
+      "population": 36297,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MN",
+      "iso3": "MNG",
+      "num": "",
+      "name": "Mongolia",
+      "capital": "Ulaanbaatar",
+      "lat": 47.8864,
+      "lon": 106.9057,
+      "population": 3447157,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ME",
+      "iso3": "MNE",
+      "num": "",
+      "name": "Montenegro",
+      "capital": "Podgorica",
+      "lat": 42.4304,
+      "lon": 19.2594,
+      "population": 616177,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MS",
+      "iso3": "MSR",
+      "name": "Montserrat",
+      "capital": "Brades",
+      "lat": 16.7918,
+      "lon": -62.2106,
+      "population": 4400,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "MA",
+      "iso3": "MAR",
+      "num": "",
+      "name": "Morocco",
+      "capital": "Rabat",
+      "lat": 34.0209,
+      "lon": -6.8416,
+      "population": 37840044,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MZ",
+      "iso3": "MOZ",
+      "num": "",
+      "name": "Mozambique",
+      "capital": "Maputo",
+      "lat": -25.9692,
+      "lon": 32.5732,
+      "population": 33897354,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MM",
+      "iso3": "MMR",
+      "num": "",
+      "name": "Myanmar",
+      "capital": "Naypyidaw",
+      "lat": 19.7633,
+      "lon": 96.0785,
+      "population": 54577997,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NA",
+      "iso3": "NAM",
+      "num": "",
+      "name": "Namibia",
+      "capital": "Windhoek",
+      "lat": -22.5609,
+      "lon": 17.0658,
+      "population": 2604172,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NP",
+      "iso3": "NPL",
+      "num": "",
+      "name": "Nepal",
+      "capital": "Kathmandu",
+      "lat": 27.7172,
+      "lon": 85.324,
+      "population": 30896590,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NL",
+      "iso3": "NLD",
+      "num": "528",
+      "name": "Netherlands",
+      "capital": "Amsterdam",
+      "lat": 52.3676,
+      "lon": 4.9041,
+      "population": 17879488,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NC",
+      "iso3": "NCL",
+      "num": "",
+      "name": "New Caledonia",
+      "capital": "Noumea",
+      "lat": -22.2758,
+      "lon": 166.458,
+      "population": 292991,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NZ",
+      "iso3": "NZL",
+      "num": "554",
+      "name": "New Zealand",
+      "capital": "Wellington",
+      "lat": -41.2866,
+      "lon": 174.7756,
+      "population": 5223100,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NI",
+      "iso3": "NIC",
+      "num": "",
+      "name": "Nicaragua",
+      "capital": "Managua",
+      "lat": 12.115,
+      "lon": -86.2362,
+      "population": 7046310,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NE",
+      "iso3": "NER",
+      "num": "",
+      "name": "Niger",
+      "capital": "Niamey",
+      "lat": 13.5116,
+      "lon": 2.1254,
+      "population": 27202843,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NG",
+      "iso3": "NGA",
+      "num": "566",
+      "name": "Nigeria",
+      "capital": "Abuja",
+      "lat": 9.0765,
+      "lon": 7.3986,
+      "population": 223804632,
+      "popYear": 2024
+    },
+    {
+      "iso2": "NU",
+      "iso3": "NIU",
+      "name": "Niue",
+      "capital": "Alofi",
+      "lat": -19.0544,
+      "lon": -169.9187,
+      "population": 1940,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "KP",
+      "iso3": "PRK",
+      "num": "",
+      "name": "North Korea",
+      "capital": "Pyongyang",
+      "lat": 39.0392,
+      "lon": 125.7625,
+      "population": 26160821,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MK",
+      "iso3": "MKD",
+      "num": "",
+      "name": "North Macedonia",
+      "capital": "Skopje",
+      "lat": 41.9981,
+      "lon": 21.4254,
+      "population": 1827816,
+      "popYear": 2024
+    },
+    {
+      "iso2": "MP",
+      "iso3": "MNP",
+      "name": "Northern Mariana Islands",
+      "capital": "Saipan",
+      "lat": 15.1778,
+      "lon": 145.751,
+      "population": 49800,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "NO",
+      "iso3": "NOR",
+      "num": "578",
+      "name": "Norway",
+      "capital": "Oslo",
+      "lat": 59.9139,
+      "lon": 10.7522,
+      "population": 5519594,
+      "popYear": 2024
+    },
+    {
+      "iso2": "OM",
+      "iso3": "OMN",
+      "num": "",
+      "name": "Oman",
+      "capital": "Muscat",
+      "lat": 23.588,
+      "lon": 58.3829,
+      "population": 4644384,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PK",
+      "iso3": "PAK",
+      "num": "",
+      "name": "Pakistan",
+      "capital": "Islamabad",
+      "lat": 33.6844,
+      "lon": 73.0479,
+      "population": 240485658,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PW",
+      "iso3": "PLW",
+      "num": "",
+      "name": "Palau",
+      "capital": "Ngerulmud",
+      "lat": 7.5004,
+      "lon": 134.6243,
+      "population": 18058,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PS",
+      "iso3": "PSE",
+      "num": "",
+      "name": "Palestine",
+      "capital": "Ramallah",
+      "lat": 31.9038,
+      "lon": 35.2034,
+      "population": 5371230,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PA",
+      "iso3": "PAN",
+      "num": "",
+      "name": "Panama",
+      "capital": "Panama City",
+      "lat": 8.9824,
+      "lon": -79.5199,
+      "population": 4468087,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PG",
+      "iso3": "PNG",
+      "num": "",
+      "name": "Papua New Guinea",
+      "capital": "Port Moresby",
+      "lat": -9.4438,
+      "lon": 147.1803,
+      "population": 10329931,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PY",
+      "iso3": "PRY",
+      "num": "",
+      "name": "Paraguay",
+      "capital": "Asuncion",
+      "lat": -25.2637,
+      "lon": -57.5759,
+      "population": 6861524,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PE",
+      "iso3": "PER",
+      "num": "604",
+      "name": "Peru",
+      "capital": "Lima",
+      "lat": -12.0464,
+      "lon": -77.0428,
+      "population": 34352719,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PL",
+      "iso3": "POL",
+      "num": "616",
+      "name": "Poland",
+      "capital": "Warsaw",
+      "lat": 52.2297,
+      "lon": 21.0122,
+      "population": 36685849,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PT",
+      "iso3": "PRT",
+      "num": "",
+      "name": "Portugal",
+      "capital": "Lisbon",
+      "lat": 38.7223,
+      "lon": -9.1393,
+      "population": 10525347,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PR",
+      "iso3": "PRI",
+      "num": "",
+      "name": "Puerto Rico",
+      "capital": "San Juan",
+      "lat": 18.4655,
+      "lon": -66.1057,
+      "population": 3205691,
+      "popYear": 2024
+    },
+    {
+      "iso2": "QA",
+      "iso3": "QAT",
+      "num": "",
+      "name": "Qatar",
+      "capital": "Doha",
+      "lat": 25.2854,
+      "lon": 51.531,
+      "population": 2716391,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CG",
+      "iso3": "COG",
+      "num": "",
+      "name": "Republic of the Congo",
+      "capital": "Brazzaville",
+      "lat": -4.2634,
+      "lon": 15.2429,
+      "population": 6106869,
+      "popYear": 2024
+    },
+    {
+      "iso2": "RE",
+      "iso3": "REU",
+      "name": "Reunion",
+      "capital": "Saint-Denis",
+      "lat": -20.8823,
+      "lon": 55.4504,
+      "population": 981000,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "RO",
+      "iso3": "ROU",
+      "num": "",
+      "name": "Romania",
+      "capital": "Bucharest",
+      "lat": 44.4268,
+      "lon": 26.1025,
+      "population": 19056116,
+      "popYear": 2024
+    },
+    {
+      "iso2": "RU",
+      "iso3": "RUS",
+      "num": "643",
+      "name": "Russia",
+      "capital": "Moscow",
+      "lat": 55.7558,
+      "lon": 37.6173,
+      "population": 143826130,
+      "popYear": 2024
+    },
+    {
+      "iso2": "RW",
+      "iso3": "RWA",
+      "num": "",
+      "name": "Rwanda",
+      "capital": "Kigali",
+      "lat": -1.9441,
+      "lon": 30.0619,
+      "population": 14094683,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SH",
+      "iso3": "SHN",
+      "name": "Saint Helena",
+      "capital": "Jamestown",
+      "lat": -15.9244,
+      "lon": -5.7181,
+      "population": 5300,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "KN",
+      "iso3": "KNA",
+      "num": "",
+      "name": "Saint Kitts and Nevis",
+      "capital": "Basseterre",
+      "lat": 17.3026,
+      "lon": -62.7177,
+      "population": 47755,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LC",
+      "iso3": "LCA",
+      "num": "",
+      "name": "Saint Lucia",
+      "capital": "Castries",
+      "lat": 14.0101,
+      "lon": -60.9875,
+      "population": 180251,
+      "popYear": 2024
+    },
+    {
+      "iso2": "PM",
+      "iso3": "SPM",
+      "name": "Saint Pierre and Miquelon",
+      "capital": "Saint-Pierre",
+      "lat": 46.7778,
+      "lon": -56.1778,
+      "population": 5840,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "VC",
+      "iso3": "VCT",
+      "num": "",
+      "name": "Saint Vincent and the Grenadines",
+      "capital": "Kingstown",
+      "lat": 13.16,
+      "lon": -61.2248,
+      "population": 103698,
+      "popYear": 2024
+    },
+    {
+      "iso2": "WS",
+      "iso3": "WSM",
+      "num": "",
+      "name": "Samoa",
+      "capital": "Apia",
+      "lat": -13.8507,
+      "lon": -171.7514,
+      "population": 225681,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SM",
+      "iso3": "SMR",
+      "num": "",
+      "name": "San Marino",
+      "capital": "San Marino",
+      "lat": 43.9424,
+      "lon": 12.4578,
+      "population": 33642,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ST",
+      "iso3": "STP",
+      "num": "",
+      "name": "Sao Tome and Principe",
+      "capital": "Sao Tome",
+      "lat": 0.3365,
+      "lon": 6.7273,
+      "population": 231856,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SA",
+      "iso3": "SAU",
+      "num": "682",
+      "name": "Saudi Arabia",
+      "capital": "Riyadh",
+      "lat": 24.7136,
+      "lon": 46.6753,
+      "population": 36947025,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SN",
+      "iso3": "SEN",
+      "num": "",
+      "name": "Senegal",
+      "capital": "Dakar",
+      "lat": 14.7167,
+      "lon": -17.4677,
+      "population": 17763163,
+      "popYear": 2024
+    },
+    {
+      "iso2": "RS",
+      "iso3": "SRB",
+      "num": "",
+      "name": "Serbia",
+      "capital": "Belgrade",
+      "lat": 44.7866,
+      "lon": 20.4489,
+      "population": 6618026,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SC",
+      "iso3": "SYC",
+      "num": "",
+      "name": "Seychelles",
+      "capital": "Victoria",
+      "lat": -4.6191,
+      "lon": 55.4513,
+      "population": 119773,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SL",
+      "iso3": "SLE",
+      "num": "",
+      "name": "Sierra Leone",
+      "capital": "Freetown",
+      "lat": 8.4657,
+      "lon": -13.2317,
+      "population": 8791092,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SG",
+      "iso3": "SGP",
+      "num": "702",
+      "name": "Singapore",
+      "capital": "Singapore",
+      "lat": 1.3521,
+      "lon": 103.8198,
+      "population": 5917648,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SX",
+      "iso3": "SXM",
+      "name": "Sint Maarten",
+      "capital": "Philipsburg",
+      "lat": 18.026,
+      "lon": -63.0458,
+      "population": 44200,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "SK",
+      "iso3": "SVK",
+      "num": "",
+      "name": "Slovakia",
+      "capital": "Bratislava",
+      "lat": 48.1486,
+      "lon": 17.1077,
+      "population": 5426740,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SI",
+      "iso3": "SVN",
+      "num": "",
+      "name": "Slovenia",
+      "capital": "Ljubljana",
+      "lat": 46.0569,
+      "lon": 14.5058,
+      "population": 2119675,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SB",
+      "iso3": "SLB",
+      "num": "",
+      "name": "Solomon Islands",
+      "capital": "Honiara",
+      "lat": -9.4456,
+      "lon": 159.9729,
+      "population": 740424,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SO",
+      "iso3": "SOM",
+      "num": "",
+      "name": "Somalia",
+      "capital": "Mogadishu",
+      "lat": 2.0469,
+      "lon": 45.3182,
+      "population": 18143378,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ZA",
+      "iso3": "ZAF",
+      "num": "710",
+      "name": "South Africa",
+      "capital": "Pretoria",
+      "lat": -25.7479,
+      "lon": 28.2293,
+      "population": 60414495,
+      "popYear": 2024
+    },
+    {
+      "iso2": "KR",
+      "iso3": "KOR",
+      "num": "410",
+      "name": "South Korea",
+      "capital": "Seoul",
+      "lat": 37.5665,
+      "lon": 126.978,
+      "population": 51712619,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SS",
+      "iso3": "SSD",
+      "num": "",
+      "name": "South Sudan",
+      "capital": "Juba",
+      "lat": 4.8594,
+      "lon": 31.5713,
+      "population": 11088796,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ES",
+      "iso3": "ESP",
+      "num": "724",
+      "name": "Spain",
+      "capital": "Madrid",
+      "lat": 40.4168,
+      "lon": -3.7038,
+      "population": 48373336,
+      "popYear": 2024
+    },
+    {
+      "iso2": "LK",
+      "iso3": "LKA",
+      "num": "",
+      "name": "Sri Lanka",
+      "capital": "Colombo",
+      "lat": 6.9271,
+      "lon": 79.8612,
+      "population": 21893579,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SD",
+      "iso3": "SDN",
+      "num": "",
+      "name": "Sudan",
+      "capital": "Khartoum",
+      "lat": 15.5007,
+      "lon": 32.5599,
+      "population": 48109006,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SR",
+      "iso3": "SUR",
+      "num": "",
+      "name": "Suriname",
+      "capital": "Paramaribo",
+      "lat": 5.852,
+      "lon": -55.2038,
+      "population": 623236,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SJ",
+      "iso3": "SJM",
+      "name": "Svalbard",
+      "capital": "Longyearbyen",
+      "lat": 78.2232,
+      "lon": 15.6267,
+      "population": 2940,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "SE",
+      "iso3": "SWE",
+      "num": "752",
+      "name": "Sweden",
+      "capital": "Stockholm",
+      "lat": 59.3293,
+      "lon": 18.0686,
+      "population": 10536632,
+      "popYear": 2024
+    },
+    {
+      "iso2": "CH",
+      "iso3": "CHE",
+      "num": "756",
+      "name": "Switzerland",
+      "capital": "Bern",
+      "lat": 46.948,
+      "lon": 7.4474,
+      "population": 8849852,
+      "popYear": 2024
+    },
+    {
+      "iso2": "SY",
+      "iso3": "SYR",
+      "num": "",
+      "name": "Syria",
+      "capital": "Damascus",
+      "lat": 33.5138,
+      "lon": 36.2765,
+      "population": 23227014,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TW",
+      "iso3": "TWN",
+      "num": "158",
+      "name": "Taiwan",
+      "capital": "Taipei",
+      "lat": 25.033,
+      "lon": 121.5654,
+      "population": 23420442,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TJ",
+      "iso3": "TJK",
+      "num": "",
+      "name": "Tajikistan",
+      "capital": "Dushanbe",
+      "lat": 38.5598,
+      "lon": 68.787,
+      "population": 10143543,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TZ",
+      "iso3": "TZA",
+      "num": "",
+      "name": "Tanzania",
+      "capital": "Dodoma",
+      "lat": -6.163,
+      "lon": 35.7516,
+      "population": 67438106,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TH",
+      "iso3": "THA",
+      "num": "764",
+      "name": "Thailand",
+      "capital": "Bangkok",
+      "lat": 13.7563,
+      "lon": 100.5018,
+      "population": 71801279,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TL",
+      "iso3": "TLS",
+      "num": "",
+      "name": "Timor-Leste",
+      "capital": "Dili",
+      "lat": -8.5569,
+      "lon": 125.5603,
+      "population": 1360596,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TG",
+      "iso3": "TGO",
+      "num": "",
+      "name": "Togo",
+      "capital": "Lome",
+      "lat": 6.1375,
+      "lon": 1.2123,
+      "population": 9053799,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TO",
+      "iso3": "TON",
+      "num": "",
+      "name": "Tonga",
+      "capital": "Nuku'alofa",
+      "lat": -21.1393,
+      "lon": -175.2049,
+      "population": 107773,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TT",
+      "iso3": "TTO",
+      "num": "",
+      "name": "Trinidad and Tobago",
+      "capital": "Port of Spain",
+      "lat": 10.6549,
+      "lon": -61.5019,
+      "population": 1534937,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TN",
+      "iso3": "TUN",
+      "num": "",
+      "name": "Tunisia",
+      "capital": "Tunis",
+      "lat": 36.8065,
+      "lon": 10.1815,
+      "population": 12458223,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TR",
+      "iso3": "TUR",
+      "num": "792",
+      "name": "Turkey",
+      "capital": "Ankara",
+      "lat": 39.9334,
+      "lon": 32.8597,
+      "population": 85326000,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TM",
+      "iso3": "TKM",
+      "num": "",
+      "name": "Turkmenistan",
+      "capital": "Ashgabat",
+      "lat": 37.9601,
+      "lon": 58.3261,
+      "population": 6516100,
+      "popYear": 2024
+    },
+    {
+      "iso2": "TC",
+      "iso3": "TCA",
+      "name": "Turks and Caicos Islands",
+      "capital": "Cockburn Town",
+      "lat": 21.4612,
+      "lon": -71.1419,
+      "population": 46100,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "VI",
+      "iso3": "VIR",
+      "name": "U.S. Virgin Islands",
+      "capital": "Charlotte Amalie",
+      "lat": 18.3419,
+      "lon": -64.9307,
+      "population": 98700,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "UG",
+      "iso3": "UGA",
+      "num": "",
+      "name": "Uganda",
+      "capital": "Kampala",
+      "lat": 0.3476,
+      "lon": 32.5825,
+      "population": 48582334,
+      "popYear": 2024
+    },
+    {
+      "iso2": "UA",
+      "iso3": "UKR",
+      "num": "804",
+      "name": "Ukraine",
+      "capital": "Kyiv",
+      "lat": 50.4501,
+      "lon": 30.5234,
+      "population": 37000000,
+      "popYear": 2024
+    },
+    {
+      "iso2": "AE",
+      "iso3": "ARE",
+      "num": "784",
+      "name": "United Arab Emirates",
+      "capital": "Abu Dhabi",
+      "lat": 24.4539,
+      "lon": 54.3773,
+      "population": 9516871,
+      "popYear": 2024
+    },
+    {
+      "iso2": "GB",
+      "iso3": "GBR",
+      "num": "826",
+      "name": "United Kingdom",
+      "capital": "London",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "population": 68350000,
+      "popYear": 2024
+    },
+    {
+      "iso2": "US",
+      "iso3": "USA",
+      "num": "840",
+      "name": "United States",
+      "capital": "Washington, D.C.",
+      "lat": 38.9072,
+      "lon": -77.0369,
+      "population": 334914895,
+      "popYear": 2024
+    },
+    {
+      "iso2": "UY",
+      "iso3": "URY",
+      "num": "",
+      "name": "Uruguay",
+      "capital": "Montevideo",
+      "lat": -34.9011,
+      "lon": -56.1645,
+      "population": 3423108,
+      "popYear": 2024
+    },
+    {
+      "iso2": "UZ",
+      "iso3": "UZB",
+      "num": "",
+      "name": "Uzbekistan",
+      "capital": "Tashkent",
+      "lat": 41.2995,
+      "lon": 69.2401,
+      "population": 35163944,
+      "popYear": 2024
+    },
+    {
+      "iso2": "VU",
+      "iso3": "VUT",
+      "num": "",
+      "name": "Vanuatu",
+      "capital": "Port Vila",
+      "lat": -17.7333,
+      "lon": 168.3273,
+      "population": 334506,
+      "popYear": 2024
+    },
+    {
+      "iso2": "VA",
+      "iso3": "VAT",
+      "num": "",
+      "name": "Vatican City",
+      "capital": "Vatican City",
+      "lat": 41.9029,
+      "lon": 12.4534,
+      "population": 764,
+      "popYear": 2024
+    },
+    {
+      "iso2": "VE",
+      "iso3": "VEN",
+      "num": "",
+      "name": "Venezuela",
+      "capital": "Caracas",
+      "lat": 10.4806,
+      "lon": -66.9036,
+      "population": 28838499,
+      "popYear": 2024
+    },
+    {
+      "iso2": "VN",
+      "iso3": "VNM",
+      "num": "704",
+      "name": "Vietnam",
+      "capital": "Hanoi",
+      "lat": 21.0278,
+      "lon": 105.8342,
+      "population": 98858950,
+      "popYear": 2024
+    },
+    {
+      "iso2": "WF",
+      "iso3": "WLF",
+      "name": "Wallis and Futuna",
+      "capital": "Mata-Utu",
+      "lat": -13.2816,
+      "lon": -176.1745,
+      "population": 11500,
+      "num": "",
+      "popYear": 2026
+    },
+    {
+      "iso2": "YE",
+      "iso3": "YEM",
+      "num": "",
+      "name": "Yemen",
+      "capital": "Sanaa",
+      "lat": 15.3694,
+      "lon": 44.191,
+      "population": 34449825,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ZM",
+      "iso3": "ZMB",
+      "num": "",
+      "name": "Zambia",
+      "capital": "Lusaka",
+      "lat": -15.3875,
+      "lon": 28.3228,
+      "population": 20569737,
+      "popYear": 2024
+    },
+    {
+      "iso2": "ZW",
+      "iso3": "ZWE",
+      "num": "",
+      "name": "Zimbabwe",
+      "capital": "Harare",
+      "lat": -17.8252,
+      "lon": 31.0335,
+      "population": 16665409,
+      "popYear": 2024
+    }
+  ],
+  "airports": [
+    {
+      "iata": "MNL",
+      "icao": "RPLL",
+      "name": "Ninoy Aquino International Airport",
+      "city": "Manila",
+      "country": "PH",
+      "lat": 14.5086,
+      "lon": 121.0194,
+      "elevM": 23
+    },
+    {
+      "iata": "CRK",
+      "icao": "RPLC",
+      "name": "Clark International Airport",
+      "city": "Angeles / Central Luzon",
+      "country": "PH",
+      "lat": 15.1859,
+      "lon": 120.56,
+      "elevM": 148
+    },
+    {
+      "iata": "CEB",
+      "icao": "RPVM",
+      "name": "Mactan-Cebu International Airport",
+      "city": "Cebu",
+      "country": "PH",
+      "lat": 10.3075,
+      "lon": 123.9794,
+      "elevM": 9
+    },
+    {
+      "iata": "JFK",
+      "icao": "KJFK",
+      "name": "John F. Kennedy International Airport",
+      "city": "New York",
+      "country": "US",
+      "lat": 40.6413,
+      "lon": -73.7781,
+      "elevM": 4
+    },
+    {
+      "iata": "LAX",
+      "icao": "KLAX",
+      "name": "Los Angeles International Airport",
+      "city": "Los Angeles",
+      "country": "US",
+      "lat": 33.9416,
+      "lon": -118.4085,
+      "elevM": 38
+    },
+    {
+      "iata": "ORD",
+      "icao": "KORD",
+      "name": "O'Hare International Airport",
+      "city": "Chicago",
+      "country": "US",
+      "lat": 41.9742,
+      "lon": -87.9073,
+      "elevM": 204
+    },
+    {
+      "iata": "LHR",
+      "icao": "EGLL",
+      "name": "London Heathrow Airport",
+      "city": "London",
+      "country": "GB",
+      "lat": 51.47,
+      "lon": -0.4543,
+      "elevM": 25
+    },
+    {
+      "iata": "CDG",
+      "icao": "LFPG",
+      "name": "Charles de Gaulle Airport",
+      "city": "Paris",
+      "country": "FR",
+      "lat": 49.0097,
+      "lon": 2.5479,
+      "elevM": 119
+    },
+    {
+      "iata": "FRA",
+      "icao": "EDDF",
+      "name": "Frankfurt Airport",
+      "city": "Frankfurt",
+      "country": "DE",
+      "lat": 50.0379,
+      "lon": 8.5622,
+      "elevM": 111
+    },
+    {
+      "iata": "AMS",
+      "icao": "EHAM",
+      "name": "Amsterdam Airport Schiphol",
+      "city": "Amsterdam",
+      "country": "NL",
+      "lat": 52.3105,
+      "lon": 4.7683,
+      "elevM": -3
+    },
+    {
+      "iata": "DXB",
+      "icao": "OMDB",
+      "name": "Dubai International Airport",
+      "city": "Dubai",
+      "country": "AE",
+      "lat": 25.2532,
+      "lon": 55.3657,
+      "elevM": 19
+    },
+    {
+      "iata": "DOH",
+      "icao": "OTHH",
+      "name": "Hamad International Airport",
+      "city": "Doha",
+      "country": "QA",
+      "lat": 25.2731,
+      "lon": 51.6081,
+      "elevM": 4
+    },
+    {
+      "iata": "IST",
+      "icao": "LTFM",
+      "name": "Istanbul Airport",
+      "city": "Istanbul",
+      "country": "TR",
+      "lat": 41.2753,
+      "lon": 28.7519,
+      "elevM": 99
+    },
+    {
+      "iata": "HND",
+      "icao": "RJTT",
+      "name": "Tokyo Haneda Airport",
+      "city": "Tokyo",
+      "country": "JP",
+      "lat": 35.5494,
+      "lon": 139.7798,
+      "elevM": 6
+    },
+    {
+      "iata": "NRT",
+      "icao": "RJAA",
+      "name": "Narita International Airport",
+      "city": "Tokyo",
+      "country": "JP",
+      "lat": 35.772,
+      "lon": 140.3929,
+      "elevM": 43
+    },
+    {
+      "iata": "ICN",
+      "icao": "RKSI",
+      "name": "Incheon International Airport",
+      "city": "Seoul",
+      "country": "KR",
+      "lat": 37.4602,
+      "lon": 126.4407,
+      "elevM": 7
+    },
+    {
+      "iata": "SIN",
+      "icao": "WSSS",
+      "name": "Singapore Changi Airport",
+      "city": "Singapore",
+      "country": "SG",
+      "lat": 1.3644,
+      "lon": 103.9915,
+      "elevM": 7
+    },
+    {
+      "iata": "HKG",
+      "icao": "VHHH",
+      "name": "Hong Kong International Airport",
+      "city": "Hong Kong",
+      "country": "CN",
+      "lat": 22.308,
+      "lon": 113.9185,
+      "elevM": 9
+    },
+    {
+      "iata": "TPE",
+      "icao": "RCTP",
+      "name": "Taiwan Taoyuan International Airport",
+      "city": "Taipei",
+      "country": "TW",
+      "lat": 25.0797,
+      "lon": 121.2342,
+      "elevM": 33
+    },
+    {
+      "iata": "PEK",
+      "icao": "ZBAA",
+      "name": "Beijing Capital International Airport",
+      "city": "Beijing",
+      "country": "CN",
+      "lat": 40.0799,
+      "lon": 116.6031,
+      "elevM": 35
+    },
+    {
+      "iata": "DEL",
+      "icao": "VIDP",
+      "name": "Indira Gandhi International Airport",
+      "city": "New Delhi",
+      "country": "IN",
+      "lat": 28.5562,
+      "lon": 77.1,
+      "elevM": 237
+    },
+    {
+      "iata": "BKK",
+      "icao": "VTBS",
+      "name": "Suvarnabhumi Airport",
+      "city": "Bangkok",
+      "country": "TH",
+      "lat": 13.69,
+      "lon": 100.7501,
+      "elevM": 2
+    },
+    {
+      "iata": "CGK",
+      "icao": "WIII",
+      "name": "Soekarno-Hatta International Airport",
+      "city": "Jakarta",
+      "country": "ID",
+      "lat": -6.1256,
+      "lon": 106.6559,
+      "elevM": 10
+    },
+    {
+      "iata": "SYD",
+      "icao": "YSSY",
+      "name": "Sydney Kingsford Smith Airport",
+      "city": "Sydney",
+      "country": "AU",
+      "lat": -33.9399,
+      "lon": 151.1753,
+      "elevM": 6
+    },
+    {
+      "iata": "GRU",
+      "icao": "SBGR",
+      "name": "Sao Paulo/Guarulhos International Airport",
+      "city": "Sao Paulo",
+      "country": "BR",
+      "lat": -23.4356,
+      "lon": -46.4731,
+      "elevM": 750
+    },
+    {
+      "iata": "JNB",
+      "icao": "FAOR",
+      "name": "O. R. Tambo International Airport",
+      "city": "Johannesburg",
+      "country": "ZA",
+      "lat": -26.1392,
+      "lon": 28.246,
+      "elevM": 1694
+    },
+    {
+      "iata": "CAI",
+      "icao": "HECA",
+      "name": "Cairo International Airport",
+      "city": "Cairo",
+      "country": "EG",
+      "lat": 30.1219,
+      "lon": 31.4056,
+      "elevM": 116
+    },
+    {
+      "iata": "HEL",
+      "icao": "EFHK",
+      "name": "Helsinki-Vantaa Airport",
+      "city": "Helsinki",
+      "country": "FI",
+      "lat": 60.3172,
+      "lon": 24.9633,
+      "elevM": 55
+    },
+    {
+      "iata": "DVO",
+      "icao": "RPMD",
+      "name": "Francisco Bangoy International Airport",
+      "city": "Davao",
+      "country": "PH",
+      "lat": 7.1255,
+      "lon": 125.6458,
+      "elevM": 29
+    },
+    {
+      "iata": "KUL",
+      "icao": "WMKK",
+      "name": "Kuala Lumpur International Airport",
+      "city": "Kuala Lumpur",
+      "country": "MY",
+      "lat": 2.7456,
+      "lon": 101.7099,
+      "elevM": 21
+    },
+    {
+      "iata": "HAN",
+      "icao": "VVNB",
+      "name": "Noi Bai International Airport",
+      "city": "Hanoi",
+      "country": "VN",
+      "lat": 21.2212,
+      "lon": 105.8072,
+      "elevM": 12
+    },
+    {
+      "iata": "SGN",
+      "icao": "VVTS",
+      "name": "Tan Son Nhat International Airport",
+      "city": "Ho Chi Minh City",
+      "country": "VN",
+      "lat": 10.8188,
+      "lon": 106.652,
+      "elevM": 10
+    },
+    {
+      "iata": "BOM",
+      "icao": "VABB",
+      "name": "Chhatrapati Shivaji Maharaj Intl Airport",
+      "city": "Mumbai",
+      "country": "IN",
+      "lat": 19.0896,
+      "lon": 72.8656,
+      "elevM": 12
+    },
+    {
+      "iata": "RUH",
+      "icao": "OERK",
+      "name": "King Khalid International Airport",
+      "city": "Riyadh",
+      "country": "SA",
+      "lat": 24.9576,
+      "lon": 46.6988,
+      "elevM": 625
+    },
+    {
+      "iata": "MAD",
+      "icao": "LEMD",
+      "name": "Adolfo Suarez Madrid-Barajas Airport",
+      "city": "Madrid",
+      "country": "ES",
+      "lat": 40.4983,
+      "lon": -3.5676,
+      "elevM": 610
+    },
+    {
+      "iata": "FCO",
+      "icao": "LIRF",
+      "name": "Leonardo da Vinci Rome Fiumicino Airport",
+      "city": "Rome",
+      "country": "IT",
+      "lat": 41.8003,
+      "lon": 12.2389,
+      "elevM": 5
+    },
+    {
+      "iata": "ZRH",
+      "icao": "LSZH",
+      "name": "Zurich Airport",
+      "city": "Zurich",
+      "country": "CH",
+      "lat": 47.4582,
+      "lon": 8.5555,
+      "elevM": 432
+    },
+    {
+      "iata": "VIE",
+      "icao": "LOWW",
+      "name": "Vienna International Airport",
+      "city": "Vienna",
+      "country": "AT",
+      "lat": 48.1103,
+      "lon": 16.5697,
+      "elevM": 183
+    },
+    {
+      "iata": "WAW",
+      "icao": "EPWA",
+      "name": "Warsaw Chopin Airport",
+      "city": "Warsaw",
+      "country": "PL",
+      "lat": 52.1657,
+      "lon": 20.9671,
+      "elevM": 110
+    },
+    {
+      "iata": "ARN",
+      "icao": "ESSA",
+      "name": "Stockholm Arlanda Airport",
+      "city": "Stockholm",
+      "country": "SE",
+      "lat": 59.6519,
+      "lon": 17.9186,
+      "elevM": 42
+    },
+    {
+      "iata": "ATH",
+      "icao": "LGAV",
+      "name": "Athens International Airport",
+      "city": "Athens",
+      "country": "GR",
+      "lat": 37.9364,
+      "lon": 23.9445,
+      "elevM": 94
+    },
+    {
+      "iata": "ADD",
+      "icao": "HAAB",
+      "name": "Bole International Airport",
+      "city": "Addis Ababa",
+      "country": "ET",
+      "lat": 8.9779,
+      "lon": 38.7993,
+      "elevM": 2334
+    },
+    {
+      "iata": "NBO",
+      "icao": "HKJK",
+      "name": "Jomo Kenyatta International Airport",
+      "city": "Nairobi",
+      "country": "KE",
+      "lat": -1.3192,
+      "lon": 36.9278,
+      "elevM": 1625
+    },
+    {
+      "iata": "LOS",
+      "icao": "DNMM",
+      "name": "Murtala Muhammed International Airport",
+      "city": "Lagos",
+      "country": "NG",
+      "lat": 6.5774,
+      "lon": 3.3212,
+      "elevM": 41
+    },
+    {
+      "iata": "CMN",
+      "icao": "GMMN",
+      "name": "Mohammed V International Airport",
+      "city": "Casablanca",
+      "country": "MA",
+      "lat": 33.3675,
+      "lon": -7.5898,
+      "elevM": 200
+    },
+    {
+      "iata": "ATL",
+      "icao": "KATL",
+      "name": "Hartsfield-Jackson Atlanta Intl Airport",
+      "city": "Atlanta",
+      "country": "US",
+      "lat": 33.6407,
+      "lon": -84.4277,
+      "elevM": 313
+    },
+    {
+      "iata": "MIA",
+      "icao": "KMIA",
+      "name": "Miami International Airport",
+      "city": "Miami",
+      "country": "US",
+      "lat": 25.7959,
+      "lon": -80.287,
+      "elevM": 3
+    },
+    {
+      "iata": "YYZ",
+      "icao": "CYYZ",
+      "name": "Toronto Pearson International Airport",
+      "city": "Toronto",
+      "country": "CA",
+      "lat": 43.6777,
+      "lon": -79.6248,
+      "elevM": 173
+    },
+    {
+      "iata": "MEX",
+      "icao": "MMMX",
+      "name": "Mexico City International Airport",
+      "city": "Mexico City",
+      "country": "MX",
+      "lat": 19.4363,
+      "lon": -99.0721,
+      "elevM": 2230
+    },
+    {
+      "iata": "PTY",
+      "icao": "MPTO",
+      "name": "Tocumen International Airport",
+      "city": "Panama City",
+      "country": "PA",
+      "lat": 9.0714,
+      "lon": -79.3835,
+      "elevM": 41
+    },
+    {
+      "iata": "BOG",
+      "icao": "SKBO",
+      "name": "El Dorado International Airport",
+      "city": "Bogota",
+      "country": "CO",
+      "lat": 4.7016,
+      "lon": -74.1469,
+      "elevM": 2548
+    },
+    {
+      "iata": "LIM",
+      "icao": "SPJC",
+      "name": "Jorge Chavez International Airport",
+      "city": "Lima",
+      "country": "PE",
+      "lat": -12.0219,
+      "lon": -77.1143,
+      "elevM": 34
+    },
+    {
+      "iata": "EZE",
+      "icao": "SAEZ",
+      "name": "Ministro Pistarini Intl Airport",
+      "city": "Buenos Aires",
+      "country": "AR",
+      "lat": -34.8222,
+      "lon": -58.5358,
+      "elevM": 20
+    },
+    {
+      "iata": "SCL",
+      "icao": "SCEL",
+      "name": "Arturo Merino Benitez Intl Airport",
+      "city": "Santiago",
+      "country": "CL",
+      "lat": -33.393,
+      "lon": -70.7858,
+      "elevM": 474
+    },
+    {
+      "iata": "AKL",
+      "icao": "NZAA",
+      "name": "Auckland Airport",
+      "city": "Auckland",
+      "country": "NZ",
+      "lat": -37.0082,
+      "lon": 174.785,
+      "elevM": 7
+    },
+    {
+      "iata": "ILO",
+      "icao": "RPVI",
+      "name": "Iloilo International Airport",
+      "city": "Iloilo",
+      "country": "PH",
+      "lat": 10.833,
+      "lon": 122.493,
+      "elevM": 51
+    },
+    {
+      "iata": "PPS",
+      "icao": "RPVP",
+      "name": "Puerto Princesa International Airport",
+      "city": "Puerto Princesa",
+      "country": "PH",
+      "lat": 9.7421,
+      "lon": 118.759,
+      "elevM": 22
+    },
+    {
+      "iata": "CPH",
+      "icao": "EKCH",
+      "name": "Copenhagen Airport",
+      "city": "Copenhagen",
+      "country": "DK",
+      "lat": 55.618,
+      "lon": 12.656,
+      "elevM": 5
+    },
+    {
+      "iata": "OSL",
+      "icao": "ENGM",
+      "name": "Oslo Gardermoen Airport",
+      "city": "Oslo",
+      "country": "NO",
+      "lat": 60.1939,
+      "lon": 11.1004,
+      "elevM": 208
+    },
+    {
+      "iata": "KEF",
+      "icao": "BIKF",
+      "name": "Keflavik International Airport",
+      "city": "Reykjavik",
+      "country": "IS",
+      "lat": 63.985,
+      "lon": -22.6056,
+      "elevM": 52
+    },
+    {
+      "iata": "DUB",
+      "icao": "EIDW",
+      "name": "Dublin Airport",
+      "city": "Dublin",
+      "country": "IE",
+      "lat": 53.4213,
+      "lon": -6.2701,
+      "elevM": 74
+    },
+    {
+      "iata": "LIS",
+      "icao": "LPPT",
+      "name": "Humberto Delgado Lisbon Airport",
+      "city": "Lisbon",
+      "country": "PT",
+      "lat": 38.7813,
+      "lon": -9.1359,
+      "elevM": 114
+    },
+    {
+      "iata": "PRG",
+      "icao": "LKPR",
+      "name": "Vaclav Havel Airport Prague",
+      "city": "Prague",
+      "country": "CZ",
+      "lat": 50.1008,
+      "lon": 14.26,
+      "elevM": 380
+    },
+    {
+      "iata": "OTP",
+      "icao": "LROP",
+      "name": "Bucharest Henri Coanda Airport",
+      "city": "Bucharest",
+      "country": "RO",
+      "lat": 44.5711,
+      "lon": 26.085,
+      "elevM": 96
+    },
+    {
+      "iata": "JED",
+      "icao": "OEJN",
+      "name": "King Abdulaziz International Airport",
+      "city": "Jeddah",
+      "country": "SA",
+      "lat": 21.6796,
+      "lon": 39.1565,
+      "elevM": 15
+    },
+    {
+      "iata": "TLV",
+      "icao": "LLBG",
+      "name": "Ben Gurion International Airport",
+      "city": "Tel Aviv",
+      "country": "IL",
+      "lat": 32.0114,
+      "lon": 34.8867,
+      "elevM": 41
+    },
+    {
+      "iata": "CPT",
+      "icao": "FACT",
+      "name": "Cape Town International Airport",
+      "city": "Cape Town",
+      "country": "ZA",
+      "lat": -33.9648,
+      "lon": 18.6017,
+      "elevM": 46
+    },
+    {
+      "iata": "YVR",
+      "icao": "CYVR",
+      "name": "Vancouver International Airport",
+      "city": "Vancouver",
+      "country": "CA",
+      "lat": 49.1967,
+      "lon": -123.1815,
+      "elevM": 4
+    }
+  ],
+  "seaports": [
+    {
+      "locode": "PHMNL",
+      "name": "Port of Manila",
+      "country": "PH",
+      "lat": 14.5833,
+      "lon": 120.9667,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "PHSFS",
+      "name": "Port of Subic Bay",
+      "country": "PH",
+      "lat": 14.8167,
+      "lon": 120.2833,
+      "kind": "Deepwater Strategic Port"
+    },
+    {
+      "locode": "SGSIN",
+      "name": "Port of Singapore",
+      "country": "SG",
+      "lat": 1.2644,
+      "lon": 103.84,
+      "kind": "Global Transshipment Hub"
+    },
+    {
+      "locode": "CNSHA",
+      "name": "Port of Shanghai",
+      "country": "CN",
+      "lat": 31.23,
+      "lon": 121.49,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "NLRTM",
+      "name": "Port of Rotterdam",
+      "country": "NL",
+      "lat": 51.95,
+      "lon": 4.14,
+      "kind": "European Gateway Port"
+    },
+    {
+      "locode": "USLAX",
+      "name": "Port of Los Angeles / Long Beach",
+      "country": "US",
+      "lat": 33.74,
+      "lon": -118.27,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "USNYC",
+      "name": "Port of New York and New Jersey",
+      "country": "US",
+      "lat": 40.67,
+      "lon": -74.14,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "KRPUS",
+      "name": "Port of Busan",
+      "country": "KR",
+      "lat": 35.1,
+      "lon": 129.04,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "JPYOK",
+      "name": "Port of Yokohama",
+      "country": "JP",
+      "lat": 35.44,
+      "lon": 139.65,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "TWKHH",
+      "name": "Port of Kaohsiung",
+      "country": "TW",
+      "lat": 22.61,
+      "lon": 120.27,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "AEJEA",
+      "name": "Port of Jebel Ali",
+      "country": "AE",
+      "lat": 25.01,
+      "lon": 55.06,
+      "kind": "Middle East Hub Port"
+    },
+    {
+      "locode": "DEHAM",
+      "name": "Port of Hamburg",
+      "country": "DE",
+      "lat": 53.54,
+      "lon": 9.98,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "FIHEL",
+      "name": "Port of Helsinki",
+      "country": "FI",
+      "lat": 60.16,
+      "lon": 24.95,
+      "kind": "Baltic Ferry & Cargo Port"
+    },
+    {
+      "locode": "EGSUZ",
+      "name": "Suez Canal Maritime Chokepoint",
+      "country": "EG",
+      "lat": 30.5852,
+      "lon": 32.2654,
+      "kind": "Strategic Maritime Canal"
+    },
+    {
+      "locode": "PAPTY",
+      "name": "Panama Canal Maritime Chokepoint",
+      "country": "PA",
+      "lat": 9.08,
+      "lon": -79.68,
+      "kind": "Strategic Maritime Canal"
+    },
+    {
+      "locode": "MYMKZ",
+      "name": "Strait of Malacca Chokepoint",
+      "country": "MY",
+      "lat": 2.5,
+      "lon": 101.2,
+      "kind": "Principal Shipping Corridor"
+    },
+    {
+      "locode": "OMHOR",
+      "name": "Strait of Hormuz Chokepoint",
+      "country": "OM",
+      "lat": 26.5667,
+      "lon": 56.25,
+      "kind": "Principal Energy Corridor"
+    },
+    {
+      "locode": "BRSSZ",
+      "name": "Port of Santos",
+      "country": "BR",
+      "lat": -23.96,
+      "lon": -46.3,
+      "kind": "South America Hub Port"
+    },
+    {
+      "locode": "ZADUR",
+      "name": "Port of Durban",
+      "country": "ZA",
+      "lat": -29.87,
+      "lon": 31.03,
+      "kind": "Southern Africa Hub Port"
+    },
+    {
+      "locode": "PHSUB",
+      "name": "Port of Subic Bay",
+      "country": "PH",
+      "lat": 14.8203,
+      "lon": 120.2828,
+      "kind": "Deepwater Freeport"
+    },
+    {
+      "locode": "PHCEB",
+      "name": "Port of Cebu",
+      "country": "PH",
+      "lat": 10.2929,
+      "lon": 123.9083,
+      "kind": "Regional Hub Seaport"
+    },
+    {
+      "locode": "THLCH",
+      "name": "Port of Laem Chabang",
+      "country": "TH",
+      "lat": 13.0827,
+      "lon": 100.8837,
+      "kind": "Deepwater Industrial Seaport"
+    },
+    {
+      "locode": "VNSGN",
+      "name": "Port of Cat Lai / Ho Chi Minh",
+      "country": "VN",
+      "lat": 10.7626,
+      "lon": 106.782,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "MYPKG",
+      "name": "Port Klang",
+      "country": "MY",
+      "lat": 3.0,
+      "lon": 101.39,
+      "kind": "Strait of Malacca Hub"
+    },
+    {
+      "locode": "IDTPP",
+      "name": "Port of Tanjung Priok",
+      "country": "ID",
+      "lat": -6.105,
+      "lon": 106.88,
+      "kind": "Primary Indonesian Seaport"
+    },
+    {
+      "locode": "INNSA",
+      "name": "Jawaharlal Nehru Port (Nhava Sheva)",
+      "country": "IN",
+      "lat": 18.95,
+      "lon": 72.95,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "LKCMB",
+      "name": "Port of Colombo",
+      "country": "LK",
+      "lat": 6.9497,
+      "lon": 79.8428,
+      "kind": "Indian Ocean Transshipment Hub"
+    },
+    {
+      "locode": "OMSLL",
+      "name": "Port of Salalah",
+      "country": "OM",
+      "lat": 16.94,
+      "lon": 54.0,
+      "kind": "Arabian Sea Hub"
+    },
+    {
+      "locode": "SAJED",
+      "name": "Jeddah Islamic Port",
+      "country": "SA",
+      "lat": 21.4858,
+      "lon": 39.1728,
+      "kind": "Red Sea Gateway Seaport"
+    },
+    {
+      "locode": "EGPSD",
+      "name": "Port Said (Suez North)",
+      "country": "EG",
+      "lat": 31.2653,
+      "lon": 32.3019,
+      "kind": "Suez Canal Entrance"
+    },
+    {
+      "locode": "DJJIB",
+      "name": "Port of Djibouti",
+      "country": "DJ",
+      "lat": 11.595,
+      "lon": 43.1481,
+      "kind": "Bab el-Mandeb Strategic Port"
+    },
+    {
+      "locode": "GRPIR",
+      "name": "Port of Piraeus",
+      "country": "GR",
+      "lat": 37.942,
+      "lon": 23.637,
+      "kind": "Mediterranean Transshipment Hub"
+    },
+    {
+      "locode": "ESALG",
+      "name": "Port of Algeciras",
+      "country": "ES",
+      "lat": 36.1315,
+      "lon": -5.4352,
+      "kind": "Strait of Gibraltar Hub"
+    },
+    {
+      "locode": "BEANR",
+      "name": "Port of Antwerp-Bruges",
+      "country": "BE",
+      "lat": 51.2667,
+      "lon": 4.3667,
+      "kind": "European Petrochemical & Container Hub"
+    },
+    {
+      "locode": "MAPTM",
+      "name": "Tanger-Med Port",
+      "country": "MA",
+      "lat": 35.8906,
+      "lon": -5.5033,
+      "kind": "Strait of Gibraltar Mega Hub"
+    },
+    {
+      "locode": "NGAPP",
+      "name": "Port of Apapa / Lekki",
+      "country": "NG",
+      "lat": 6.44,
+      "lon": 3.36,
+      "kind": "West Africa Hub Seaport"
+    },
+    {
+      "locode": "KEMBA",
+      "name": "Port of Mombasa",
+      "country": "KE",
+      "lat": -4.0435,
+      "lon": 39.6682,
+      "kind": "East Africa Gateway Port"
+    },
+    {
+      "locode": "USSAV",
+      "name": "Port of Savannah",
+      "country": "US",
+      "lat": 32.126,
+      "lon": -81.148,
+      "kind": "Major Atlantic Container Port"
+    },
+    {
+      "locode": "PABLB",
+      "name": "Port of Balboa (Panama Pacific)",
+      "country": "PA",
+      "lat": 8.9553,
+      "lon": -79.563,
+      "kind": "Panama Canal Pacific Terminal"
+    },
+    {
+      "locode": "PECLL",
+      "name": "Port of Callao",
+      "country": "PE",
+      "lat": -12.046,
+      "lon": -77.147,
+      "kind": "Andean Pacific Hub Port"
+    },
+    {
+      "locode": "AUMEL",
+      "name": "Port of Melbourne",
+      "country": "AU",
+      "lat": -37.838,
+      "lon": 144.915,
+      "kind": "Australia Container Hub"
+    },
+    {
+      "locode": "PHBTG",
+      "name": "Port of Batangas",
+      "country": "PH",
+      "lat": 13.7546,
+      "lon": 121.0448,
+      "kind": "Container & RoRo Seaport"
+    },
+    {
+      "locode": "JPTYO",
+      "name": "Port of Tokyo",
+      "country": "JP",
+      "lat": 35.6197,
+      "lon": 139.7798,
+      "kind": "Major Container Seaport"
+    },
+    {
+      "locode": "OMSOH",
+      "name": "Port of Sohar",
+      "country": "OM",
+      "lat": 24.5042,
+      "lon": 56.6239,
+      "kind": "Gulf of Oman Gateway"
+    },
+    {
+      "locode": "MATNG",
+      "name": "Tanger-Med Port",
+      "country": "MA",
+      "lat": 35.8919,
+      "lon": -5.5033,
+      "kind": "Gibraltar Strait Mega-Port"
+    },
+    {
+      "locode": "BEANT",
+      "name": "Port of Antwerp-Bruges",
+      "country": "BE",
+      "lat": 51.2602,
+      "lon": 4.3686,
+      "kind": "European Petrochemical & Container Hub"
+    },
+    {
+      "locode": "CAHAL",
+      "name": "Port of Halifax",
+      "country": "CA",
+      "lat": 44.6488,
+      "lon": -63.5752,
+      "kind": "North Atlantic Gateway"
+    },
+    {
+      "locode": "CLVAP",
+      "name": "Port of Valparaiso",
+      "country": "CL",
+      "lat": -33.036,
+      "lon": -71.6296,
+      "kind": "South Pacific Gateway"
+    }
+  ],
+  "submarineCables": [
+    {
+      "id": "cable-apricot",
+      "name": "Apricot Intra-Asia Cable",
+      "rfs": "2025/2026",
+      "coords": [
+        [
+          139.9,
+          35.3
+        ],
+        [
+          121.5,
+          25.1
+        ],
+        [
+          120.3,
+          16.0
+        ],
+        [
+          125.6,
+          7.1
+        ],
+        [
+          103.8,
+          1.3
+        ],
+        [
+          106.8,
+          -6.1
+        ]
+      ]
+    },
+    {
+      "id": "cable-bifrost",
+      "name": "Bifrost Trans-Pacific Cable",
+      "rfs": "2025",
+      "coords": [
+        [
+          103.8,
+          1.3
+        ],
+        [
+          106.8,
+          -6.1
+        ],
+        [
+          125.6,
+          7.1
+        ],
+        [
+          144.8,
+          13.4
+        ],
+        [
+          -157.8,
+          21.3
+        ],
+        [
+          -122.4,
+          37.7
+        ]
+      ]
+    },
+    {
+      "id": "cable-jupiter",
+      "name": "JUPITER Trans-Pacific Cable",
+      "rfs": "2020",
+      "coords": [
+        [
+          120.3,
+          14.8
+        ],
+        [
+          139.9,
+          34.3
+        ],
+        [
+          -157.9,
+          21.3
+        ],
+        [
+          -118.4,
+          33.8
+        ],
+        [
+          -123.9,
+          45.2
+        ]
+      ]
+    },
+    {
+      "id": "cable-seamewe6",
+      "name": "SEA-ME-WE 6 Cable System",
+      "rfs": "2025/2026",
+      "coords": [
+        [
+          103.8,
+          1.3
+        ],
+        [
+          80.2,
+          13.1
+        ],
+        [
+          72.8,
+          19.1
+        ],
+        [
+          55.3,
+          25.2
+        ],
+        [
+          43.1,
+          11.6
+        ],
+        [
+          32.5,
+          29.9
+        ],
+        [
+          29.9,
+          31.2
+        ],
+        [
+          5.4,
+          43.3
+        ]
+      ]
+    },
+    {
+      "id": "cable-marea",
+      "name": "MAREA Transatlantic Cable",
+      "rfs": "2018",
+      "coords": [
+        [
+          -75.9,
+          36.8
+        ],
+        [
+          -45.0,
+          40.0
+        ],
+        [
+          -20.0,
+          42.5
+        ],
+        [
+          -2.9,
+          43.4
+        ]
+      ]
+    },
+    {
+      "id": "cable-gracehopper",
+      "name": "Grace Hopper Transatlantic Cable",
+      "rfs": "2022",
+      "coords": [
+        [
+          -72.9,
+          40.7
+        ],
+        [
+          -35.0,
+          46.0
+        ],
+        [
+          -4.5,
+          50.8
+        ],
+        [
+          -3.0,
+          43.4
+        ]
+      ]
+    },
+    {
+      "id": "cable-2africa",
+      "name": "2Africa Circum-African Cable",
+      "rfs": "2024",
+      "coords": [
+        [
+          -0.1,
+          50.8
+        ],
+        [
+          -9.1,
+          38.7
+        ],
+        [
+          -17.4,
+          14.7
+        ],
+        [
+          3.4,
+          6.4
+        ],
+        [
+          18.4,
+          -33.9
+        ],
+        [
+          31.0,
+          -29.8
+        ],
+        [
+          39.6,
+          -4.0
+        ],
+        [
+          43.1,
+          11.6
+        ],
+        [
+          32.5,
+          29.9
+        ],
+        [
+          8.9,
+          44.4
+        ]
+      ]
+    },
+    {
+      "id": "cable-southerncross",
+      "name": "Southern Cross NEXT",
+      "rfs": "2022",
+      "coords": [
+        [
+          151.2,
+          -33.9
+        ],
+        [
+          174.8,
+          -36.8
+        ],
+        [
+          178.4,
+          -18.1
+        ],
+        [
+          -157.8,
+          21.3
+        ],
+        [
+          -118.4,
+          33.9
+        ]
+      ]
+    },
+    {
+      "id": "cable-curie",
+      "name": "Curie Americas Pacific Cable",
+      "rfs": "2019",
+      "coords": [
+        [
+          -118.4,
+          33.9
+        ],
+        [
+          -95.0,
+          12.0
+        ],
+        [
+          -79.5,
+          8.9
+        ],
+        [
+          -71.6,
+          -33.0
+        ]
+      ]
+    }
+  ],
+  "powerStations": [
+    {
+      "id": "pwr-sanroque",
+      "name": "San Roque Multipurpose Hydro",
+      "country": "PH",
+      "fuel": "Hydro",
+      "capacityMw": 435,
+      "lat": 16.0772,
+      "lon": 120.6844
+    },
+    {
+      "id": "pwr-angat",
+      "name": "Angat Hydroelectric Facility",
+      "country": "PH",
+      "fuel": "Hydro",
+      "capacityMw": 246,
+      "lat": 14.9103,
+      "lon": 121.1539
+    },
+    {
+      "id": "pwr-threegorges",
+      "name": "Three Gorges Dam Hydro",
+      "country": "CN",
+      "fuel": "Hydro",
+      "capacityMw": 22500,
+      "lat": 30.8231,
+      "lon": 111.0033
+    },
+    {
+      "id": "pwr-itaipu",
+      "name": "Itaipu Binational Hydro",
+      "country": "BR",
+      "fuel": "Hydro",
+      "capacityMw": 14000,
+      "lat": -25.4081,
+      "lon": -54.5889
+    },
+    {
+      "id": "pwr-paloverde",
+      "name": "Palo Verde Generating Station",
+      "country": "US",
+      "fuel": "Nuclear",
+      "capacityMw": 3937,
+      "lat": 33.3881,
+      "lon": -112.8617
+    },
+    {
+      "id": "pwr-gravelines",
+      "name": "Gravelines Nuclear Station",
+      "country": "FR",
+      "fuel": "Nuclear",
+      "capacityMw": 5460,
+      "lat": 51.0153,
+      "lon": 2.1361
+    },
+    {
+      "id": "pwr-barakah",
+      "name": "Barakah Nuclear Energy Plant",
+      "country": "AE",
+      "fuel": "Nuclear",
+      "capacityMw": 5600,
+      "lat": 23.9592,
+      "lon": 52.2389
+    },
+    {
+      "id": "pwr-bhadla",
+      "name": "Bhadla Solar Park",
+      "country": "IN",
+      "fuel": "Solar",
+      "capacityMw": 2245,
+      "lat": 27.5397,
+      "lon": 71.9167
+    },
+    {
+      "id": "pwr-hornsea",
+      "name": "Hornsea Offshore Wind Array",
+      "country": "GB",
+      "fuel": "Wind",
+      "capacityMw": 2538,
+      "lat": 53.885,
+      "lon": 1.7911
+    },
+    {
+      "id": "pwr-bruce",
+      "name": "Bruce Nuclear Generating Station",
+      "country": "CA",
+      "fuel": "Nuclear",
+      "capacityMw": 6550,
+      "lat": 44.3256,
+      "lon": -81.5994
+    }
+  ],
+  "referenceTles": [
+    {
+      "noradId": "25544",
+      "name": "ISS (ZARYA)",
+      "group": "Space Stations",
+      "line1": "1 25544U 98067A   26310.50000000  .00016717  00000-0  10270-3 0  9993",
+      "line2": "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.50103472480008"
+    },
+    {
+      "noradId": "48274",
+      "name": "CSS (TIANHE / TIANGONG)",
+      "group": "Space Stations",
+      "line1": "1 48274U 21035A   26310.50000000  .00021500  00000-0  24100-3 0  9991",
+      "line2": "2 48274  41.4742 182.3410 0005120 284.1200  75.9100 15.60841200315004"
+    },
+    {
+      "noradId": "20580",
+      "name": "HST (HUBBLE)",
+      "group": "Science",
+      "line1": "1 20580U 90037B   26310.50000000  .00001850  00000-0  92000-4 0  9998",
+      "line2": "2 20580  28.4698 114.5210 0002480  65.2100 294.8900 15.10245000721002"
+    },
+    {
+      "noradId": "43013",
+      "name": "NOAA 20 (JPSS-1)",
+      "group": "Weather / EO",
+      "line1": "1 43013U 17073A   26310.50000000  .00000095  00000-0  62000-4 0  9994",
+      "line2": "2 43013  98.7420 225.1800 0001420  91.4200 268.7100 14.19548000462007"
+    },
+    {
+      "noradId": "25994",
+      "name": "TERRA (EOS AM-1)",
+      "group": "Earth Observation",
+      "line1": "1 25994U 99068A   26310.50000000  .00000210  00000-0  58000-4 0  9995",
+      "line2": "2 25994  98.1980  38.4500 0001680  85.1100 275.0200 14.57112000431001"
+    },
+    {
+      "noradId": "49260",
+      "name": "LANDSAT 9",
+      "group": "Earth Observation",
+      "line1": "1 49260U 21088A   26310.50000000  .00000190  00000-0  49000-4 0  9992",
+      "line2": "2 49260  98.2190  29.8400 0001310  92.3400 267.7900 14.57121000274006"
+    },
+    {
+      "noradId": "40697",
+      "name": "SENTINEL-2A",
+      "group": "Earth Observation",
+      "line1": "1 40697U 15028A   26310.50000000  .00000110  00000-0  51000-4 0  9997",
+      "line2": "2 40697  98.5680  42.1900 0001240  88.4500 271.6800 14.30818000591003"
+    },
+    {
+      "noradId": "24876",
+      "name": "GPS BIIR-2 (PRN 13)",
+      "group": "GNSS",
+      "line1": "1 24876U 97035A   26310.50000000 -.00000041  00000-0  00000+0 0  9996",
+      "line2": "2 24876  55.4420 148.2300 0068200 221.4000 138.1200  2.00563120214009"
+    }
+  ]
+}

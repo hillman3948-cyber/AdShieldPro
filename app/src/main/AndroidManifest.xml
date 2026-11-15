@@ -16,6 +16,10 @@
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+    <!-- Optional one-time ADB grant enabling Private DNS & USB Debugging Quick Settings tiles -->
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".AdShieldApplication"
@@ -39,6 +43,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -73,6 +81,34 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="local_dns_ad_and_tracker_filtering_vpn" />
         </service>
+
+        <!-- Quick Settings Tiles for System Preferences -->
+        <service
+            android:name=".service.PrivateDnsTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_private_dns"
+            android:label="@string/tile_private_dns_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.UsbDebuggingTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_usb_debugging"
+            android:label="@string/tile_usb_debugging_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".service.AutoRevertReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <!-- Boot Receiver for restoring VPN protection after device restart -->
         <receiver

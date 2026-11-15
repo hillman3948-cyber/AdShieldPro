@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.IntelligenceMapTestSuite" tests="29" skipped="0" failures="0" errors="0" timestamp="2026-11-06T13:07:07.362Z" hostname="runnervmwuk1x" time="0.42">
+<testsuite name="com.adshield.pro.IntelligenceMapTestSuite" tests="29" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:11.116Z" hostname="runnervmccnms" time="0.58">
   <properties/>
-  <testcase name="testAggregatorEscalatesThermalThresholdAndRecovers" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.007"/>
-  <testcase name="testAggregatorBuildsOnlyFromRealInputs" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testGeometryHitTestSelectsNearestNodeAndCore" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.003"/>
-  <testcase name="testRepositoryRoundTripPersistsSanitizedEvents" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.064"/>
+  <testcase name="testAggregatorEscalatesThermalThresholdAndRecovers" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.01"/>
+  <testcase name="testAggregatorBuildsOnlyFromRealInputs" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testGeometryHitTestSelectsNearestNodeAndCore" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.004"/>
+  <testcase name="testRepositoryRoundTripPersistsSanitizedEvents" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.07"/>
   <testcase name="testGeometryFitContainsAllNodesInPortraitAndLandscape" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testAutomationFailuresRaiseAlerts" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.003"/>
-  <testcase name="testMitigatedBlocksDoNotRaiseModuleAlerts" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testAutomationFailuresRaiseAlerts" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.002"/>
+  <testcase name="testMitigatedBlocksDoNotRaiseModuleAlerts" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
   <testcase name="testScanRecordRoutesToCyberFinancialAndPrivacy" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testCameraLerpAndCentredOn" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testGeometryPulseProgressAlphaAndMarkerPlacement" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testCameraLerpAndCentredOn" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testGeometryPulseProgressAlphaAndMarkerPlacement" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
   <testcase name="testFinancialClassifierAttributesPaymentLinksOnly" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.002"/>
   <testcase name="testNodePositionsClampIntoTheWorld" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
-  <testcase name="testDedupePolicyThrottlesRepeatedObservations" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.008"/>
-  <testcase name="testGeometryPinchZoomKeepsFocalPointStable" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
+  <testcase name="testDedupePolicyThrottlesRepeatedObservations" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.01"/>
+  <testcase name="testGeometryPinchZoomKeepsFocalPointStable" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
   <testcase name="testFactoryNeverEmitsWithoutRealEvidence" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
-  <testcase name="testAggregatorReportsOfflineModuleWithoutInventingData" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testAggregatorReportsOfflineModuleWithoutInventingData" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
   <testcase name="testEmergencyLockdownIsReportedAsVerifiedConfiguration" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
-  <testcase name="testEventSanitizerBoundsAndMetricLimits" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.059"/>
+  <testcase name="testEventSanitizerBoundsAndMetricLimits" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.078"/>
   <testcase name="testRecommendationsCoverEveryModule" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
   <testcase name="testSanitizerRejectsEventWithoutEvidence" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
   <testcase name="testSanitizerRejectsModuleTypeMismatchAndFutureTimestamps" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
-  <testcase name="testAggregatorPerformanceBudget" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.253"/>
-  <testcase name="testSanitizerMasksSecretsAndPersonalData" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testRepositoryPrunesByAgeAndCount" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.004"/>
+  <testcase name="testAggregatorPerformanceBudget" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.385"/>
+  <testcase name="testSanitizerMasksSecretsAndPersonalData" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
+  <testcase name="testRepositoryPrunesByAgeAndCount" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.006"/>
   <testcase name="testSanitizerCannotDowngradeCatalogueSeverity" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
   <testcase name="testGeometryTapSlopCancelsSelectionWhileDragging" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.0"/>
   <testcase name="testFiltersMatchModuleSeverityRangeAndQuery" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
   <testcase name="testNetworkStateFollowsRealTunnelState" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
-  <testcase name="testRepositoryDropsCorruptRowsOnRead" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.002"/>
-  <system-out><![CDATA[IntelligenceAggregator: 600 events, 8 nodes, filters=on → avg=1.071 ms p95=1.583 ms (budget 25 ms avg / 40 ms p95, measured on the CI JVM)
-Event feed filter (800 events, query+range): avg=0.384 ms per pass
+  <testcase name="testRepositoryDropsCorruptRowsOnRead" classname="com.adshield.pro.IntelligenceMapTestSuite" time="0.001"/>
+  <system-out><![CDATA[IntelligenceAggregator: 600 events, 8 nodes, filters=on → avg=1.555 ms p95=2.173 ms (budget 25 ms avg / 40 ms p95, measured on the CI JVM)
+Event feed filter (800 events, query+range): avg=0.667 ms per pass
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.LookupAndQrTestSuite" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-06T13:07:07.784Z" hostname="runnervmwuk1x" time="0.062">
+<testsuite name="com.adshield.pro.LookupAndQrTestSuite" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:11.699Z" hostname="runnervmccnms" time="0.073">
   <properties/>
   <testcase name="cidr containment matches real networks" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.0"/>
-  <testcase name="retired sources are not implemented" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.001"/>
-  <testcase name="blank image yields no payload instead of a guess" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.008"/>
-  <testcase name="qr encoder and decoder agree on a payload" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.041"/>
-  <testcase name="no native handler is dead code" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.006"/>
+  <testcase name="retired sources are not implemented" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.0"/>
+  <testcase name="blank image yields no payload instead of a guess" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.01"/>
+  <testcase name="qr encoder and decoder agree on a payload" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.048"/>
+  <testcase name="no native handler is dead code" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.008"/>
   <testcase name="lookup connectors never require a key to be counted as implemented" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.0"/>
-  <testcase name="lookup connectors are https templated and cacheable" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.0"/>
+  <testcase name="lookup connectors are https templated and cacheable" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.001"/>
   <testcase name="oversized images are refused before decoding" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.0"/>
-  <testcase name="every implemented native probe has a dispatch branch" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.005"/>
+  <testcase name="every implemented native probe has a dispatch branch" classname="com.adshield.pro.LookupAndQrTestSuite" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -218,9 +218,32 @@ class FilterRuleEngine @Inject constructor() {
 
         val activeCategories = snap.protectionMode.activeCategories
 
+        /**
+         * Video Safety, applied where it belongs: when a feed rule matches.
+         *
+         * A rule that blocks the media *domain itself* (`||googlevideo.com^`) would
+         * take playback down, so it is ignored for playback hosts. A rule for a
+         * specific host (`||log.byteoversea.com^`, `||views.hulu.com^`) is a
+         * deliberate block of an ad or telemetry endpoint and is always enforced.
+         *
+         * Exempting whole media domains in the allowlist step (the previous
+         * behaviour) silently unblocked 195 such ad and telemetry hosts.
+         */
+        val videoZone = DnsMediaPlaybackGuard.protectedZoneFor(domain)
+
+        fun videoExemption(matchedRule: String): FilterEvaluationResult? {
+            if (videoZone == null || matchedRule != videoZone) return null
+            if (!DnsMediaPlaybackGuard.isProtectedPlaybackHost(domain)) return null
+            return buildResult(
+                domain, false, "||$matchedRule^", null, RuleMatchType.SUBDOMAIN,
+                "Video Safety", 70, startNs
+            )
+        }
+
         // 7. Filter List Exact Match
         snap.filterListExact[domain]?.let { entry ->
             if (activeCategories.contains(entry.category)) {
+                videoExemption(domain)?.let { return it }
                 return buildResult(domain, true, domain, entry.category, RuleMatchType.EXACT, entry.sourceName, 50, startNs)
             }
         }
@@ -229,6 +252,7 @@ class FilterRuleEngine @Inject constructor() {
         for (suffix in suffixes) {
             val entry = snap.filterListSubdomains[suffix]
             if (entry != null && activeCategories.contains(entry.category)) {
+                videoExemption(suffix)?.let { return it }
                 return buildResult(domain, true, "||$suffix^", entry.category, RuleMatchType.SUBDOMAIN, entry.sourceName, 50, startNs)
             }
         }
@@ -370,7 +394,12 @@ class FilterRuleEngine @Inject constructor() {
         val wildcardRules: List<WildcardEntry>,
         val allowSubdomains: Set<String>,
         val totalValidRules: Int,
-        val duplicateCount: Int
+        val duplicateCount: Int,
+        /**
+         * Block rules skipped because they would have taken media playback down
+         * (entity-level, substring or shared-CDN rules). Reported, never hidden.
+         */
+        val rejectedVideoUnsafeRules: Int = 0
     )
 
     fun parseFilterListContent(
@@ -391,6 +420,7 @@ class FilterRuleEngine @Inject constructor() {
         val wildcardList = ArrayList<WildcardEntry>()
         val allowSet = HashSet<String>()
         var duplicates = 0
+        var rejectedVideoUnsafe = 0
         var activeCategory = defaultCategory
 
         content.lineSequence().forEach { rawLine ->
@@ -414,6 +444,16 @@ class FilterRuleEngine @Inject constructor() {
 
             // Ignore cosmetic HTML rules (e.g., example.com##.ad) in DNS filter parser
             if (withoutComment.contains("##") || withoutComment.contains("#@#") || withoutComment.contains("#?#")) {
+                return@forEach
+            }
+
+            // Video Safety: an entity-level, substring or shared-CDN block rule
+            // removes media playback itself. Refuse the line and count it, rather
+            // than silently breaking every video on the device.
+            if (!withoutComment.startsWith("@@") &&
+                DnsMediaPlaybackGuard.isVideoUnsafeRule(withoutComment)
+            ) {
+                rejectedVideoUnsafe++
                 return@forEach
             }
 
@@ -495,7 +535,8 @@ class FilterRuleEngine @Inject constructor() {
                 wildcardRules = wildcardList,
                 allowSubdomains = allowSet,
                 totalValidRules = totalValid,
-                duplicateCount = duplicates
+                duplicateCount = duplicates,
+                rejectedVideoUnsafeRules = rejectedVideoUnsafe
             )
         )
     }

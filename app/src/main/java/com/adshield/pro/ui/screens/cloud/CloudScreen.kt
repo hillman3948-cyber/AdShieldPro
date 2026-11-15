@@ -122,6 +122,12 @@ fun CloudDashboardScreen(
         viewModel.consumePendingUrl()
     }
 
+    // Telegram is a self-contained provider: it does not depend on AdShield Cloud endpoints,
+    // a Supabase session or a Worker, so it gets its own full-screen surface instead of being
+    // gated by the Cloud empty state. All other sections keep their existing layout.
+    if (section == CloudSection.TELEGRAM) {
+        TelegramCloudScreen(onBack = { section = CloudSection.OVERVIEW })
+    } else {
     Scaffold(snackbarHost = { SnackbarHost(snackbar) }) { padding ->
         Column(
             modifier = Modifier
@@ -154,11 +160,14 @@ fun CloudDashboardScreen(
                     )
                     CloudSection.SECURITY -> SecuritySection(viewModel, state, quarantine)
                     CloudSection.SETTINGS -> SettingsSection(viewModel, state, onOpenLegacyProviders)
+                    // Unreachable: the Telegram provider renders its own surface above.
+                    CloudSection.TELEGRAM -> Unit
                 }
             } else {
                 AuthSection(viewModel, state)
             }
         }
+    }
     }
 }
 
@@ -256,7 +265,8 @@ private fun OverviewSection(
                 CloudSection.BACKUPS to "Back up and restore the full DNS configuration",
                 CloudSection.SHARED to "Expiring share links you can revoke",
                 CloudSection.UPLOADS to "Pause, resume and retry transfers",
-                CloudSection.SECURITY to "Audit log, quota truth and quarantine"
+                CloudSection.SECURITY to "Audit log, quota truth and quarantine",
+                CloudSection.TELEGRAM to "Telegram provider: direct TDLib account, real uploads/downloads"
             )
             sections.forEach { (target, description) ->
                 Row(

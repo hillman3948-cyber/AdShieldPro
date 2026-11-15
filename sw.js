@@ -11,7 +11,7 @@
  *
  * Bump VERSION to invalidate caches on release.
  */
-const VERSION = 'omnishield-x-v5.0.1';
+const VERSION = 'omnishield-x-v5.0.2';
 const SHELL_CACHE = `${VERSION}-shell`;
 const RULES_CACHE = `${VERSION}-rules`;
 
@@ -31,6 +31,7 @@ const SHELL_ASSETS = [
   './dns/dnssec.js',
   './dns/chain.js',
   './dns/resolvers.js',
+  './guard/video-safety.js',
   './aether/index.js',
   './aether/data.js',
   './aether/domain.js',

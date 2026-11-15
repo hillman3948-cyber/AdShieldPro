@@ -163,6 +163,11 @@ jobs:
           unzip -l "$APK" | grep -q 'AndroidManifest.xml'
           unzip -l "$APK" | grep -qE 'classes[0-9]*\.dex'
           unzip -l "$APK" | grep -q 'resources.arsc'
+          # The Telegram provider needs all three TDLib/OpenSSL libraries for every supported
+          # ABI, and the packaged bytes must still match the pinned checksums. A missing,
+          # swapped or unverified .so must never ship as a "successful" build.
+          chmod +x tools/check_apk_native_libs.py
+          python3 tools/check_apk_native_libs.py "$APK"
           echo "APK: $APK"
           ls -l "$APK"
           sha256sum "$APK"

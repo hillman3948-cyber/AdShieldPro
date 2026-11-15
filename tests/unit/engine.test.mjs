@@ -150,10 +150,13 @@ test('supplement closes apex gaps without breaking core services', () => {
 
   const res = e.loadFilterList(SUPPLEMENT, 'ADS', 'core_supplement_ads');
   assert.ok(res.added >= 70, `supplement too small: ${res.added}`);
-  // Overlap with the lite feed is expected (136 curated entries, 74 new, 62 already covered).
-  // The engine reports the overlap instead of silently double-counting it.
+  // Overlap with the lite feed is expected (141 curated entries, 79 new, 62 already
+  // covered). The engine reports the overlap instead of silently double-counting it;
+  // the total is derived from the feed so adding a curated entry cannot silently
+  // unbalance this contract.
+  const supplementEntries = (SUPPLEMENT.match(/^\|\|/gm) || []).length;
   assert.ok(res.duplicates > 0, 'dedupe accounting is broken');
-  assert.equal(res.added + res.duplicates, 136, 'supplement entry accounting must balance');
+  assert.equal(res.added + res.duplicates, supplementEntries, 'supplement entry accounting must balance');
   assert.equal(res.invalid, 0, 'supplement contains malformed entries');
 
   const after = apexes

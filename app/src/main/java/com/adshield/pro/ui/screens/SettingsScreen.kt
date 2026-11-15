@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.Power
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -59,10 +60,12 @@ import com.adshield.pro.domain.model.DnssecMode
 import com.adshield.pro.domain.model.NetworkTransportPolicy
 import com.adshield.pro.engine.dns.DnsDiagnosticReport
 import com.adshield.pro.ui.components.CompactStatusChip
+import com.adshield.pro.ui.components.StatusPill
 import com.adshield.pro.ui.model.ProtectionPipelineStatus
 import com.adshield.pro.domain.model.DnsProtocol
 import com.adshield.pro.domain.model.DnsProviderPreset
 import com.adshield.pro.domain.model.DnsResolverConfig
+import com.adshield.pro.engine.platform.SystemTileEngine
 import com.adshield.pro.ui.theme.CyberCyan
 import com.adshield.pro.ui.theme.EmeraldPrimary
 import com.adshield.pro.ui.theme.WarningAmber
@@ -73,6 +76,8 @@ fun SettingsScreen(
     showAboutScreen: Boolean,
     onOpenAbout: () -> Unit,
     onCloseAbout: () -> Unit,
+    onOpenQuickTiles: () -> Unit = {},
+    hasQuickTilePermission: Boolean = false,
     settings: AppSettingsState,
     installedApps: List<AppExclusionInfo>,
     onUpdateResolverConfig: (DnsResolverConfig) -> Unit,
@@ -236,6 +241,15 @@ fun SettingsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
+                                    text = if (preset.forwardsClientSubnet) {
+                                        "CDN accuracy: forwards a truncated client subnet, so video CDNs pick an edge near you."
+                                    } else {
+                                        "CDN accuracy: forwards no client subnet; edge choice follows the resolver location."
+                                    },
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = if (preset.forwardsClientSubnet) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
                                     text = "Privacy: ${preset.privacyDisclosure}",
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -305,6 +319,36 @@ fun SettingsScreen(
                             checked = settings.resolverConfig.enableIpv6,
                             onCheckedChange = {
                                 onUpdateResolverConfig(settings.resolverConfig.copy(enableIpv6 = it))
+                            }
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 12.dp)
+                        ) {
+                            Text(
+                                text = "Geo-accurate DNS for video (ECS)",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = "Media hostnames resolve through the first provider that forwards a client subnet, so a video CDN returns an edge near you. Ordinary browsing keeps the configured order. This reveals a truncated subnet to authoritative servers.",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = settings.resolverConfig.preferGeoAccurateMediaDns,
+                            onCheckedChange = {
+                                onUpdateResolverConfig(
+                                    settings.resolverConfig.copy(preferGeoAccurateMediaDns = it)
+                                )
                             }
                         )
                     }
@@ -606,6 +650,50 @@ fun SettingsScreen(
                             Text("Privacy Policy")
                         }
                     }
+                }
+            }
+        }
+
+        item {
+            val cycleCount = SystemTileEngine.buildPrivateDnsCycle(settings.privateDnsTileConfig).size
+            val usbAutoRevertSummary = if (settings.usbDebuggingTileConfig.autoRevertEnabled) {
+                "Auto-revert ${settings.usbDebuggingTileConfig.autoRevertDelayMinutes}m"
+            } else {
+                "Manual toggle"
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenQuickTiles),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Tune, contentDescription = null, tint = CyberCyan)
+                    Spacer(Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text("Quick Settings Tiles", style = MaterialTheme.typography.titleMedium)
+                            StatusPill(
+                                text = if (hasQuickTilePermission) "Ready" else "Quick Setup",
+                                color = if (hasQuickTilePermission) EmeraldPrimary else WarningAmber
+                            )
+                        }
+                        Text(
+                            if (hasQuickTilePermission) {
+                                "Private DNS ($cycleCount cycle steps) & USB Debugging ($usbAutoRevertSummary)"
+                            } else {
+                                "Tap for quick permission setup (Wireless ADB / PC / Root) & add tiles"
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Open Quick Settings Tiles", tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }

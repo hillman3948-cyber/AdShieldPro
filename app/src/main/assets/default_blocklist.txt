@@ -262,3 +262,15 @@
 *.adtrack.*
 *.telemetry.*
 *adserver*
+
+# --- THIRD-PARTY VIDEO ADVERT INFRASTRUCTURE (VAST/VPAID) ---
+# The advert that plays inside a video player, not the video itself. Media
+# delivery domains (googlevideo.com, nflxvideo.net, ttvnw.net, fbcdn.net, ...)
+# are never listed here: DnsMediaPlaybackGuard keeps them resolvable and
+# refuses any rule broad enough to break playback. If one app still needs the
+# ad SDK to initialise its player, add it to that app's allowlist instead of
+# disabling this section.
+||imasdk.googleapis.com^
+||fwmrm.net^
+||innovid.com^
+||springserve.com^

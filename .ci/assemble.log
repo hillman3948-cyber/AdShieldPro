@@ -1,7 +1,11 @@
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
 Daemon will be stopped at the end of the build 
-> Task :app:preBuild UP-TO-DATE
-> Task :app:preDebugBuild UP-TO-DATE
+
+> Task :app:fetchTdlibNative
+TDLib native runtime: 12 checksum-verified libraries present
+
+> Task :app:preBuild
+> Task :app:preDebugBuild
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:generateDebugBuildConfig UP-TO-DATE
 > Task :app:generateDebugResources UP-TO-DATE
@@ -35,16 +39,16 @@ Daemon will be stopped at the end of the build
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
 > Task :app:mergeDebugJniLibFolders
-> Task :app:processDebugManifestForPackage
 > Task :app:mergeDebugNativeLibs
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so. Run with --info option to learn more.
-
-> Task :app:processDebugResources
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
+> Task :app:processDebugManifestForPackage
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libcryptox.so, libdatastore_shared_counter.so, libsslx.so, libtdjni.so. Run with --info option to learn more.
+
+> Task :app:processDebugResources
 > Task :app:transformDebugClassesWithAsm
 > Task :app:dexBuilderDebug
 > Task :app:mergeProjectDexDebug
@@ -52,6 +56,6 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
 
-BUILD SUCCESSFUL in 1m 49s
-42 actionable tasks: 34 executed, 8 up-to-date
+BUILD SUCCESSFUL in 2m 34s
+43 actionable tasks: 35 executed, 8 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html

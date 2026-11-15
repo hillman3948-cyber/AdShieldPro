@@ -53,7 +53,8 @@ fun IntelligenceMapScreen(
     onOpenModule: (IntelligenceModule) -> Unit,
     modifier: Modifier = Modifier,
     connectorSummaryFor: (IntelligenceModule) -> ConnectorModuleSummaryUi? = { null },
-    onOpenConnectors: (IntelligenceModule?) -> Unit = {}
+    onOpenConnectors: (IntelligenceModule?) -> Unit = {},
+    onOpenWorldMonitor: () -> Unit = {}
 ) {
     val cameraState = remember { IntelligenceCameraState() }
     var commandExpanded by remember { mutableStateOf(true) }
@@ -172,6 +173,7 @@ fun IntelligenceMapScreen(
             onToggleLayoutEditing = { onSetEditingLayout(!uiState.isEditingLayout) },
             onResetLayout = onResetLayout,
             onOpenCommandPanel = { commandExpanded = !commandExpanded },
+            onOpenWorldMonitor = onOpenWorldMonitor,
             modifier = Modifier.align(Alignment.TopCenter)
         )
 
@@ -186,6 +188,7 @@ fun IntelligenceMapScreen(
             onOpenModule = onOpenModule,
             onOpenTimeline = { timelineOpen = true },
             onOpenConnectors = { onOpenConnectors(null) },
+            onOpenWorldMonitor = onOpenWorldMonitor,
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }

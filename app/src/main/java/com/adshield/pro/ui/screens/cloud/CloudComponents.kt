@@ -164,6 +164,7 @@ fun sectionLabel(section: CloudSection): String = when (section) {
     CloudSection.UPLOADS -> "Upload Manager"
     CloudSection.SECURITY -> "Cloud Security"
     CloudSection.SETTINGS -> "Settings"
+    CloudSection.TELEGRAM -> "Telegram"
 }
 
 @Composable

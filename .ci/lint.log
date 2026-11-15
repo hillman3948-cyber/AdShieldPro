@@ -1,7 +1,11 @@
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
 Daemon will be stopped at the end of the build 
-> Task :app:preBuild UP-TO-DATE
-> Task :app:preDebugBuild UP-TO-DATE
+
+> Task :app:fetchTdlibNative
+TDLib native runtime: 12 checksum-verified libraries present
+
+> Task :app:preBuild
+> Task :app:preDebugBuild
 > Task :app:generateDebugBuildConfig UP-TO-DATE
 > Task :app:generateDebugResources UP-TO-DATE
 > Task :app:packageDebugResources UP-TO-DATE
@@ -30,52 +34,23 @@ Daemon will be stopped at the end of the build
 > Task :app:generateDebugAndroidTestLintModel
 > Task :app:extractProguardFiles UP-TO-DATE
 > Task :app:generateDebugLintReportModel
-> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:preDebugUnitTestBuild
 > Task :app:generateDebugUnitTestLintModel
 > Task :app:lintAnalyzeDebugAndroidTest
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
 
 > Task :app:lintReportDebug
 Wrote HTML report to file:///home/runner/work/AdShieldPro/AdShieldPro/app/build/reports/lint-results-debug.html
 Wrote SARIF report to file:///home/runner/work/AdShieldPro/AdShieldPro/app/build/reports/lint-results-debug.sarif
-Lint found 1 error and 72 warnings. First failure:
-/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:310: Error: Call requires API level 30 (current min is 29): android.os.UserManager#isManagedProfile [NewApi]
-        val managed = runCatching { manager.isManagedProfile }.getOrDefault(false)
-                                            ~~~~~~~~~~~~~~~~
+Lint found 1 error and 81 warnings. First failure:
+/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/org/drinkless/tdlib/TdApi.java: Error: Source file too large for lint to process (4901KB); the current max size is 20480KB. You can increase the limit by setting this system property: idea.max.intellisense.filesize=8192 (or even higher) [LintError]
 
 
 > Task :app:lintDebug FAILED
-Lint found 1 error, 72 warnings. First failure:
+Lint found 1 error, 81 warnings. First failure:
 
-/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:310: Error: Call requires API level 30 (current min is 29): android.os.UserManager#isManagedProfile [NewApi]
-        val managed = runCatching { manager.isManagedProfile }.getOrDefault(false)
-                                            ~~~~~~~~~~~~~~~~
-
-   Explanation for issues of type "NewApi":
-   This check scans through all the Android API calls in the application and
-   warns about any calls that are not available on all versions targeted by
-   this application (according to its minimum SDK attribute in the manifest).
-
-   If you really want to use this API and don't need to support older devices
-   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
-   files.
-
-   If your code is deliberately accessing newer APIs, and you have ensured
-   (e.g. with conditional execution) that this code will only ever be called
-   on a supported platform, then you can annotate your class or method with
-   the @TargetApi annotation specifying the local minimum SDK to apply, such
-   as @TargetApi(11), such that this check considers 11 rather than your
-   manifest file's minimum SDK as the required API level.
-
-   If you are deliberately setting android: attributes in style definitions,
-   make sure you place this in a values-vNN folder in order to avoid running
-   into runtime conflicts on certain devices where manufacturers have added
-   custom attributes whose ids conflict with the new ones on later platforms.
-
-   Similarly, you can use tools:targetApi="11" in an XML file to indicate that
-   the element will only be inflated in an adequate context.
-
+/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/org/drinkless/tdlib/TdApi.java: Error: Source file too large for lint to process (4901KB); the current max size is 20480KB. You can increase the limit by setting this system property: idea.max.intellisense.filesize=8192 (or even higher) [LintError]
 
 The full lint text report is located at:
   /home/runner/work/AdShieldPro/AdShieldPro/app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
@@ -97,36 +72,9 @@ Execution failed for task ':app:lintDebug' (registered by plugin 'com.android.in
   ```
   For more details, see https://developer.android.com/studio/write/lint#snapshot
   
-  Lint found 1 error, 72 warnings. First failure:
+  Lint found 1 error, 81 warnings. First failure:
   
-  /home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:310: Error: Call requires API level 30 (current min is 29): android.os.UserManager#isManagedProfile [NewApi]
-          val managed = runCatching { manager.isManagedProfile }.getOrDefault(false)
-                                              ~~~~~~~~~~~~~~~~
-  
-     Explanation for issues of type "NewApi":
-     This check scans through all the Android API calls in the application and
-     warns about any calls that are not available on all versions targeted by
-     this application (according to its minimum SDK attribute in the manifest).
-  
-     If you really want to use this API and don't need to support older devices
-     just set the minSdkVersion in your build.gradle or AndroidManifest.xml
-     files.
-  
-     If your code is deliberately accessing newer APIs, and you have ensured
-     (e.g. with conditional execution) that this code will only ever be called
-     on a supported platform, then you can annotate your class or method with
-     the @TargetApi annotation specifying the local minimum SDK to apply, such
-     as @TargetApi(11), such that this check considers 11 rather than your
-     manifest file's minimum SDK as the required API level.
-  
-     If you are deliberately setting android: attributes in style definitions,
-     make sure you place this in a values-vNN folder in order to avoid running
-     into runtime conflicts on certain devices where manufacturers have added
-     custom attributes whose ids conflict with the new ones on later platforms.
-  
-     Similarly, you can use tools:targetApi="11" in an XML file to indicate that
-     the element will only be inflated in an adequate context.
-  
+  /home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/org/drinkless/tdlib/TdApi.java: Error: Source file too large for lint to process (4901KB); the current max size is 20480KB. You can increase the limit by setting this system property: idea.max.intellisense.filesize=8192 (or even higher) [LintError]
   
   The full lint text report is located at:
     /home/runner/work/AdShieldPro/AdShieldPro/app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
@@ -184,36 +132,9 @@ android {
 ```
 For more details, see https://developer.android.com/studio/write/lint#snapshot
 
-Lint found 1 error, 72 warnings. First failure:
+Lint found 1 error, 81 warnings. First failure:
 
-/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:310: Error: Call requires API level 30 (current min is 29): android.os.UserManager#isManagedProfile [NewApi]
-        val managed = runCatching { manager.isManagedProfile }.getOrDefault(false)
-                                            ~~~~~~~~~~~~~~~~
-
-   Explanation for issues of type "NewApi":
-   This check scans through all the Android API calls in the application and
-   warns about any calls that are not available on all versions targeted by
-   this application (according to its minimum SDK attribute in the manifest).
-
-   If you really want to use this API and don't need to support older devices
-   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
-   files.
-
-   If your code is deliberately accessing newer APIs, and you have ensured
-   (e.g. with conditional execution) that this code will only ever be called
-   on a supported platform, then you can annotate your class or method with
-   the @TargetApi annotation specifying the local minimum SDK to apply, such
-   as @TargetApi(11), such that this check considers 11 rather than your
-   manifest file's minimum SDK as the required API level.
-
-   If you are deliberately setting android: attributes in style definitions,
-   make sure you place this in a values-vNN folder in order to avoid running
-   into runtime conflicts on certain devices where manufacturers have added
-   custom attributes whose ids conflict with the new ones on later platforms.
-
-   Similarly, you can use tools:targetApi="11" in an XML file to indicate that
-   the element will only be inflated in an adequate context.
-
+/home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/org/drinkless/tdlib/TdApi.java: Error: Source file too large for lint to process (4901KB); the current max size is 20480KB. You can increase the limit by setting this system property: idea.max.intellisense.filesize=8192 (or even higher) [LintError]
 
 The full lint text report is located at:
   /home/runner/work/AdShieldPro/AdShieldPro/app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
@@ -325,5 +246,5 @@ The full lint text report is located at:
 	... 30 more
 
 
-BUILD FAILED in 1m 55s
-32 actionable tasks: 8 executed, 24 up-to-date
+BUILD FAILED in 2m
+33 actionable tasks: 9 executed, 24 up-to-date

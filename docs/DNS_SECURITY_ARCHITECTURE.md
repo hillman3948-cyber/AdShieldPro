@@ -19,7 +19,10 @@ nothing here makes AdShield Pro a general-purpose IP firewall.
 | No silent downgrade | Plaintext UDP/TCP 53 never appears as a fallback for a DoH or DoT configuration, and no provider outside the user's selection is contacted. |
 | No response merging | The first provider that returns a validated answer wins; answers are never combined. |
 | Health ordering | `DnsProviderHealthMonitor` records real success/failure counts and EWMA latency per provider+protocol. `FASTEST_HEALTHY` sorts by measured EWMA only; unmeasured providers keep configured order. |
-| Circuit breaking | After 3 consecutive failures a provider is skipped until a 30 s cooldown elapses. Cancellation and interruption are not counted as provider failures. |
+| Circuit breaking | After 3 consecutive failures a provider is skipped until a 30 s cooldown elapses. Cancellation and interruption are not counted as provider failures. Providers with an open circuit are skipped before the query plan is raced; when every circuit is open the full plan is still tried. |
+| Hedged failover | The primary gets a 250 ms head start, then the runner-up is started in parallel and the first validated answer wins. Worst case is one head start plus one provider timeout instead of the sum of every provider timeout. A provider that loses a race is abandoned, not marked unhealthy. |
+| Media-aware ordering | For media hostnames only, providers that forward EDNS Client Subnet (`DnsProviderPreset.forwardsClientSubnet`) are moved to the front, because the authoritative server chooses the video CDN edge from that subnet. Ordinary names keep the configured order. Controlled by `preferGeoAccurateMediaDns`. |
+| Video Safety | `DnsMediaPlaybackGuard` refuses entity-level, substring-wildcard and shared-CDN rules at parse time (counted in `rejectedVideoUnsafeRules`), and installs media delivery domains as exceptions. Advert delivery hosts stay blocked. See `docs/DNS_AND_VIDEO_SAFETY.md`. |
 
 Supported presets include NextDNS (`https://dns.nextdns.io/dns-query`) and Control D
 (`p0.freedns.controld.com`) in addition to the previous providers. The custom preset accepts
@@ -132,3 +135,10 @@ installability gate successfully.
 - No malware corpus benchmark and no YARA/native-engine integration: the scanner is a signature and
   structure triage aid, not a detection claim.
 - No local DNSSEC validation, no DoH3/oblivious DoH, and no general IP-level firewalling.
+
+## 8. DoH bootstrap bound
+
+An encrypted endpoint's own hostname is never resolved through the tunnel. Every
+shipped provider is in a literal-address table, and any other lookup through the
+system resolver is capped at 1.5 s, so a broken network cannot stall the DoH path
+(which every query crosses) for seconds at a time.

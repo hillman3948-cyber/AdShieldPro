@@ -27,7 +27,7 @@ import { dirname, resolve, relative } from 'node:path';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /** Everything the browser actually loads. Tests and build scripts are excluded. */
-const RUNTIME_DIRS = ['ui', 'dns', 'aether', 'security'];
+const RUNTIME_DIRS = ['ui', 'dns', 'aether', 'security', 'guard'];
 const RUNTIME_FILES = ['app.js', 'engine.js', 'sw.js'];
 
 const ALLOWED_CONSOLE = /console\.(debug|warn|error|info)\s*\(/;

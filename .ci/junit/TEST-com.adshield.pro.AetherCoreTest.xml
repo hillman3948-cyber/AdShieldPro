@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.AetherCoreTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-06T13:07:03.285Z" hostname="runnervmwuk1x" time="0.028">
+<testsuite name="com.adshield.pro.AetherCoreTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:06.833Z" hostname="runnervmccnms" time="0.03">
   <properties/>
   <testcase name="testHeuristicsAlone_canNeverVerifyOrBlock" classname="com.adshield.pro.AetherCoreTest" time="0.006"/>
-  <testcase name="testUserAllowRule_alwaysWins" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testAdsList_isVerifiedButNotThreatIntelligence" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testDomainAnalyzer_flagsRealPhishingPatterns" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testUserAllowRule_alwaysWins" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testAdsList_isVerifiedButNotThreatIntelligence" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testDomainAnalyzer_flagsRealPhishingPatterns" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
   <testcase name="testRiskAggregation_listMatchDominates" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testConnectionHealth_isHonestAboutMissingData" classname="com.adshield.pro.AetherCoreTest" time="0.004"/>
-  <testcase name="testAppAssessment_neverBlocksAndExplainsSignals" classname="com.adshield.pro.AetherCoreTest" time="0.003"/>
-  <testcase name="testThreatListMatch_isVerifiedAndBlocksByDefault" classname="com.adshield.pro.AetherCoreTest" time="0.004"/>
+  <testcase name="testConnectionHealth_isHonestAboutMissingData" classname="com.adshield.pro.AetherCoreTest" time="0.003"/>
+  <testcase name="testAppAssessment_neverBlocksAndExplainsSignals" classname="com.adshield.pro.AetherCoreTest" time="0.002"/>
+  <testcase name="testThreatListMatch_isVerifiedAndBlocksByDefault" classname="com.adshield.pro.AetherCoreTest" time="0.005"/>
   <testcase name="testManualAutonomy_reportsInsteadOfBlocking" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testUnknownIsAFirstClassAnswer" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testLiveSnapshot_isBuiltOnlyFromRealLogs" classname="com.adshield.pro.AetherCoreTest" time="0.003"/>
-  <testcase name="testDomainAnalyzer_doesNotFlagLegitimateDomains" classname="com.adshield.pro.AetherCoreTest" time="0.005"/>
-  <testcase name="testSuspectedBlocking_requiresExplicitOptInAndHigherScore" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
-  <testcase name="testHostExtraction_handlesPortsUsersAndTrailingDots" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testUnknownIsAFirstClassAnswer" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testLiveSnapshot_isBuiltOnlyFromRealLogs" classname="com.adshield.pro.AetherCoreTest" time="0.004"/>
+  <testcase name="testDomainAnalyzer_doesNotFlagLegitimateDomains" classname="com.adshield.pro.AetherCoreTest" time="0.004"/>
+  <testcase name="testSuspectedBlocking_requiresExplicitOptInAndHigherScore" classname="com.adshield.pro.AetherCoreTest" time="0.001"/>
+  <testcase name="testHostExtraction_handlesPortsUsersAndTrailingDots" classname="com.adshield.pro.AetherCoreTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

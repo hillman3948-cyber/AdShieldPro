@@ -99,7 +99,12 @@ original DNS, security, optimizer, battery, statistics, settings, or browser mod
 
 - **Cloud / Infinity** — authenticated Nextcloud/WebDAV folders, streaming upload/download, preview,
   rename/delete, Nextcloud public sharing, Android-Keystore-encrypted passwords, and unified capacity
-  calculated only from online providers that return real DAV quota values.
+  calculated only from online providers that return real DAV quota values. A separate **Telegram**
+  provider signs in a user account directly through official TDLib, stores files in Saved Messages
+  or a private channel, and supports real uploads/downloads with progress, retry, SHA-256
+  deduplication and a Keystore-protected session. No backend server or paid service is required;
+  Telegram does not promise permanent backup. See
+  [`docs/TELEGRAM_CLOUD_STORAGE.md`](docs/TELEGRAM_CLOUD_STORAGE.md).
 - **Files** — user-granted SAF trees, import/export through Android providers, preview/share,
   create/rename/delete, current-folder search, SHA-256 duplicate grouping, and bounded recursive scans
   with live progress and persistent reports.
@@ -119,6 +124,7 @@ S3/Ceph adapters, and periodic folder scanning are explicitly listed as remainin
 | --- | --- |
 | [`docs/INFINITY_ARCHITECTURE.md`](docs/INFINITY_ARCHITECTURE.md) | Component boundaries, server deployment, WebDAV URL, capacity semantics, security and backup requirements |
 | [`docs/INFINITY_VERIFICATION.md`](docs/INFINITY_VERIFICATION.md) | Feature-by-feature implementation/test status, evidence, external requirements and remaining issues |
+| [`docs/TELEGRAM_CLOUD_STORAGE.md`](docs/TELEGRAM_CLOUD_STORAGE.md) | Official TDLib Android integration, direct account authorization, encrypted session, transfers, limits, security and device test checklist |
 | [`docs/CAPABILITY_MATRIX.md`](docs/CAPABILITY_MATRIX.md) | Generated in-app/source-of-truth capability matrix |
 | [`docs/DNS_SECURITY_ARCHITECTURE.md`](docs/DNS_SECURITY_ARCHITECTURE.md) | Upstream failover, response validation, DNSSEC reporting and DNS-only app/network policy |
 | [`docs/INTELLIGENCE_MAP.md`](docs/INTELLIGENCE_MAP.md) | Live Intelligence Map: event pipeline, module data sources, gestures, honesty rules, performance budget and acceptance evidence |

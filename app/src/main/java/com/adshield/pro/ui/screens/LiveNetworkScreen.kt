@@ -21,10 +21,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -59,7 +62,11 @@ import java.util.Date
  * feed is lazy and keyed by log id so long sessions scroll without composing hundreds of rows.
  */
 @Composable
-fun LiveNetworkScreen(snapshot: LiveNetworkModel.NetworkSnapshot) {
+fun LiveNetworkScreen(
+    snapshot: LiveNetworkModel.NetworkSnapshot,
+    onToggleProtection: (() -> Unit)? = null,
+    onOpenWorldMonitor: (() -> Unit)? = null
+) {
     val listState = rememberLazyListState()
     val timeFormat = remember { DateFormat.getTimeInstance(DateFormat.MEDIUM) }
     Box(Modifier.fillMaxSize()) {
@@ -73,13 +80,13 @@ fun LiveNetworkScreen(snapshot: LiveNetworkModel.NetworkSnapshot) {
                 CyberPanel(
                     title = "Live network",
                     subtitle = "${snapshot.modeLabel} · ${snapshot.protocolLabel}",
-                    trailing = { StatusPill(if (snapshot.vpnConnected) "LIVE" else "IDLE", if (snapshot.vpnConnected) EmeraldPrimary else WarningAmber) }
+                    trailing = { StatusPill(if (snapshot.vpnConnected) "● LIVE" else "IDLE", if (snapshot.vpnConnected) EmeraldPrimary else WarningAmber) }
                 ) {
                     ProtectionShield(
                         status = if (snapshot.vpnConnected) VpnStatus.CONNECTED else VpnStatus.DISCONNECTED,
                         hasTraffic = snapshot.hasData,
                         threatSignals = snapshot.threatsBlocked.toInt(),
-                        modifier = Modifier.fillMaxWidth().height(220.dp)
+                        modifier = Modifier.fillMaxWidth().height(210.dp)
                     )
                     Text(
                         if (snapshot.hasData) "${formatInteger(snapshot.blockedQueries)} blocked in the recent log window"
@@ -88,6 +95,62 @@ fun LiveNetworkScreen(snapshot: LiveNetworkModel.NetworkSnapshot) {
                         fontSize = 12.sp,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    if (onToggleProtection != null || onOpenWorldMonitor != null) {
+                        Spacer(Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (onToggleProtection != null) {
+                                Button(
+                                    onClick = onToggleProtection,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (snapshot.vpnConnected) AlertRed else EmeraldPrimary
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = if (snapshot.vpnConnected) "Stop Live Shield" else "▶ Start Live DNS",
+                                        color = if (snapshot.vpnConnected) Color.White else Color.Black,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                            if (onOpenWorldMonitor != null) {
+                                OutlinedButton(
+                                    onClick = onOpenWorldMonitor,
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = "🌍 3D World Live",
+                                        color = CyberCyan,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            item(key = "live-counters") {
+                CyberPanel(
+                    title = "Live packet telemetry",
+                    subtitle = if (snapshot.hasData) "Latest ${snapshot.totalQueries} logged queries" else "Real-time DNS & threat counters"
+                ) {
+                    ResponsiveMetrics(
+                        columns = 2,
+                        metrics = listOf(
+                            MetricSpec("Logged", formatInteger(snapshot.totalQueries), "recent window", Color.White),
+                            MetricSpec("Blocked", formatInteger(snapshot.blockedQueries), "${snapshot.blockRatePercent.toInt()}% of recent", AlertRed),
+                            MetricSpec("Allowed", formatInteger(snapshot.allowedQueries), "passed filter", EmeraldPrimary),
+                            MetricSpec("Threats", formatInteger(snapshot.threatsBlocked), "malware / phishing", WarningAmber)
+                        )
                     )
                 }
             }
@@ -116,20 +179,6 @@ fun LiveNetworkScreen(snapshot: LiveNetworkModel.NetworkSnapshot) {
             }
 
             if (snapshot.hasData) {
-                item(key = "live-counters") {
-                    CyberPanel(title = "Recent traffic", subtitle = "Latest ${snapshot.totalQueries} logged queries") {
-                        ResponsiveMetrics(
-                            columns = 2,
-                            metrics = listOf(
-                                MetricSpec("Logged", formatInteger(snapshot.totalQueries), "recent window", Color.White),
-                                MetricSpec("Blocked", formatInteger(snapshot.blockedQueries), "${snapshot.blockRatePercent.toInt()}% of recent", AlertRed),
-                                MetricSpec("Allowed", formatInteger(snapshot.allowedQueries), "passed filter", EmeraldPrimary),
-                                MetricSpec("Threats", formatInteger(snapshot.threatsBlocked), "malware / phishing", WarningAmber)
-                            )
-                        )
-                    }
-                }
-
                 item(key = "live-categories") {
                     CyberPanel(title = "What was blocked", subtitle = "Categories from real matched rules") {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

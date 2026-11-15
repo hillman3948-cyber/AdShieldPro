@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+      The official generated TDLib Java API is a single ~5 MB source file. Android lint's
+      PSI parser reports a generic LintError for files above its configured size instead of
+      analyzing that one generated file. It is upstream, generated code (Boost 1.0) and is
+      intentionally kept verbatim; suppress only that diagnostic for only that path. All
+      other project lint checks and all other source files remain at their normal severity.
+    -->
+    <issue id="LintError">
+        <ignore path="src/main/java/org/drinkless/tdlib/TdApi.java" />
+        <ignore regexp=".*org/drinkless/tdlib/TdApi\.java" />
+    </issue>
+</lint>

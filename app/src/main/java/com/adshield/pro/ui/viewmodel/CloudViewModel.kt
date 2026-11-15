@@ -38,7 +38,7 @@ import android.net.Uri
 import javax.inject.Inject
 
 enum class CloudSection {
-    OVERVIEW, FILES, PHOTOS, VIDEOS, DOCUMENTS, BACKUPS, SHARED, UPLOADS, SECURITY, SETTINGS
+    OVERVIEW, FILES, PHOTOS, VIDEOS, DOCUMENTS, BACKUPS, SHARED, UPLOADS, SECURITY, SETTINGS, TELEGRAM
 }
 
 /** The live working status of the cloud module: derived from real activity, never a fixed string. */

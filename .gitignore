@@ -6,6 +6,10 @@
 local.properties
 signing.properties
 
+# TDLib native libraries are fetched + checksum-verified by :app:fetchTdlibNative,
+# never committed (see tdlib/native-checksums.sha256).
+app/src/main/jniLibs/
+
 # Release and debug packages stay out of source control
 *.apk
 *.aab

@@ -161,3 +161,16 @@
 ||vwo.com^
 ||abtasty.com^
 ||dynamicyield.com^
+
+#
+# Third-party VIDEO advert infrastructure (VAST/VPAID, outstream video)
+# These serve the advert that plays inside a video player. They are not the
+# media CDN: blocking them removes the in-player advert, while googlevideo.com,
+# nflxvideo.net, ttvnw.net and the other delivery domains stay untouched.
+# The video-safety guard (`guard/video-safety.js`) keeps those delivery domains
+# resolvable and refuses any rule broad enough to take playback down.
+||imasdk.googleapis.com^
+||fwmrm.net^
+||innovid.com^
+||springserve.com^
+||tremorhub.com^

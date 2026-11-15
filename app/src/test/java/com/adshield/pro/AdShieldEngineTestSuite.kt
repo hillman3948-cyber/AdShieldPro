@@ -16,7 +16,10 @@ import com.adshield.pro.domain.model.StorageMetrics
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.dns.DnsPacketCodec
 import com.adshield.pro.engine.dns.IpPacketFraming
+import com.adshield.pro.engine.dns.DnsProviderHealthMonitor
+import com.adshield.pro.engine.dns.DnsProviderRegistry
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
+import com.adshield.pro.engine.filter.DnsMediaPlaybackGuard
 import com.adshield.pro.engine.filter.FilterRuleEngine
 import com.adshield.pro.update.GitHubReleaseClient
 import com.adshield.pro.engine.optimizer.RuleBasedOptimizationPredictor
@@ -315,6 +318,187 @@ class AdShieldEngineTestSuite {
         )
         assertNotNull(script)
         assertTrue(script!!.contains(".custom-sponsored-slot"))
+    }
+
+    // --- Video Safety: block the third-party video advert, keep the video ---
+
+    @Test
+    fun videoSafetyProtectsPlaybackAndKeepsThirdPartyAdSlotsBlocked() {
+        // Media delivery: blocking any of these removes the stream.
+        for (host in listOf(
+            "rr3---sn-ab5l6nr6.googlevideo.com",
+            "www.youtube.com",
+            "i.ytimg.com",
+            "usher.ttvnw.net",
+            "ipv4-c001-mnl001.1.oca.nflxvideo.net",
+            "video.xx.fbcdn.net",
+            "srv-adserver-3.googlevideo.com"
+        )) {
+            assertTrue("$host must stay playable", DnsMediaPlaybackGuard.isProtectedPlaybackHost(host))
+            assertFalse("$host is not advert delivery", DnsMediaPlaybackGuard.isAdvertDeliveryHost(host))
+        }
+
+        // Third-party video advert delivery: always blockable.
+        for (host in listOf(
+            "pubads.g.doubleclick.net",
+            "static.doubleclick.net",
+            "s0.2mdn.net",
+            "imasdk.googleapis.com",
+            "ads.twitch.tv",
+            "analytics.tiktok.com"
+        )) {
+            assertTrue("$host must stay blockable", DnsMediaPlaybackGuard.isAdvertDeliveryHost(host))
+            assertFalse("$host must not be exempted", DnsMediaPlaybackGuard.isProtectedPlaybackHost(host))
+        }
+    }
+
+    @Test
+    fun videoSafetyRefusesRulesThatWouldBreakPlayback() {
+        val unsafe = mapOf(
+            "||googlevideo.com^" to "ENTITY_LEVEL_RULE",
+            "||google.com^" to "ENTITY_LEVEL_RULE",
+            "||akamaized.net^" to "SHARED_CDN_BLANKET",
+            "||cloudfront.net^" to "SHARED_CDN_BLANKET",
+            "*adserver*" to "SUBSTRING_WILDCARD",
+            "*telemetry.*" to "SUBSTRING_WILDCARD"
+        )
+        for ((rule, code) in unsafe) {
+            val reason = DnsMediaPlaybackGuard.explainUnsafe(rule)
+            assertTrue("$rule must be refused", reason != null)
+            assertEquals(code, reason!!.code)
+            assertTrue("every refusal needs an explanation", reason.detail.length > 20)
+        }
+
+        // Targeted advert rules must still load.
+        for (rule in listOf(
+            "||pubads.g.doubleclick.net^",
+            "||static.doubleclick.net^",
+            "||s0.2mdn.net^",
+            "||imasdk.googleapis.com^",
+            "||d10lpgp6xz60nq.cloudfront.net^",
+            "*.telemetry.*"
+        )) {
+            assertNull("$rule must load", DnsMediaPlaybackGuard.explainUnsafe(rule))
+        }
+    }
+
+    @Test
+    fun filterEngineDropsUnsafeFeedRulesAndKeepsMediaResolvable() {
+        val engine = FilterRuleEngine()
+        val parsed = engine.parseFilterListContent(
+            listOf(
+                "||googlevideo.com^",
+                "||pubads.g.doubleclick.net^",
+                "*adserver*",
+                "||ads.example-video.net^"
+            ).joinToString("\n"),
+            RuleCategory.ADS,
+            "test-feed"
+        ).getOrThrow()
+
+        assertEquals(2, parsed.rejectedVideoUnsafeRules)
+        assertTrue(parsed.subdomainRules.containsKey("pubads.g.doubleclick.net"))
+        assertFalse(parsed.subdomainRules.containsKey("googlevideo.com"))
+
+        engine.updateFilterListRules(
+            subdomainRules = parsed.subdomainRules,
+            exactRules = parsed.exactRules,
+            wildcardRules = parsed.wildcardRules,
+            allowSubdomains = parsed.allowSubdomains
+        )
+
+        assertTrue(engine.evaluate("pubads.g.doubleclick.net").isBlocked)
+        assertFalse(engine.evaluate("rr3---sn-ab5l6nr6.googlevideo.com").isBlocked)
+        assertFalse(engine.evaluate("www.youtube.com").isBlocked)
+    }
+
+    @Test
+    fun videoSafetyExemptionAppliesOnlyToTheMediaDomainRuleNotToAdHosts() {
+        val engine = FilterRuleEngine()
+        val parsed = engine.parseFilterListContent(
+            listOf(
+                "||googlevideo.com^",          // would break playback: exempted for playback hosts
+                "||log.byteoversea.com^",      // specific telemetry host: must stay blocked
+                "||views.hulu.com^",           // specific ad metrics host: must stay blocked
+                "||mcs.tiktokv.com^"           // specific telemetry host: must stay blocked
+            ).joinToString("\n"),
+            RuleCategory.TRACKERS,
+            "test-feed"
+        ).getOrThrow()
+
+        engine.updateFilterListRules(
+            subdomainRules = parsed.subdomainRules,
+            exactRules = parsed.exactRules,
+            wildcardRules = parsed.wildcardRules,
+            allowSubdomains = parsed.allowSubdomains
+        )
+
+        // Video Safety refuses the blanket media-domain rule at parse time, so a
+        // playback host stays resolvable with no matching rule. The specific
+        // ad/telemetry rules below are still enforced.
+        val playback = engine.evaluate("rr3---sn-ab5l6nr6.googlevideo.com")
+        assertFalse(playback.isBlocked)
+        assertEquals("Allowed", playback.sourceName)
+
+        // A rule naming the specific ad/telemetry host is always enforced.
+        for (host in listOf("log.byteoversea.com", "views.hulu.com", "mcs.tiktokv.com")) {
+            assertTrue("$host must stay blocked", engine.evaluate(host).isBlocked)
+        }
+    }
+
+    @Test
+    fun mediaAwareOrderPrefersSubnetForwardingProviderOnlyForMedia() {
+        val registry = DnsProviderRegistry
+        val health = DnsProviderHealthMonitor()
+        val config = DnsResolverConfig(
+            preset = DnsProviderPreset.CLOUDFLARE,
+            protocol = DnsProtocol.DOH,
+            failoverEnabled = true,
+            failoverProviderIds = setOf(DnsProviderPreset.QUAD9_ECS.id),
+            preferGeoAccurateMediaDns = true
+        )
+        val plan = registry.queryPlan(config)
+        assertEquals(listOf("cloudflare", "quad9-ecs"), plan.map { it.providerId })
+
+        val mediaOrdered = UpstreamDnsResolver.mediaAwareOrder(
+            plan = DnsProviderRegistry.orderedByHealth(plan, health, config.protocol, false),
+            config = config,
+            domain = "rr3---sn-ab5l6nr6.googlevideo.com"
+        )
+        assertEquals("quad9-ecs", mediaOrdered.first().providerId)
+
+        // A non-media name keeps the configured order.
+        val plainOrdered = UpstreamDnsResolver.mediaAwareOrder(plan, config, "example.com")
+        assertEquals("cloudflare", plainOrdered.first().providerId)
+
+        // Turning the preference off also keeps the configured order.
+        val disabled = UpstreamDnsResolver.mediaAwareOrder(
+            plan, config.copy(preferGeoAccurateMediaDns = false), "rr3---sn-x.googlevideo.com"
+        )
+        assertEquals("cloudflare", disabled.first().providerId)
+
+        // The ECS-enabled preset exists with Quad9's documented addresses.
+        val ecs = DnsProviderPreset.entries.first { it.id == "quad9-ecs" }
+        assertTrue(ecs.forwardsClientSubnet)
+        assertEquals("9.9.9.11", ecs.primaryIpv4)
+        assertEquals("https://dns11.quad9.net/dns-query", ecs.dohUrl)
+        assertFalse(DnsProviderPreset.CLOUDFLARE.forwardsClientSubnet)
+        assertTrue(DnsProviderPreset.GOOGLE.forwardsClientSubnet)
+    }
+
+    @Test
+    fun everyProviderDeclaresItsClientSubnetPolicy() {
+        for (preset in DnsProviderPreset.entries) {
+            // Documented, never inferred: both answers are legal, silence is not.
+            assertTrue(
+                "${preset.id} must declare a documented subnet policy",
+                preset.forwardsClientSubnet || preset.privacyDisclosure.isNotBlank()
+            )
+        }
+        assertTrue(
+            "at least one selectable provider must forward a subnet for video",
+            DnsProviderPreset.entries.count { it.forwardsClientSubnet } >= 2
+        )
     }
 
     // --- Regression tests for UDP truncation, upstream validation and cache policy ---

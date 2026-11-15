@@ -55,7 +55,7 @@ export class BackupManager {
     if (!this.storage) throw new Error('BackupManager requires a storage adapter');
     this.clock = options.clock ?? (() => Date.now());
     this.maxSnapshots = options.maxSnapshots ?? 5;
-    this.appVersion = options.appVersion ?? '5.0.1';
+    this.appVersion = options.appVersion ?? '5.0.2';
     this.prefix = options.prefix ?? 'backup:';
   }
 

@@ -629,6 +629,19 @@ object CapabilityRegistry {
             "InfinityCoreTestSuite.testWebDavXml_parsesOnlyHttpsNextcloudShareLinks plus manual Nextcloud share test"
         ),
         cap(
+            "telegram-tdlib-storage", "Telegram Cloud Storage via official TDLib, Keystore session and real transfers", CapabilityArea.CLOUD_STORAGE,
+            CapabilityStatus.PARTIAL, "data/telegram/TelegramStorageRepository.kt", listOf(PERM_INTERNET),
+            listOf(
+                "Official org.drinkless.tdlib.Client/TdApi JNI requests and Telegram MTProto updates (updateFile, updateAuthorizationState)",
+                "Android Keystore AES-256-GCM encrypted session/index/transfer records and SAF document streams"
+            ),
+            listOf(
+                "Requires the user's own api_id/api_hash from my.telegram.org and a real Telegram account; live-account sign-in and network transfers need manual device verification",
+                "2 GB per-file ceiling; Telegram publishes no quota or permanent-backup guarantee; only the designated Saved Messages/private channel is read"
+            ),
+            "TelegramCloudTestSuite.testOfficialAuthorizationFlowUsesRealTdlibRequestsAndNeverPersistsSecrets plus manual device smoke test (docs/TELEGRAM_CLOUD_STORAGE.md)"
+        ),
+        cap(
             "nextcloud-server-infrastructure", "Open-source Nextcloud/PostgreSQL backend deployment manifests", CapabilityArea.CLOUD_STORAGE,
             CapabilityStatus.PARTIAL, "infra/docker-compose.yml", listOf(PERM_INTERNET),
             listOf("Operator-supplied Nextcloud Community, PostgreSQL, HTTPS reverse proxy and persistent volumes"),
@@ -900,6 +913,85 @@ object CapabilityRegistry {
                 "The UI draws at most 8 nodes, 7 connectors, 7 markers and 12 concurrent pulses; pulses are pruned when expired"
             ),
             "IntelligenceMapTestSuite.testAggregatorPerformanceBudget"
+        ),
+        cap(
+            "qs-tile-private-dns", "Quick Settings tile for Private DNS (Off, Auto, Hostnames)",
+            CapabilityArea.PLATFORM,
+            CapabilityStatus.IMPLEMENTED, "service/PrivateDnsTileService.kt",
+            listOf("android.permission.WRITE_SECURE_SETTINGS", "android.permission.BIND_QUICK_SETTINGS_TILE"),
+            listOf(
+                "Settings.Global private_dns_mode and private_dns_specifier read-back",
+                "User-configured cycle steps and custom DNS-over-TLS hostnames in DataStore"
+            ),
+            listOf(
+                "Requires a one-time grant of WRITE_SECURE_SETTINGS via Wireless/USB ADB, Shizuku/LADB shell, or optional root; without it the tile opens quick setup",
+                "Some OEM or managed enterprise builds reject Settings.Global writes; read-back verification detects and reports rejections",
+                "Optional auto-revert relies on WorkManager and inexact AlarmManager so OS battery optimization can delay execution slightly"
+            ),
+            "SystemTilesTestSuite.testPrivateDnsCycleAdvancesAndWrapsCorrectly and SystemTilesTestSuite.testPrivateDnsAutoRevertPreservesOriginalTargetAcrossMultipleTapsAndCancelsOnReturn and SystemTilesTestSuite.testQuickSetupCommandFormattingAndChecklistEvaluation"
+        ),
+        cap(
+            "qs-tile-usb-debugging", "Quick Settings tile for USB Debugging with optional auto-revert",
+            CapabilityArea.PLATFORM,
+            CapabilityStatus.IMPLEMENTED, "service/UsbDebuggingTileService.kt",
+            listOf("android.permission.WRITE_SECURE_SETTINGS", "android.permission.BIND_QUICK_SETTINGS_TILE"),
+            listOf(
+                "Settings.Global.ADB_ENABLED and Settings.Global.DEVELOPMENT_SETTINGS_ENABLED read-back",
+                "User-configured auto-revert delay and lock-screen guard in DataStore"
+            ),
+            listOf(
+                "Requires a one-time ADB grant of WRITE_SECURE_SETTINGS and Developer Options to be enabled on Android",
+                "Requires device unlock to toggle by default; auto-revert timing via WorkManager and setAndAllowWhileIdle is approximate"
+            ),
+            "SystemTilesTestSuite.testUsbDebuggingAutoRevertArmsOnEnableAndClearsOnDisable and SystemTilesTestSuite.testTilePresentationsReflectPermissionAndRealSystemState"
+        ),
+        cap(
+            "worldmonitor-3d-earth", "Interactive 3D Digital Earth (CesiumJS WebGL, terrain, projections, split-date GIBS)",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "ui/screens/worldmonitor/WorldMonitorScreen.kt", listOf(PERM_INTERNET),
+            listOf("Bundled CesiumJS 1.147.0, Natural Earth 110m borders, Esri/OSM/CARTO/NASA GIBS/AWS Terrarium tiles, Nominatim & Overpass 3D"),
+            listOf("Street-level satellite tiles and Overpass 3D buildings require network access until cached in the 120 MB tile cache"),
+            "WorldMonitorTestSuite.testJsBridgeAndTileServerSecurityValidation"
+        ),
+        cap(
+            "worldmonitor-multi-domain-feeds", "8-domain live global OSINT feeds (Aviation, Maritime, Space, Disaster, Weather, Cyber, News, Infra)",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/worldmonitor/WorldMonitorNormalizers.kt", listOf(PERM_INTERNET),
+            listOf("OpenSky, ADSB-lol, OurAirports, Digitraffic AIS, NOAA NDBC/SWPC/NWS, CelesTrak, USGS, EMSC, NASA EONET, GDACS, Open-Meteo, RainViewer, CISA KEV, IODA, RIPEstat, GDELT, UN News"),
+            listOf("Anonymous OpenSky/Overpass tiers enforce rate limits; NASA FIRMS raw CSV requires a free user MAP_KEY; aged offline records decay to DELAYED/HISTORICAL"),
+            "WorldMonitorTestSuite.testNormalizersAcrossAllEightIntelligenceDomains and testDynamicFreshnessDecayOnCachedEntities"
+        ),
+        cap(
+            "worldmonitor-correlation-engine", "Deterministic cross-domain Global Event Correlation Engine",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/worldmonitor/EventCorrelationEngine.kt", emptyList(),
+            listOf("Normalized multi-provider WorldEntity records with Haversine distance and event-time delta"),
+            listOf("Reports spatio-temporal coincidence across independent providers with explicit non-causation caveats; never links same-provider or simulated items"),
+            "WorldMonitorTestSuite.testEventCorrelationEngineNeverInventsSelfLinks"
+        ),
+        cap(
+            "worldmonitor-digital-twin-analyst", "Regional Digital Twin & on-device Evidence RAG Global Analyst",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/worldmonitor/WorldMonitorAiAnalyst.kt", listOf(PERM_INTERNET),
+            listOf("World Bank population dataset + bundled UN/World Bank baseline, Open-Meteo elevation/weather/GloFAS, cached WorldEntity records"),
+            listOf("100% local deterministic retrieval-augmented synthesis separating verified facts, data gaps, and hypotheses without cloud LLMs"),
+            "WorldMonitorTestSuite.testDigitalTwinAndAiAnalystEpistemicSeparation"
+        ),
+        cap(
+            "worldmonitor-simulation-watchtower", "Experimental Simulation Lab & Watchtower geofence notifications",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.IMPLEMENTED, "engine/worldmonitor/SimulationLabEngine.kt", listOf(PERM_INTERNET, PERM_NOTIF),
+            listOf("User-defined geofences evaluated via WorkManager against synced feeds; geometric plume, surge, and exposure screening"),
+            listOf("All simulation outputs are stamped SIMULATED / EXPERIMENTAL_SIMULATION; background Watchtower polling uses 60-minute WorkManager scheduling"),
+            "WorldMonitorTestSuite.testSimulationLabStampsExperimentalMetadata and testWatchtowerGeofenceMatchingAndDeduplication"
+        ),
+        cap(
+            "worldmonitor-commercial-ais-satellite-video", "Global commercial satellite-AIS stream & live orbital video",
+            CapabilityArea.AI_INTELLIGENCE,
+            CapabilityStatus.UNAVAILABLE, "", emptyList(),
+            listOf("Digitraffic coastal AIS and NOAA NDBC buoys are supported; commercial global AIS requires external WebSocket/API licensing"),
+            listOf("Global satellite AIS requires a licensed backend or user AISStream WebSocket proxy; live real-time satellite video of arbitrary Earth locations does not publicly exist"),
+            "n/a — commercial backend / physical sensor restriction"
         )
     )
 

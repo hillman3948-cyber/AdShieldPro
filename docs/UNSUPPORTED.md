@@ -20,7 +20,9 @@ under **Capabilities**.
 | Not supported | Why |
 |---|---|
 | Universal / guaranteed ad blocking | Ads served from the page's own (first-party) domain cannot be identified by DNS. No technology guarantees this. |
-| Blocking ads inside video streams (server-side stitched) | Same-origin delivery — invisible to DNS. |
+| Blocking ads inside video streams (server-side stitched) | Same-origin delivery — invisible to DNS. Third-party video advert infrastructure (VAST/VPAID slots, `imasdk.googleapis.com`, `s0.2mdn.net`, ...) **is** blocked, and media delivery domains are protected from being blocked by the Video Safety guard (`docs/DNS_AND_VIDEO_SAFETY.md`). |
+| Choosing a CDN edge from your own IP | The edge is chosen by the authoritative server from the *resolver's* address. This app can prefer resolvers that forward a client subnet (ECS); it cannot force a specific edge. |
+| Free geo-accuracy | ECS reveals a truncated client subnet to authoritative servers. It is a toggle, not a default free win. |
 | Malware detection inside files or pages | This is DNS filtering, not an antivirus and not a file scanner. |
 | Content-based phishing detection | No page content, DOM or certificate inspection is performed. Only hostname evidence. |
 | Full Public Suffix List | A focused subset (`aether/domain.js`) covers common ccTLD layouts. Exotic suffixes may be mis-split when computing registrable domains. |

@@ -1,0 +1,248 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #020813;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Inter", sans-serif;
+  color: #E2E8F0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+}
+
+#cesiumContainer,
+#wmFallbackGlobeCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cesium-viewer,
+.cesium-viewer-cesiumWidgetContainer,
+.cesium-widget,
+.cesium-widget canvas,
+#cesiumContainer canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Hide default Cesium chrome — replaced by native Compose command deck */
+.cesium-viewer-toolbar,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-bottom,
+.cesium-viewer-fullscreenContainer,
+.cesium-selection-wrapper {
+  display: none !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Style Presets (subtle post-process tone over canvas, never breaking legibility) */
+body[data-style="CYBER_TACTICAL"] #cesiumContainer canvas,
+body[data-style="CYBER_TACTICAL"] #wmFallbackGlobeCanvas {
+  filter: contrast(1.07) saturate(1.08);
+}
+
+body[data-style="SATELLITE_NATURAL"] #cesiumContainer canvas,
+body[data-style="SATELLITE_NATURAL"] #wmFallbackGlobeCanvas {
+  filter: none;
+}
+
+body[data-style="NIGHT_OPS_DARK"] #cesiumContainer canvas,
+body[data-style="NIGHT_OPS_DARK"] #wmFallbackGlobeCanvas {
+  filter: brightness(0.84) contrast(1.14) saturate(0.86);
+}
+
+body[data-style="THERMAL_CONTRAST"] #cesiumContainer canvas,
+body[data-style="THERMAL_CONTRAST"] #wmFallbackGlobeCanvas {
+  filter: contrast(1.22) saturate(1.30) hue-rotate(-10deg);
+}
+
+body[data-style="HIGH_VISIBILITY"] #cesiumContainer canvas,
+body[data-style="HIGH_VISIBILITY"] #wmFallbackGlobeCanvas {
+  filter: brightness(1.08) contrast(1.16) saturate(1.15);
+}
+
+/* Boot Splash */
+.wm-boot-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: radial-gradient(circle at 50% 46%, rgba(8, 28, 56, 0.72), rgba(2, 8, 19, 0.92));
+  pointer-events: none;
+}
+
+.wm-boot-ring {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(34, 211, 238, 0.22);
+  border-top-color: #22D3EE;
+  animation: wmSpin 0.9s linear infinite;
+}
+
+.wm-boot-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #67E8F9;
+}
+
+@keyframes wmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Minimal Telemetry Bar */
+.wm-mini-telemetry {
+  position: absolute;
+  left: 10px;
+  bottom: 22px;
+  z-index: 15;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(4, 13, 26, 0.78);
+  border: 1px solid rgba(56, 189, 248, 0.26);
+  backdrop-filter: blur(6px);
+  font-size: 10px;
+  letter-spacing: 0.35px;
+  color: #BAE6FD;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.wm-sep {
+  margin: 0 5px;
+  color: #475569;
+}
+
+/* Attribution Footer */
+.wm-attribution {
+  position: absolute;
+  left: 10px;
+  bottom: 4px;
+  right: 10px;
+  z-index: 14;
+  font-size: 9px;
+  color: rgba(148, 163, 184, 0.78);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Simulation Banner */
+.wm-sim-banner {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(124, 45, 18, 0.88);
+  border: 1px solid #F59E0B;
+  color: #FEF3C7;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Radar Timestamp */
+.wm-radar-stamp {
+  position: absolute;
+  right: 12px;
+  bottom: 22px;
+  z-index: 15;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: rgba(6, 78, 59, 0.84);
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  color: #A7F3D0;
+  font-size: 10px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Historical Split Overlay */
+.wm-split-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.wm-split-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: #38BDF8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.wm-split-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #040D1A;
+  border: 1.5px solid #38BDF8;
+  color: #38BDF8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.wm-split-badge {
+  position: absolute;
+  top: 126px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(4, 13, 26, 0.84);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-size: 10px;
+  font-weight: 600;
+  color: #E0F2FE;
+}
+
+.wm-split-badge.left {
+  left: 12px;
+}
+
+.wm-split-badge.right {
+  right: 54px;
+}

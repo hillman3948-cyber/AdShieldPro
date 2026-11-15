@@ -80,12 +80,23 @@ enum class DnsProviderPreset(
     val secondaryIpv6: String,
     val dohUrl: String,
     val dotHostname: String,
-    val dotPort: Int = 853
+    val dotPort: Int = 853,
+    /**
+     * Whether the operator forwards EDNS Client Subnet (ECS) to authoritative
+     * servers, per its published policy.
+     *
+     * This is the DNS setting that decides which CDN edge serves a video: the
+     * authoritative server picks an edge from the resolver's address, so a
+     * resolver that forwards a truncated client subnet returns an edge near you.
+     * It is a real trade-off — the authoritative server learns a /24 of your
+     * address — so it is a per-provider choice, never silently forced.
+     */
+    val forwardsClientSubnet: Boolean = false
 ) {
     CLOUDFLARE(
         id = "cloudflare",
         displayName = "Cloudflare (1.1.1.1)",
-        providerSummary = "Ultra-fast global anycast DNS with strict no-user-IP logging policy.",
+        providerSummary = "Ultra-fast global anycast DNS. Sends no client subnet, so CDN edge choice follows the resolver location.",
         privacyDisclosure = "Cloudflare commits not to sell browsing data or retain personal IP logs beyond 24 hours.",
         primaryIpv4 = "1.1.1.1",
         secondaryIpv4 = "1.0.0.1",
@@ -128,7 +139,21 @@ enum class DnsProviderPreset(
         primaryIpv6 = "2001:4860:4860::8888",
         secondaryIpv6 = "2001:4860:4860::8844",
         dohUrl = "https://dns.google/dns-query",
-        dotHostname = "dns.google"
+        dotHostname = "dns.google",
+        forwardsClientSubnet = true
+    ),
+    QUAD9_ECS(
+        id = "quad9-ecs",
+        displayName = "Quad9 Secure + ECS (9.9.9.11)",
+        providerSummary = "Quad9's malware-blocking resolver that also forwards a truncated client subnet, for CDN-accurate video edges.",
+        privacyDisclosure = "Operated by Quad9 Foundation under Swiss law. Forwarding ECS reveals a truncated subnet to authoritative servers — the documented trade-off of this endpoint.",
+        primaryIpv4 = "9.9.9.11",
+        secondaryIpv4 = "149.112.112.11",
+        primaryIpv6 = "2620:fe::11",
+        secondaryIpv6 = "2620:fe::fe:11",
+        dohUrl = "https://dns11.quad9.net/dns-query",
+        dotHostname = "dns11.quad9.net",
+        forwardsClientSubnet = true
     ),
     NEXTDNS(
         id = "nextdns",
@@ -182,7 +207,17 @@ data class DnsResolverConfig(
     val failoverEnabled: Boolean = false,
     val failoverProviderIds: Set<String> = emptySet(),
     val fastestHealthyProvider: Boolean = false,
-    val dnssecMode: DnssecMode = DnssecMode.REPORT_ONLY
+    val dnssecMode: DnssecMode = DnssecMode.REPORT_ONLY,
+    /**
+     * Prefer a subnet-forwarding resolver for media/CDN hostnames.
+     *
+     * Sequential failover and a single resolver choice cannot serve both goals:
+     * the fastest resolver for browsing is often the one that hands a video CDN
+     * the wrong edge. When this is on, media hostnames are resolved through the
+     * first healthy provider that forwards a client subnet (the selected provider
+     * when it already does), while everything else keeps the configured order.
+     */
+    val preferGeoAccurateMediaDns: Boolean = true
 ) {
     val activeDohUrl: String
         get() = if (preset == DnsProviderPreset.CUSTOM) customDohUrl.ifBlank { preset.dohUrl } else preset.dohUrl
