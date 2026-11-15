@@ -1,6 +1,5 @@
 package com.adshield.pro.engine.connectors
 
-import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -303,18 +302,19 @@ class NativeProbeExpansion @Inject constructor(
         )
     }
 
-    // The API-30 UserManager.isManagedProfile call is explicitly guarded by SDK_INT >= R below;
-    // lint does not carry that guard through the inline runCatching lambda, so suppress the
-    // false positive on this function only.
-    @SuppressLint("NewApi")
+    /** Android 11+ only; the caller checks Build.VERSION.SDK_INT before calling. */
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
+    private fun isManagedProfile(manager: UserManager): Boolean = manager.isManagedProfile
+
     suspend fun workProfile(): ProbeResult {
         val manager = context.getSystemService(Context.USER_SERVICE) as? UserManager
             ?: return ProbeResult(false, ConnectorStatus.DEGRADED, "UserManager unavailable")
         // UserManager.userCount needs MANAGE_USERS (privileged, non-grantable) and the no-argument
         // isManagedProfile flag only exists from Android 11, so both are handled explicitly instead
-        // of being assumed.
+        // of being assumed. The call itself lives in a @RequiresApi helper: the annotation states
+        // the requirement in a way lint can verify, where @Suppress on an expression it did not read.
         val managed: Boolean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            runCatching { manager.isManagedProfile }.getOrNull()
+            runCatching { isManagedProfile(manager) }.getOrNull()
         } else {
             null
         }

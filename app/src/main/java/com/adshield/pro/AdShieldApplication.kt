@@ -11,6 +11,7 @@ import com.adshield.pro.worker.IntelligenceRetentionWorker
 import com.adshield.pro.worker.ConnectorRetentionWorker
 import com.adshield.pro.worker.ConnectorSyncWorker
 import com.adshield.pro.worker.SmartOptimizationWorker
+import com.adshield.pro.worker.WorldMonitorWatchWorker
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,7 @@ class AdShieldApplication : Application(), Configuration.Provider {
         IntelligenceRetentionWorker.schedule(this)
         ConnectorSyncWorker.schedule(this)
         ConnectorRetentionWorker.schedule(this)
+        WorldMonitorWatchWorker.schedule(this)
         GitHubUpdateWorker.schedule(this)
         appScope.launch {
             val settings = preferencesRepository.getSettingsSnapshot()

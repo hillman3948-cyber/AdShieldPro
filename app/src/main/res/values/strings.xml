@@ -3,4 +3,6 @@
     <string name="vpn_notification_channel_name">AdShield Protection Status</string>
     <string name="vpn_notification_channel_desc">Displays real-time local VPN and DNS ad-blocking status</string>
     <string name="vpn_session_name">AdShield Pro Local DNS Firewall</string>
+    <string name="tile_private_dns_label">Private DNS</string>
+    <string name="tile_usb_debugging_label">USB Debugging</string>
 </resources>

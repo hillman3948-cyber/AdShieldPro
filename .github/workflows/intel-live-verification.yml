@@ -12,6 +12,7 @@ on:
       - 'tools/probe_intel_endpoints.py'
       - '.github/workflows/intel-live-verification.yml'
       - 'app/src/main/java/com/adshield/pro/engine/connectors/ConnectorCatalogue.kt'
+      - 'app/src/main/java/com/adshield/pro/engine/worldmonitor/WorldMonitorProviderRegistry.kt'
   schedule:
     # Weekly drift check: providers move, and the catalogue has to follow.
     - cron: '17 3 * * 1'

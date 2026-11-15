@@ -19,6 +19,7 @@ import com.adshield.pro.domain.model.CustomRule
 import com.adshield.pro.domain.model.DnsActivityRecord
 import com.adshield.pro.domain.model.DomainBlockCount
 import com.adshield.pro.domain.model.FilterListSource
+import com.adshield.pro.domain.model.PrivateDnsTileConfig
 import com.adshield.pro.domain.model.ProtectionMode
 import com.adshield.pro.domain.model.RuleCategory
 import com.adshield.pro.domain.model.RuleConflictReport
@@ -26,6 +27,7 @@ import com.adshield.pro.domain.model.RuleMatchType
 import com.adshield.pro.domain.model.RuleType
 import com.adshield.pro.domain.model.SourceEffectiveness
 import com.adshield.pro.domain.model.TimeBucketStat
+import com.adshield.pro.domain.model.UsbDebuggingTileConfig
 import com.adshield.pro.domain.model.VpnRuntimeState
 import com.adshield.pro.domain.model.VpnStatus
 import com.adshield.pro.engine.filter.FilterRuleEngine
@@ -781,14 +783,16 @@ class AdShieldRepository @Inject constructor(
 
     @Serializable
     data class FullConfigurationBackup(
-        val version: Int = 3,
+        val version: Int = 4,
         val exportedAtEpochMs: Long = System.currentTimeMillis(),
         val protectionMode: ProtectionMode,
         val customRules: List<CustomRule>,
         val browserSiteExceptions: Set<String>,
         val excludedAppPackages: Set<String>,
         val resolverConfig: DnsResolverConfig? = null,
-        val dnsFirewallPolicy: DnsFirewallPolicy? = null
+        val dnsFirewallPolicy: DnsFirewallPolicy? = null,
+        val privateDnsTileConfig: PrivateDnsTileConfig? = null,
+        val usbDebuggingTileConfig: UsbDebuggingTileConfig? = null
     )
 
     suspend fun createConfigurationBackupJson(): String = withContext(Dispatchers.IO) {
@@ -800,7 +804,15 @@ class AdShieldRepository @Inject constructor(
             browserSiteExceptions = settings.browserSiteExceptions,
             excludedAppPackages = settings.excludedAppPackages,
             resolverConfig = settings.resolverConfig,
-            dnsFirewallPolicy = settings.dnsFirewallPolicy
+            dnsFirewallPolicy = settings.dnsFirewallPolicy,
+            privateDnsTileConfig = settings.privateDnsTileConfig.copy(
+                autoRevertTargetMode = null,
+                autoRevertTargetHostname = null,
+                autoRevertDeadlineEpochMs = 0L
+            ),
+            usbDebuggingTileConfig = settings.usbDebuggingTileConfig.copy(
+                autoRevertDeadlineEpochMs = 0L
+            )
         )
         jsonSerializer.encodeToString(backup)
     }
@@ -811,6 +823,20 @@ class AdShieldRepository @Inject constructor(
             prefs.setProtectionMode(backup.protectionMode)
             backup.resolverConfig?.let { prefs.updateResolverConfig(it) }
             backup.dnsFirewallPolicy?.let { prefs.updateDnsFirewallPolicy(it) }
+            backup.privateDnsTileConfig?.let { restored ->
+                prefs.updatePrivateDnsTileConfig {
+                    restored.copy(
+                        autoRevertTargetMode = null,
+                        autoRevertTargetHostname = null,
+                        autoRevertDeadlineEpochMs = 0L
+                    )
+                }
+            }
+            backup.usbDebuggingTileConfig?.let { restored ->
+                prefs.updateUsbDebuggingTileConfig {
+                    restored.copy(autoRevertDeadlineEpochMs = 0L)
+                }
+            }
             filterEngine.updateProtectionMode(backup.protectionMode)
 
             val validEntities = backup.customRules.mapNotNull { rule ->

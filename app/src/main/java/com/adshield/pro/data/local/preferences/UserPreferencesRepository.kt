@@ -19,9 +19,11 @@ import com.adshield.pro.domain.model.DnsProviderPreset
 import com.adshield.pro.domain.model.DnsResolverConfig
 import com.adshield.pro.domain.model.GameSessionRecord
 import com.adshield.pro.domain.model.GamingProfile
+import com.adshield.pro.domain.model.PrivateDnsTileConfig
 import com.adshield.pro.domain.model.ProtectionMode
 import com.adshield.pro.domain.model.SearchHistoryEntry
 import com.adshield.pro.domain.model.SearchProvider
+import com.adshield.pro.domain.model.UsbDebuggingTileConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -75,7 +77,10 @@ data class AppSettingsState(
     val lastSmartBoostEpochMs: Long = 0L,
     // --- Private search & scheduled scanning ---
     val scheduledScanEnabled: Boolean = false,
-    val scheduledScanIntervalHours: Int = 24
+    val scheduledScanIntervalHours: Int = 24,
+    // --- Quick Settings Tiles for System Preferences ---
+    val privateDnsTileConfig: PrivateDnsTileConfig = PrivateDnsTileConfig(),
+    val usbDebuggingTileConfig: UsbDebuggingTileConfig = UsbDebuggingTileConfig()
 )
 
 enum class DarkThemePreference(val label: String) {
@@ -148,6 +153,10 @@ class UserPreferencesRepository @Inject constructor(
         // Private search & scheduled scanning
         val SCHEDULED_SCAN_ENABLED = booleanPreferencesKey("scheduled_scan_enabled")
         val SCHEDULED_SCAN_HOURS = intPreferencesKey("scheduled_scan_interval_hours")
+
+        // Quick Settings Tiles for System Preferences
+        val PRIVATE_DNS_TILE_CONFIG_JSON = stringPreferencesKey("private_dns_tile_config_json")
+        val USB_DEBUGGING_TILE_CONFIG_JSON = stringPreferencesKey("usb_debugging_tile_config_json")
     }
 
     val settingsFlow: Flow<AppSettingsState> = context.adShieldDataStore.data.map { prefs ->
@@ -196,6 +205,14 @@ class UserPreferencesRepository @Inject constructor(
         val searchHistory = prefs[Keys.SEARCH_HISTORY_JSON]?.let { raw ->
             runCatching { json.decodeFromString<List<SearchHistoryEntry>>(raw) }.getOrDefault(emptyList())
         } ?: emptyList()
+
+        val privateDnsTileConfig = prefs[Keys.PRIVATE_DNS_TILE_CONFIG_JSON]?.let { raw ->
+            runCatching { json.decodeFromString<PrivateDnsTileConfig>(raw) }.getOrDefault(PrivateDnsTileConfig())
+        } ?: PrivateDnsTileConfig()
+
+        val usbDebuggingTileConfig = prefs[Keys.USB_DEBUGGING_TILE_CONFIG_JSON]?.let { raw ->
+            runCatching { json.decodeFromString<UsbDebuggingTileConfig>(raw) }.getOrDefault(UsbDebuggingTileConfig())
+        } ?: UsbDebuggingTileConfig()
 
         AppSettingsState(
             vpnShouldRemainActive = prefs[Keys.VPN_ACTIVE] ?: false,
@@ -249,7 +266,9 @@ class UserPreferencesRepository @Inject constructor(
             batteryMode = batteryMode,
             lastSmartBoostEpochMs = prefs[Keys.LAST_SMART_BOOST_MS] ?: 0L,
             scheduledScanEnabled = prefs[Keys.SCHEDULED_SCAN_ENABLED] ?: false,
-            scheduledScanIntervalHours = (prefs[Keys.SCHEDULED_SCAN_HOURS] ?: 24).coerceIn(12, 168)
+            scheduledScanIntervalHours = (prefs[Keys.SCHEDULED_SCAN_HOURS] ?: 24).coerceIn(12, 168),
+            privateDnsTileConfig = privateDnsTileConfig,
+            usbDebuggingTileConfig = usbDebuggingTileConfig
         )
     }
 
@@ -489,5 +508,39 @@ class UserPreferencesRepository @Inject constructor(
         context.adShieldDataStore.edit { prefs ->
             prefs[Keys.BATTERY_MODE] = mode.name
         }
+    }
+
+    // --- Quick Settings Tiles Persistence ---
+
+    suspend fun updatePrivateDnsTileConfig(
+        transform: (PrivateDnsTileConfig) -> PrivateDnsTileConfig
+    ): PrivateDnsTileConfig {
+        var result = PrivateDnsTileConfig()
+        context.adShieldDataStore.edit { prefs ->
+            val current = prefs[Keys.PRIVATE_DNS_TILE_CONFIG_JSON]?.let { raw ->
+                runCatching { json.decodeFromString<PrivateDnsTileConfig>(raw) }
+                    .getOrDefault(PrivateDnsTileConfig())
+            } ?: PrivateDnsTileConfig()
+            val updated = transform(current)
+            result = updated
+            prefs[Keys.PRIVATE_DNS_TILE_CONFIG_JSON] = json.encodeToString(updated)
+        }
+        return result
+    }
+
+    suspend fun updateUsbDebuggingTileConfig(
+        transform: (UsbDebuggingTileConfig) -> UsbDebuggingTileConfig
+    ): UsbDebuggingTileConfig {
+        var result = UsbDebuggingTileConfig()
+        context.adShieldDataStore.edit { prefs ->
+            val current = prefs[Keys.USB_DEBUGGING_TILE_CONFIG_JSON]?.let { raw ->
+                runCatching { json.decodeFromString<UsbDebuggingTileConfig>(raw) }
+                    .getOrDefault(UsbDebuggingTileConfig())
+            } ?: UsbDebuggingTileConfig()
+            val updated = transform(current)
+            result = updated
+            prefs[Keys.USB_DEBUGGING_TILE_CONFIG_JSON] = json.encodeToString(updated)
+        }
+        return result
     }
 }

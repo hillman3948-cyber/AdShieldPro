@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.OfflineBolt
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Shield
@@ -127,7 +128,8 @@ fun HomeScreen(
     onOpenOptimizerTab: () -> Unit,
     onOpenLiveTab: () -> Unit,
     onOpenStatisticsTab: () -> Unit,
-    onOpenStatusTab: () -> Unit
+    onOpenStatusTab: () -> Unit,
+    onOpenWorldMonitor: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -189,12 +191,37 @@ fun HomeScreen(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
+                    IconButton(onClick = onOpenWorldMonitor) {
+                        Icon(
+                            Icons.Default.Public,
+                            contentDescription = "Open 3D World Monitor 2035",
+                            tint = CyberCyan
+                        )
+                    }
                     IconButton(onClick = onCheckForUpdates, enabled = !isCheckingForUpdates) {
                         Icon(
                             Icons.Default.SystemUpdateAlt,
                             contentDescription = if (isCheckingForUpdates) "Checking for updates" else "Check for updates",
                             tint = SkyBlueGlow
                         )
+                    }
+                }
+            }
+
+            item(key = "world-monitor-top-banner") {
+                CyberPanel(
+                    title = "World Monitor 2035",
+                    subtitle = "3D Digital Earth · Live Aviation, Maritime, Satellites, Hazards, Weather, Cyber & Infra",
+                    trailing = { StatusPill("3D GLOBE", CyberCyan) }
+                ) {
+                    Button(
+                        onClick = onOpenWorldMonitor,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = ElectricBlue)
+                    ) {
+                        Icon(Icons.Default.Public, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Open 3D World Monitor 2035", fontWeight = FontWeight.Bold)
                     }
                 }
             }

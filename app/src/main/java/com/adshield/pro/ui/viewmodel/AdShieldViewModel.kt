@@ -30,6 +30,7 @@ import com.adshield.pro.domain.model.GameAppInfo
 import com.adshield.pro.domain.model.GamingProfile
 import com.adshield.pro.domain.model.JunkCleanMode
 import com.adshield.pro.domain.model.JunkScanReport
+import com.adshield.pro.domain.model.PrivateDnsCycleStep
 import com.adshield.pro.domain.model.ProtectionMode
 import com.adshield.pro.domain.model.RamOptimizationResult
 import com.adshield.pro.domain.model.RamSnapshot
@@ -42,6 +43,8 @@ import com.adshield.pro.domain.model.SearchProvider
 import com.adshield.pro.domain.model.SmartBoostResult
 import com.adshield.pro.domain.model.SourceEffectiveness
 import com.adshield.pro.domain.model.StorageMetrics
+import com.adshield.pro.domain.model.SystemPreferenceWriteResult
+import com.adshield.pro.domain.model.SystemTilesLiveStatus
 import com.adshield.pro.domain.model.TimeBucketStat
 import com.adshield.pro.domain.model.VpnRuntimeState
 import com.adshield.pro.ui.model.ProtectionPipelineStatus
@@ -56,6 +59,8 @@ import com.adshield.pro.engine.battery.BatteryTelemetry
 import com.adshield.pro.engine.browser.BrowserContentBlocker
 import com.adshield.pro.engine.browser.SearchSuggestionClient
 import com.adshield.pro.engine.platform.DeviceProfiler
+import com.adshield.pro.engine.platform.SystemPreferencesController
+import com.adshield.pro.engine.platform.SystemTileEngine
 import com.adshield.pro.engine.dns.UpstreamDnsResolver
 import com.adshield.pro.engine.dns.DnsDiagnosticReport
 import com.adshield.pro.engine.dns.runDiagnostics
@@ -121,7 +126,8 @@ class AdShieldViewModel @Inject constructor(
     private val quarantineManager: QuarantineManager,
     private val batteryRepository: BatteryIntelligenceRepository,
     private val deviceProfiler: DeviceProfiler,
-    private val searchSuggestionClient: SearchSuggestionClient
+    private val searchSuggestionClient: SearchSuggestionClient,
+    private val systemPreferencesController: SystemPreferencesController
 ) : ViewModel() {
 
     val vpnState: StateFlow<VpnRuntimeState> = repository.vpnRuntimeState
@@ -1343,4 +1349,230 @@ class AdShieldViewModel @Inject constructor(
             emptyList()
         )
     )
+
+    // --- Quick Settings System-Preference Tiles (Private DNS & USB Debugging) ---
+
+    private val _systemTilesStatus = MutableStateFlow(systemPreferencesController.readLiveStatus())
+    val systemTilesStatus: StateFlow<SystemTilesLiveStatus> = _systemTilesStatus.asStateFlow()
+
+    private val _isGrantingQuickTilePermission = MutableStateFlow(false)
+    val isGrantingQuickTilePermission: StateFlow<Boolean> = _isGrantingQuickTilePermission.asStateFlow()
+
+    fun refreshSystemTilesStatus() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                systemPreferencesController.executeDueAutoReverts()
+                _systemTilesStatus.value = systemPreferencesController.readLiveStatus()
+            }
+        }
+    }
+
+    fun applyPrivateDnsStep(step: PrivateDnsCycleStep) {
+        viewModelScope.launch {
+            val result = systemPreferencesController.applyPrivateDnsStep(step, fromTile = false)
+            _systemTilesStatus.value = withContext(Dispatchers.IO) {
+                systemPreferencesController.readLiveStatus()
+            }
+            handleSystemWriteResult(result)
+        }
+    }
+
+    fun cyclePrivateDnsNow() {
+        viewModelScope.launch {
+            val result = systemPreferencesController.cyclePrivateDnsFromTile()
+            _systemTilesStatus.value = withContext(Dispatchers.IO) {
+                systemPreferencesController.readLiveStatus()
+            }
+            handleSystemWriteResult(result)
+        }
+    }
+
+    fun setPrivateDnsIncludeOff(enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig { it.copy(includeOffInCycle = enabled) }
+            systemPreferencesController.requestTileUpdates()
+        }
+    }
+
+    fun setPrivateDnsIncludeAuto(enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig { it.copy(includeAutoInCycle = enabled) }
+            systemPreferencesController.requestTileUpdates()
+        }
+    }
+
+    fun setPrivateDnsHostnameEnabled(id: String, enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig { cfg ->
+                cfg.copy(
+                    hostnames = cfg.hostnames.map { item ->
+                        if (item.id == id) item.copy(enabledInCycle = enabled) else item
+                    }
+                )
+            }
+            systemPreferencesController.requestTileUpdates()
+        }
+    }
+
+    fun movePrivateDnsHostname(id: String, delta: Int) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig { cfg ->
+                cfg.copy(hostnames = SystemTileEngine.moveHostname(cfg.hostnames, id, delta))
+            }
+            systemPreferencesController.requestTileUpdates()
+        }
+    }
+
+    fun addPrivateDnsCustomHostname(
+        label: String,
+        hostname: String,
+        onAdded: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            var errorMessage: String? = null
+            preferencesRepository.updatePrivateDnsTileConfig { cfg ->
+                val added = SystemTileEngine.addCustomHostname(cfg, label, hostname)
+                added.fold(
+                    onSuccess = { it },
+                    onFailure = { err ->
+                        errorMessage = err.message ?: "Invalid Private DNS hostname."
+                        cfg
+                    }
+                )
+            }
+            if (errorMessage != null) {
+                showFeedback(errorMessage!!)
+            } else {
+                systemPreferencesController.requestTileUpdates()
+                onAdded()
+                showFeedback("Added Private DNS hostname to tile cycle.")
+            }
+        }
+    }
+
+    fun removePrivateDnsHostname(id: String) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig { cfg ->
+                SystemTileEngine.removeHostname(cfg, id)
+            }
+            systemPreferencesController.requestTileUpdates()
+        }
+    }
+
+    fun setPrivateDnsRequireUnlock(requireUnlock: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.updatePrivateDnsTileConfig {
+                it.copy(requireUnlockToToggle = requireUnlock)
+            }
+        }
+    }
+
+    fun setPrivateDnsAutoRevert(enabled: Boolean, delayMinutes: Int) {
+        viewModelScope.launch {
+            val clamped = SystemTileEngine.clampDelayMinutes(delayMinutes)
+            preferencesRepository.updatePrivateDnsTileConfig {
+                it.copy(
+                    autoRevertEnabled = enabled,
+                    autoRevertDelayMinutes = clamped,
+                    autoRevertTargetMode = if (enabled) it.autoRevertTargetMode else null,
+                    autoRevertTargetHostname = if (enabled) it.autoRevertTargetHostname else null,
+                    autoRevertDeadlineEpochMs = if (enabled) it.autoRevertDeadlineEpochMs else 0L
+                )
+            }
+            if (!enabled) {
+                systemPreferencesController.cancelPrivateDnsAutoRevert()
+            } else {
+                systemPreferencesController.requestTileUpdates()
+            }
+        }
+    }
+
+    fun cancelPrivateDnsAutoRevert() {
+        viewModelScope.launch {
+            systemPreferencesController.cancelPrivateDnsAutoRevert()
+            showFeedback("Cancelled Private DNS auto-revert timer.")
+        }
+    }
+
+    fun setUsbDebuggingEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            val result = systemPreferencesController.setUsbDebuggingEnabled(enabled, fromTile = false)
+            _systemTilesStatus.value = withContext(Dispatchers.IO) {
+                systemPreferencesController.readLiveStatus()
+            }
+            handleSystemWriteResult(result)
+        }
+    }
+
+    fun setUsbDebuggingAutoRevert(enabled: Boolean, delayMinutes: Int) {
+        viewModelScope.launch {
+            val clamped = SystemTileEngine.clampDelayMinutes(delayMinutes)
+            preferencesRepository.updateUsbDebuggingTileConfig {
+                it.copy(
+                    autoRevertEnabled = enabled,
+                    autoRevertDelayMinutes = clamped,
+                    autoRevertDeadlineEpochMs = if (enabled) it.autoRevertDeadlineEpochMs else 0L
+                )
+            }
+            if (!enabled) {
+                systemPreferencesController.cancelUsbDebuggingAutoRevert()
+            } else {
+                systemPreferencesController.requestTileUpdates()
+            }
+        }
+    }
+
+    fun armUsbDebuggingAutoRevertNow() {
+        viewModelScope.launch {
+            val result = systemPreferencesController.armUsbDebuggingAutoRevertNow()
+            _systemTilesStatus.value = withContext(Dispatchers.IO) {
+                systemPreferencesController.readLiveStatus()
+            }
+            handleSystemWriteResult(result)
+        }
+    }
+
+    fun cancelUsbDebuggingAutoRevert() {
+        viewModelScope.launch {
+            systemPreferencesController.cancelUsbDebuggingAutoRevert()
+            showFeedback("Cancelled USB Debugging auto-revert timer.")
+        }
+    }
+
+    fun setUsbDebuggingRequireUnlock(requireUnlock: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.updateUsbDebuggingTileConfig {
+                it.copy(requireUnlockToToggle = requireUnlock)
+            }
+        }
+    }
+
+    fun notifyQuickTileFeedback(message: String) {
+        showFeedback(message)
+    }
+
+    fun tryGrantQuickTilePermissionWithRoot() {
+        if (_isGrantingQuickTilePermission.value) return
+        viewModelScope.launch {
+            _isGrantingQuickTilePermission.value = true
+            try {
+                val result = systemPreferencesController.tryGrantPermissionWithRoot()
+                _systemTilesStatus.value = withContext(Dispatchers.IO) {
+                    systemPreferencesController.readLiveStatus()
+                }
+                handleSystemWriteResult(result)
+            } finally {
+                _isGrantingQuickTilePermission.value = false
+            }
+        }
+    }
+
+    private fun handleSystemWriteResult(result: SystemPreferenceWriteResult) {
+        when (result) {
+            is SystemPreferenceWriteResult.Success -> showFeedback(result.message)
+            is SystemPreferenceWriteResult.PermissionDenied ->
+                showFeedback("Grant WRITE_SECURE_SETTINGS via ADB once to let AdShield Pro toggle this preference.")
+            is SystemPreferenceWriteResult.RejectedBySystem -> showFeedback(result.reason)
+        }
+    }
 }

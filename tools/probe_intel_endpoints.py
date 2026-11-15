@@ -449,6 +449,37 @@ CANDIDATES: list[dict] = [
          headers={"Accept": "application/dns-json"},
          expect="JSON or wire-only response",
          terms="Quad9 public DoH"),
+    # ---------------- NEWS: World Monitor global news layer ----------------
+    # These five endpoints are what `wm.news.*` actually fetches. If one starts answering with
+    # an HTML challenge page instead of a feed, the News layer silently loses an outlet — which
+    # is exactly the failure this list exists to catch before a release.
+    dict(id="wm-news-bbc-world", module="NEWS", method="GET",
+         url="https://feeds.bbci.co.uk/news/world/rss.xml",
+         expect="RSS 2.0 XML with <item><title> blocks",
+         terms="BBC public RSS; headline + summary + article link"),
+    dict(id="wm-news-aljazeera", module="NEWS", method="GET",
+         url="https://www.aljazeera.com/xml/rss/all.xml",
+         expect="RSS 2.0 XML with <item> blocks",
+         terms="Al Jazeera public RSS"),
+    dict(id="wm-news-dw-world", module="NEWS", method="GET",
+         url="https://rss.dw.com/rdf/rss-en-world",
+         expect="RDF / RSS 1.0 XML with <item><dc:date> blocks",
+         terms="Deutsche Welle public RSS"),
+    dict(id="wm-news-un", module="NEWS", method="GET",
+         url="https://news.un.org/feed/subscribe/en/news/all/rss.xml",
+         expect="RSS 2.0 XML with <item> blocks",
+         terms="UN News public RSS"),
+    dict(id="wm-news-rappler", module="NEWS", method="GET",
+         url="https://www.rappler.com/feed/",
+         expect="RSS 2.0 XML with <item> blocks",
+         terms="Rappler public RSS"),
+    # Kept as a failing-but-recorded entry on purpose: GDELT 2.0 Geo was listed as a live source
+    # and returned 404 for keyless requests, leaving the News layer empty. The probe records the
+    # real answer so the catalogue cannot quietly re-add it.
+    dict(id="gdelt-geo-2-0", module="NEWS", method="GET",
+         url="https://api.gdeltproject.org/api/v2/geo/geo?query=earthquake&format=geojson&timespan=24h",
+         expect="GeoJSON FeatureCollection (was listed; verify before re-enabling)",
+         terms="GDELT open data"),
 ]
 
 SKIP_REASON_DEFAULT = "skipped by catalogue policy"

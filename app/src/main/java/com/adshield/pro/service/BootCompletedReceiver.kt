@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.VpnService
 import androidx.core.content.ContextCompat
 import com.adshield.pro.data.local.preferences.UserPreferencesRepository
+import com.adshield.pro.engine.platform.SystemPreferencesController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,12 +16,14 @@ import javax.inject.Inject
 
 /**
  * Restores AdShield Pro VPN protection automatically after device boot or app update
- * if the user had protection active and enabled boot restoration.
+ * if the user had protection active and enabled boot restoration, and reconciles any pending
+ * Quick Settings tile auto-revert timers.
  */
 @AndroidEntryPoint
 class BootCompletedReceiver : BroadcastReceiver() {
 
     @Inject lateinit var preferencesRepository: UserPreferencesRepository
+    @Inject lateinit var systemPreferencesController: SystemPreferencesController
 
     override fun onReceive(context: Context, intent: Intent?) {
         val action = intent?.action ?: return
@@ -31,6 +34,9 @@ class BootCompletedReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             try {
+                runCatching {
+                    systemPreferencesController.reconcileAutoRevertTimers()
+                }
                 val settings = preferencesRepository.getSettingsSnapshot()
                 if (settings.vpnShouldRemainActive && settings.autoStartOnBoot) {
                     // Verify VPN consent is still granted before starting foreground service
