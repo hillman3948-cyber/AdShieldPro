@@ -239,7 +239,7 @@ class UserPreferencesRepository @Inject constructor(
             runCatching { json.decodeFromString<UsbDebuggingTileConfig>(raw) }.getOrDefault(UsbDebuggingTileConfig())
         } ?: UsbDebuggingTileConfig()
 
-        AppSettingsState(
+        return AppSettingsState(
             vpnShouldRemainActive = prefs[Keys.VPN_ACTIVE] ?: false,
             autoStartOnBoot = prefs[Keys.AUTO_START_BOOT] ?: true,
             darkThemeMode = theme,
