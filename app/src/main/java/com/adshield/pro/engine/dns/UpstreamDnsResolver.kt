@@ -345,32 +345,6 @@ class UpstreamDnsResolver @Inject constructor(
         )
     }
 
-    /**
-     * Media-aware provider order.
-     *
-     * The authoritative server picks the video CDN edge from the resolver's
-     * address, so a resolver that forwards EDNS Client Subnet returns an edge near
-     * the user while a resolver that does not may return one in another region.
-     * For media hostnames only, providers that forward a client subnet are moved
-     * to the front of the plan. Everything else keeps the configured/health order,
-     * so ordinary browsing is unaffected and no provider outside the user's plan
-     * is ever contacted.
-     */
-    internal fun mediaAwareOrder(
-        plan: List<DnsProviderEndpoint>,
-        config: DnsResolverConfig,
-        domain: String
-    ): List<DnsProviderEndpoint> {
-        if (!config.preferGeoAccurateMediaDns || plan.size < 2) return plan
-        if (!DnsMediaPlaybackGuard.isProtectedPlaybackHost(domain)) return plan
-        val (geoAccurate, rest) = plan.partition { endpoint ->
-            DnsProviderPreset.entries.any {
-                it.id == endpoint.providerId && it.forwardsClientSubnet
-            }
-        }
-        return if (geoAccurate.isEmpty()) plan else geoAccurate + rest
-    }
-
     private fun executeProviderQuery(
         query: DnsPacketCodec.ParsedDnsQuery,
         config: DnsResolverConfig,
@@ -552,6 +526,32 @@ class UpstreamDnsResolver @Inject constructor(
 
     companion object {
         private val DNS_MESSAGE_MEDIA_TYPE = "application/dns-message".toMediaType()
+
+        /**
+         * Media-aware provider order.
+         *
+         * The authoritative server picks the video CDN edge from the resolver's
+         * address, so a resolver that forwards EDNS Client Subnet returns an edge near
+         * the user while a resolver that does not may return one in another region.
+         * For media hostnames only, providers that forward a client subnet are moved
+         * to the front of the plan. Everything else keeps the configured/health order,
+         * so ordinary browsing is unaffected and no provider outside the user's plan
+         * is ever contacted.
+         */
+        internal fun mediaAwareOrder(
+            plan: List<DnsProviderEndpoint>,
+            config: DnsResolverConfig,
+            domain: String
+        ): List<DnsProviderEndpoint> {
+            if (!config.preferGeoAccurateMediaDns || plan.size < 2) return plan
+            if (!DnsMediaPlaybackGuard.isProtectedPlaybackHost(domain)) return plan
+            val (geoAccurate, rest) = plan.partition { endpoint ->
+                DnsProviderPreset.entries.any {
+                    it.id == endpoint.providerId && it.forwardsClientSubnet
+                }
+            }
+            return if (geoAccurate.isEmpty()) plan else geoAccurate + rest
+        }
 
         /**
          * How long the primary provider gets before the runner-up is started in
