@@ -22,6 +22,14 @@
  */
 
 /** Characters that may appear inside a hostname label. */
+import {
+  PROTECTED_REGISTRABLE_DOMAINS,
+  PROTECTED_HOSTS as VIDEO_PROTECTED_HOSTS,
+  explainDanger as explainVideoDanger,
+  classify as classifyVideoHost,
+  protectedZone as videoZoneOf
+} from './guard/video-safety.js';
+
 const LABEL_RE = /^[a-z0-9_-]+$/;
 
 /** Entries that must never be blocked: they are required for OS/network health. */
@@ -74,6 +82,20 @@ export class OmniShieldFilterEngine {
 
     this.safetyAllow = new Set(SYSTEM_SAFETY_ALLOWLIST);
 
+    /**
+     * Video Safety: hosts that must never resolve to a block, because losing them
+     * means "the player loads but the video never starts". Advert slots are NOT in
+     * this set — see guard/video-safety.js for the policy and the reasoning.
+     */
+    this.videoSafe = true;
+    this.videoGuardDropped = [];
+
+    /** Rules refused because they would break media playback, with the reason. */
+    this.rejectedRules = [];
+
+    /** Suffix set consulted by the evaluator for the video-safe exception. */
+    this.videoAllowSuffix = new Set([...PROTECTED_REGISTRABLE_DOMAINS, ...VIDEO_PROTECTED_HOSTS]);
+
     /** Compiled wildcard rules: {re, category, source, pattern, mode} */
     this.wildcardBlock = [];
     this.wildcardAllow = [];
@@ -86,7 +108,8 @@ export class OmniShieldFilterEngine {
       hostsFormat: 0,
       exceptions: 0,
       filtered: 0,
-      sources: 0
+      sources: 0,
+      videoRejected: 0
     };
 
     /** Verdict memo — pure function of the rule tables, invalidated on mutation. */
@@ -154,14 +177,60 @@ export class OmniShieldFilterEngine {
    * @param {string} source feed filename for attribution
    * @returns {{added:number, exceptions:number, wildcards:number, invalid:number, hosts:number, duplicates:number}}
    */
-  loadFilterList(text, category = 'ADS', source = 'unknown') {
+  /**
+   * Loads a rule list without freezing the page.
+   *
+   * Parsing 80k lines takes ~700 ms of blocking work in one go, which is exactly
+   * the "the website lags / stops responding while it boots" symptom. This variant
+   * parses the same list in bounded chunks and yields to the event loop between
+   * them, so the UI keeps painting and input stays responsive.
+   *
+   * @param {string} text
+   * @param {{category?:string, source?:string, chunkChars?:number,
+   *          onProgress?:(p:{fraction:number, added:number})=>void}} [options]
+   */
+  async loadFilterListAsync(text, options = {}) {
+    const category = options.category ?? 'ADS';
+    const source = options.source ?? 'unknown';
+    // 256 KB per chunk keeps the longest single blocking pass to a few tens of
+    // milliseconds on a phone. Callers may lower it further (tests do).
+    const chunkChars = Math.max(256, options.chunkChars ?? 262_144);
+    const total = text.length;
+    let offset = 0;
+    let added = 0;
+    let firstChunk = true;
+
+    while (offset < total) {
+      let end = Math.min(total, offset + chunkChars);
+      if (end < total) {
+        // Never split a line: a cut inside `@@||example.com^` would turn an
+        // exception into a block rule (or vice versa) and break the domain.
+        const newline = text.indexOf('\n', end);
+        end = newline === -1 ? total : newline + 1;
+      }
+      const chunk = text.slice(offset, end);
+      const result = this.loadFilterList(chunk, category, source, { firstChunk });
+      added += result.added;
+      firstChunk = false;
+      offset = end;
+      if (options.onProgress) {
+        try { options.onProgress({ fraction: offset / total, added }); } catch { /* observers */ }
+      }
+      if (offset < total) await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+    this._invalidate();
+    return { added, source, bytes: total, chunks: Math.ceil(total / chunkChars) };
+  }
+
+  loadFilterList(text, category = 'ADS', source = 'unknown', options = {}) {
     const before = {
       added: this.filterSubdomains.size,
       exceptions: this.allowSubdomains.size,
       wildcards: this.stats.wildcards,
       invalid: this.stats.invalid,
       hosts: this.stats.hostsFormat,
-      duplicates: this.stats.duplicates
+      duplicates: this.stats.duplicates,
+      videoRejected: this.stats.videoRejected
     };
     this.stats.sources++;
     let added = 0;
@@ -172,6 +241,15 @@ export class OmniShieldFilterEngine {
       this.stats.parsed++;
 
       const isException = line.startsWith('@@');
+
+      // Video Safety applies to feed content too. Upstream lists are conservative,
+      // but one entity-level or substring line is enough to take playback down for
+      // every video service, so those lines are counted and skipped, never loaded.
+      if (!isException && this.videoSafe && explainVideoDanger(line)) {
+        this.stats.videoRejected++;
+        continue;
+      }
+
       let body = isException ? line.slice(2).trim() : line;
 
       // hosts-file syntax: "0.0.0.0 domain" / "127.0.0.1 domain [alias...]"
@@ -211,7 +289,8 @@ export class OmniShieldFilterEngine {
       wildcards: this.stats.wildcards - before.wildcards,
       invalid: this.stats.invalid - before.invalid,
       hosts: this.stats.hostsFormat - before.hosts,
-      duplicates: this.stats.duplicates - before.duplicates
+      duplicates: this.stats.duplicates - before.duplicates,
+      videoRejected: this.stats.videoRejected - before.videoRejected
     };
     this.sourceCounts.set(source, (this.sourceCounts.get(source) || 0) + added);
     return result;
@@ -254,6 +333,17 @@ export class OmniShieldFilterEngine {
    * @returns {boolean} false when the pattern could not be parsed
    */
   addUserRule(pattern, isAllow) {
+    // Video Safety: an entity-level, substring or shared-CDN block rule takes
+    // playback down. Refuse it and keep the reason, instead of silently breaking
+    // every video the user watches.
+    if (!isAllow) {
+      const danger = explainVideoDanger(pattern);
+      if (danger) {
+        this.rejectedRules.push({ rule: String(pattern), code: danger.code, detail: danger.detail });
+        if (this.rejectedRules.length > 100) this.rejectedRules.shift();
+        return false;
+      }
+    }
     const cleaned = String(pattern || '')
       .replace(/^@@/, '')
       .replace(/^\|\|?/, '')
@@ -437,10 +527,35 @@ export class OmniShieldFilterEngine {
       }
     }
 
+    /**
+     * Video Safety, applied where it belongs: at the moment a feed rule matches.
+     *
+     * A rule that blocks the media *domain itself* (`||googlevideo.com^`) would
+     * take playback down, so it is ignored for playback hosts. A rule for a
+     * specific host (`||log.byteoversea.com^`, `||views.hulu.com^`) is a
+     * deliberate block of an ad or telemetry endpoint and is always enforced —
+     * exempting whole media domains instead silently unblocked 195 such hosts.
+     */
+    const videoZone = this.videoSafe ? videoZoneOf(domain) : null;
+    const playbackExemption = (matchedSuffix) => {
+      if (!videoZone || matchedSuffix !== videoZone) return null;
+      const verdict = classifyVideoHost(domain);
+      if (!verdict.protected) return null;
+      return {
+        domain, blocked: false, source: 'Video Safety', action: 'ALLOW', matched: matchedSuffix,
+        reasons: [
+          verdict.reason,
+          `The rule blocking ${matchedSuffix} would stop playback; specific ad and telemetry hosts under it stay blocked.`
+        ]
+      };
+    };
+
     // 5. Feed block rules.
     for (const suffix of this._walk(domain)) {
       const hit = this.filterSubdomains.get(suffix);
       if (hit) {
+        const exempt = playbackExemption(suffix);
+        if (exempt) return exempt;
         return {
           domain, blocked: true, source: hit.source, action: 'BLOCK', category: hit.category, matched: suffix,
           reasons: [
@@ -485,6 +600,8 @@ export class OmniShieldFilterEngine {
       wildcards: this.wildcardBlock.length + this.wildcardAllow.length,
       userRules: this.customBlockExact.size + this.customAllowExact.size,
       safetyEntries: this.safetyAllow.size,
+      videoSafeEntries: this.videoAllowSuffix.size,
+      videoRulesRejected: this.stats.videoRejected,
       total: this.totalRules(),
       categories: this.ruleCountByCategory(),
       sources: Object.fromEntries(this.sourceCounts)

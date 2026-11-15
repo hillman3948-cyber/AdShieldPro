@@ -73,6 +73,15 @@ class AdShieldRepository @Inject constructor(
     private val filterMutex = Mutex()
     private val statsMutex = Mutex()
 
+    /** Guards the in-memory daily counter; see [recordDnsQueryEvent]. */
+    private val dailyStatLock = Any()
+    private var pendingDayEpoch = -1L
+    private var pendingDayTotal = 0L
+    private var pendingDayBlockedQueries = 0L
+    private var pendingDayAllowedQueries = 0L
+    private var pendingDayCachedQueries = 0L
+    private var lastDailyStatFlushMs = 0L
+
     private val filterCacheDir: File by lazy {
         File(context.filesDir, "filter_cache").apply { mkdirs() }
     }
@@ -305,27 +314,29 @@ class AdShieldRepository @Inject constructor(
         val now = System.currentTimeMillis()
         val epochDay = now / MILLIS_PER_DAY
 
-        // 2. Update persistent daily aggregate counter
-        statsMutex.withLock {
-            val existing = dao.getDailyStatForDay(epochDay)
-            val updated = if (existing == null) {
-                DailyStatEntity(
-                    dateEpochDay = epochDay,
-                    totalQueries = 1L,
-                    blockedQueries = if (isBlocked) 1L else 0L,
-                    allowedQueries = if (isBlocked) 0L else 1L,
-                    cachedQueries = if (fromCache) 1L else 0L
-                )
-            } else {
-                existing.copy(
-                    totalQueries = existing.totalQueries + 1L,
-                    blockedQueries = existing.blockedQueries + if (isBlocked) 1L else 0L,
-                    allowedQueries = existing.allowedQueries + if (isBlocked) 0L else 1L,
-                    cachedQueries = existing.cachedQueries + if (fromCache) 1L else 0L
-                )
+        // 2. Daily aggregate counter.
+        //
+        // This used to be a read-modify-write to SQLite for every single DNS query: a
+        // disk transaction per packet, serialised against other packets' log inserts.
+        // Loading one page with 60 subresources meant 60 transactions, and on a phone
+        // that is exactly what "the app lags" feels like. The counter is accumulated
+        // in memory and flushed in a single write, at most once per second (plus a
+        // final flush on shutdown), and immediately when the day rolls over.
+        val shouldFlush = synchronized(dailyStatLock) {
+            if (pendingDayEpoch != epochDay) {
+                pendingDayEpoch = epochDay
+                pendingDayTotal = 0L
+                pendingDayBlockedQueries = 0L
+                pendingDayAllowedQueries = 0L
+                pendingDayCachedQueries = 0L
             }
-            dao.upsertDailyStat(updated)
+            pendingDayTotal += 1L
+            pendingDayBlockedQueries += if (isBlocked) 1L else 0L
+            pendingDayAllowedQueries += if (isBlocked) 0L else 1L
+            pendingDayCachedQueries += if (fromCache) 1L else 0L
+            now - lastDailyStatFlushMs >= DAILY_STAT_FLUSH_INTERVAL_MS
         }
+        if (shouldFlush) flushDailyStats()
 
         // 3. Publish a real intelligence event for malware/phishing blocks. Routine ad/tracker
         //    blocks stay as counters only — the map must not invent "threats" out of ad traffic.
@@ -360,7 +371,66 @@ class AdShieldRepository @Inject constructor(
         }
     }
 
+    /**
+     * Persists the in-memory daily counter as one transaction.
+     *
+     * Safe to call concurrently: the counters are swapped under the lock, so a
+     * query arriving mid-flush simply counts into the next batch.
+     */
+    suspend fun flushDailyStats() {
+        val batch = synchronized(dailyStatLock) {
+            if (pendingDayTotal == 0L) return
+            val snapshot = DailyStatBatch(
+                epochDay = pendingDayEpoch,
+                total = pendingDayTotal,
+                blocked = pendingDayBlockedQueries,
+                allowed = pendingDayAllowedQueries,
+                cached = pendingDayCachedQueries
+            )
+            pendingDayTotal = 0L
+            pendingDayBlockedQueries = 0L
+            pendingDayAllowedQueries = 0L
+            pendingDayCachedQueries = 0L
+            lastDailyStatFlushMs = System.currentTimeMillis()
+            snapshot
+        }
+        statsMutex.withLock {
+            val existing = dao.getDailyStatForDay(batch.epochDay)
+            val updated = if (existing == null) {
+                DailyStatEntity(
+                    dateEpochDay = batch.epochDay,
+                    totalQueries = batch.total,
+                    blockedQueries = batch.blocked,
+                    allowedQueries = batch.allowed,
+                    cachedQueries = batch.cached
+                )
+            } else {
+                existing.copy(
+                    totalQueries = existing.totalQueries + batch.total,
+                    blockedQueries = existing.blockedQueries + batch.blocked,
+                    allowedQueries = existing.allowedQueries + batch.allowed,
+                    cachedQueries = existing.cachedQueries + batch.cached
+                )
+            }
+            dao.upsertDailyStat(updated)
+        }
+    }
+
+    private data class DailyStatBatch(
+        val epochDay: Long,
+        val total: Long,
+        val blocked: Long,
+        val allowed: Long,
+        val cached: Long
+    )
+
     suspend fun clearAllStatisticsAndLogs() = withContext(Dispatchers.IO) {
+        synchronized(dailyStatLock) {
+            pendingDayTotal = 0L
+            pendingDayBlockedQueries = 0L
+            pendingDayAllowedQueries = 0L
+            pendingDayCachedQueries = 0L
+        }
         statsMutex.withLock {
             dao.clearAllDnsLogs()
             dao.clearAllDailyStats()
@@ -1103,6 +1173,9 @@ class AdShieldRepository @Inject constructor(
 
     companion object {
         const val MILLIS_PER_DAY = 86_400_000L
+
+        /** At most one daily-counter transaction per second, instead of one per query. */
+        const val DAILY_STAT_FLUSH_INTERVAL_MS = 1_000L
 
         /**
          * Hard caps for the merged engine snapshot. The three bundled offline lists total

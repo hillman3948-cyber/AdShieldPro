@@ -35,6 +35,7 @@ const FORBIDDEN_CLAIMS = [
 const MODULE_FILES = [
   'app.js', 'engine.js', 'ui/dom.js',
   'dns/codec.js', 'dns/cache.js', 'dns/client.js', 'dns/dnssec.js', 'dns/resolvers.js',
+  'guard/video-safety.js',
   'aether/index.js', 'aether/data.js', 'aether/domain.js', 'aether/lexical.js',
   'aether/typosquat.js', 'aether/reputation.js', 'aether/classifier.js',
   'security/monitor.js', 'security/firewall-ai.js', 'security/feedmanager.js',

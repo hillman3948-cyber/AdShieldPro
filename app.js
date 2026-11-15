@@ -12,6 +12,7 @@ import { OmniShieldFilterEngine } from './engine.js';
 import { DnsClient } from './dns/client.js';
 import { RESOLVERS, DotTransport } from './dns/resolvers.js';
 import { auditChain } from './dns/chain.js';
+import { classify as classifyVideoHost } from './guard/video-safety.js';
 import { Aether } from './aether/index.js';
 import { DomainClassifier } from './aether/classifier.js';
 import { SIGNAL_WEIGHTS, EVIDENCE_FLOORS } from './aether/reputation.js';
@@ -122,12 +123,26 @@ async function boot() {
   }
 }
 
+/**
+ * Loads the bundled rule sets without blocking the first paint.
+ *
+ * `loadFilterList` on the 80k-line list is ~0.8 s of straight-line work. Doing that
+ * synchronously made the tab look frozen (and on slower phones tripped the
+ * "page unresponsive" prompt). The chunked loader yields between chunks and
+ * reports progress, so the boot status keeps updating instead of the UI dying.
+ */
 async function loadBundledRules() {
   for (const key of ['lite', 'supplement']) {
     const descriptor = BUNDLED[key];
     try {
       const text = await fetchText(descriptor.file);
-      const result = state.engine.loadFilterList(text, descriptor.category, descriptor.source);
+      const result = await state.engine.loadFilterListAsync(text, {
+        category: descriptor.category,
+        source: descriptor.source,
+        onProgress: ({ fraction }) => {
+          if (key === 'lite') setBootStatus(`loading rule sets… ${Math.round(fraction * 100)}%`, 'info');
+        }
+      });
       state.bundled[descriptor.source] = { ...result, label: descriptor.label, bytes: text.length };
     } catch (err) {
       state.bundled[descriptor.source] = { error: err.message, label: descriptor.label };
@@ -162,7 +177,10 @@ async function rebuildEngine() {
   for (const key of ['lite', 'supplement']) {
     try {
       const text = await fetchText(BUNDLED[key].file);
-      engine.loadFilterList(text, BUNDLED[key].category, BUNDLED[key].source);
+      await engine.loadFilterListAsync(text, {
+        category: BUNDLED[key].category,
+        source: BUNDLED[key].source
+      });
     } catch { /* keep going with whatever loads */ }
   }
   if (state.settings.aggressiveTier) {
@@ -205,7 +223,7 @@ function buildState({ includeModel = false } = {}) {
   }
   return {
     schemaVersion: SCHEMA_VERSION,
-    appVersion: '5.0.1',
+    appVersion: '5.0.2',
     savedAt: new Date().toISOString(),
     settings: { ...state.settings },
     customRules: state.customRules.map((r) => ({ pattern: r.pattern, isAllow: r.isAllow, rawPattern: r.pattern, ruleType: r.isAllow ? 'ALLOW' : 'BLOCK', matchType: 'SUFFIX', isEnabled: true })),
@@ -786,11 +804,19 @@ function renderDnsResult(out, result, type) {
   }
 
   const cls = result.blocked ? 'blocked' : result.ok ? 'allowed' : 'error';
+  const video = classifyVideoHost(result.name);
   mount(out,
     h('div', { class: `verdict ${cls}` },
       h('h3', { text: `${result.name} (${result.type})` }),
       h('ul', {}, (result.reasons || []).map((r) => h('li', { text: r })))
     ),
+    (video.protected || video.adIntent)
+      ? h('div', { class: 'row', style: { marginBottom: '8px' } },
+        video.protected ? pill('media playback host — never blocked as an advert', 'ok') : null,
+        video.adIntent ? pill('third-party advert host — safe to block', 'warn') : null,
+        h('span', { class: 'small muted', text: video.reason })
+      )
+      : null,
     kv([
       ['Status', result.status],
       ['Addresses', result.addresses.join(', ') || '—'],
@@ -813,17 +839,22 @@ function renderDns() {
   const order = state.client?.pool.order().map((r) => r.id) || [];
   mount('#dns-resolvers',
     h('h2', { text: 'Encrypted resolvers' }),
-    table(['Resolver', 'Policy (operator claim)', 'Health', 'EWMA'], RESOLVERS.map((resolver) => {
+    table(['Resolver', 'Policy (operator claim)', 'Client subnet (ECS)', 'Health', 'EWMA'], RESOLVERS.map((resolver) => {
       const hstate = health.find((s) => s.id === resolver.id) || {};
       const cls = hstate.available === false ? 'bad' : hstate.ewmaMs ? 'ok' : '';
       return [
         h('div', {}, h('div', { text: resolver.name }), h('span', { class: 'tiny muted mono', text: `${resolver.dohJson || resolver.dohWire}` })),
         h('div', { class: 'tiny' }, h('div', { text: resolver.filtering }), h('span', { class: 'muted', text: resolver.privacy })),
+        h('div', { class: 'tiny' },
+          pill(resolver.ecs === 'supported' ? 'forwards subnet' : 'no subnet', resolver.ecs === 'supported' ? 'ok' : 'info'),
+          h('div', { class: 'muted', style: { marginTop: '4px' }, text: resolver.ecsNote })
+        ),
         pill(hstate.available === false ? 'circuit open' : (hstate.successes ? 'healthy' : 'untested'), cls),
         hstate.ewmaMs ? `${Math.round(hstate.ewmaMs)} ms` : '—'
       ];
     })),
     h('p', { class: 'small muted', style: { marginTop: '8px' }, text: `Fallback order: ${order.join(' → ') || 'default'}. A failing resolver trips a circuit breaker after repeated failures and stops receiving traffic until its cooldown expires.` }),
+    h('p', { class: 'small muted', text: 'Media hostnames are resolved through the first healthy resolver that forwards a client subnet (ECS), because the authoritative server picks the video CDN edge from it. Ordinary browsing keeps the order above. A slow resolver is hedged: the runner-up starts after 350 ms instead of waiting out the full timeout.' }),
     note(`DoT: ${DotTransport.capability().reason}`, 'warn')
   );
 
@@ -1388,7 +1419,7 @@ function exportMergedConfig() {
     ...(state.importedBackup || {}),
     ...buildState({ includeModel: true }),
     exportedAt: new Date().toISOString(),
-    exportedBy: 'OmniShield X web platform v5.0.1'
+    exportedBy: 'OmniShield X web platform v5.0.2'
   };
   download('omnishield-x-config.json', JSON.stringify(payload, null, 2));
   toast('Merged configuration exported.', 'ok');

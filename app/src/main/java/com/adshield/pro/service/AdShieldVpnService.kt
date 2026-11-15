@@ -630,6 +630,9 @@ class AdShieldVpnService : VpnService() {
         }
         upstreamDnsResolver.bindVpnSocketProtectors(null, null)
         stopVpnTunnel()
+        // The daily counter is batched in memory; write the tail before the scope
+        // dies so the last second of activity is never lost.
+        runCatching { runBlocking { withTimeout(SHUTDOWN_PERSIST_TIMEOUT_MS) { repository.flushDailyStats() } } }
         serviceScope.cancel()
         super.onDestroy()
     }

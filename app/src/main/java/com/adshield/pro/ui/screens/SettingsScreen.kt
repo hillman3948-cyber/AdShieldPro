@@ -241,6 +241,15 @@ fun SettingsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
+                                    text = if (preset.forwardsClientSubnet) {
+                                        "CDN accuracy: forwards a truncated client subnet, so video CDNs pick an edge near you."
+                                    } else {
+                                        "CDN accuracy: forwards no client subnet; edge choice follows the resolver location."
+                                    },
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = if (preset.forwardsClientSubnet) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
                                     text = "Privacy: ${preset.privacyDisclosure}",
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -310,6 +319,36 @@ fun SettingsScreen(
                             checked = settings.resolverConfig.enableIpv6,
                             onCheckedChange = {
                                 onUpdateResolverConfig(settings.resolverConfig.copy(enableIpv6 = it))
+                            }
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 12.dp)
+                        ) {
+                            Text(
+                                text = "Geo-accurate DNS for video (ECS)",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = "Media hostnames resolve through the first provider that forwards a client subnet, so a video CDN returns an edge near you. Ordinary browsing keeps the configured order. This reveals a truncated subnet to authoritative servers.",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = settings.resolverConfig.preferGeoAccurateMediaDns,
+                            onCheckedChange = {
+                                onUpdateResolverConfig(
+                                    settings.resolverConfig.copy(preferGeoAccurateMediaDns = it)
+                                )
                             }
                         )
                     }

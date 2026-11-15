@@ -3,7 +3,12 @@ package com.adshield.pro.engine.dns
 import com.adshield.pro.domain.model.DnsProtocol
 import com.adshield.pro.domain.model.DnsProviderPreset
 import com.adshield.pro.domain.model.DnsResolverConfig
+import com.adshield.pro.engine.filter.DnsMediaPlaybackGuard
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaType
@@ -25,6 +30,12 @@ import javax.net.SocketFactory
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
+
+/**
+ * Endpoint plus its settled outcome, used while racing two providers.
+ * Top-level because Kotlin does not allow nested type aliases.
+ */
+private typealias AttemptOutcome = Pair<DnsProviderEndpoint, Result<UpstreamDnsResolver.UpstreamResult>>
 
 /**
  * Multi-protocol Upstream DNS Client supporting:
@@ -135,31 +146,42 @@ class UpstreamDnsResolver @Inject constructor(
     /**
      * Bootstrap DNS resolver for DoH endpoints so OkHttp never triggers a recursive DNS lookup
      * through the VPN tunnel when resolving well-known DoH hostnames.
+     *
+     * The lookup itself is wrapped in a hard bound. `InetAddress.getByName("1.1.1.1")`
+     * performs a *reverse* lookup when the string is not a literal, and Dns.SYSTEM
+     * can block for seconds on a broken network. Because this sits inside the DoH
+     * code path, an unbounded stall here delays every single query — first paint
+     * included. When the bootstrap host cannot be resolved in time the query fails
+     * fast instead of hanging on a socket open.
      */
     private val bootstrapDns = object : Dns {
         override fun lookup(hostname: String): List<InetAddress> {
-            val lower = hostname.lowercase()
-            val presetIps = when (lower) {
-                "cloudflare-dns.com", "one.one.one.one" ->
-                    listOf("1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001")
-                "dns.quad9.net" ->
-                    listOf("9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::9")
-                "unfiltered.adguard-dns.com", "dns.adguard-dns.com" ->
-                    listOf("94.140.14.140", "94.140.14.141", "2a10:50c0::1:ff", "2a10:50c0::2:ff")
-                "dns.google" ->
-                    listOf("8.8.8.8", "8.8.4.4", "2001:4860:4860::8888", "2001:4860:4860::8844")
-                "dns.nextdns.io" ->
-                    listOf("45.90.28.0", "45.90.30.0", "2a07:a8c0::", "2a07:a8c1::")
-                "freedns.controld.com", "p0.freedns.controld.com" ->
-                    listOf("76.76.2.0", "76.76.10.0", "2606:1a40::", "2606:1a40:1::")
-                else -> emptyList()
-            }
-            if (presetIps.isNotEmpty()) {
+            val lower = hostname.lowercase().trimEnd('.')
+            val presetIps = PRESET_BOOTSTRAP_IPS[lower]
+            if (presetIps != null && presetIps.isNotEmpty()) {
                 return presetIps.mapNotNull { ip ->
                     runCatching { InetAddress.getByName(ip) }.getOrNull()
+                }.ifEmpty {
+                    // Every literal failed: fall through to the system resolver
+                    // rather than declaring the provider unreachable.
+                    boundedSystemLookup(hostname)
                 }
             }
-            return Dns.SYSTEM.lookup(hostname)
+            return boundedSystemLookup(hostname)
+        }
+
+        private fun boundedSystemLookup(hostname: String): List<InetAddress> {
+            val task = java.util.concurrent.FutureTask { Dns.SYSTEM.lookup(hostname) }
+            Thread(task, "adshield-doh-bootstrap").apply { isDaemon = true }.start()
+            return try {
+                task.get(BOOTSTRAP_DNS_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS)
+            } catch (timeout: java.util.concurrent.TimeoutException) {
+                task.cancel(true)
+                throw java.net.UnknownHostException("Bootstrap DNS timed out for $hostname")
+            } catch (interrupted: InterruptedException) {
+                Thread.currentThread().interrupt()
+                throw java.net.UnknownHostException("Bootstrap DNS interrupted for $hostname")
+            }
         }
     }
 
@@ -197,52 +219,121 @@ class UpstreamDnsResolver @Inject constructor(
         }
 
         val configuredPlan = DnsProviderRegistry.queryPlan(config)
-        val plan = DnsProviderRegistry.orderedByHealth(
+        val healthOrdered = DnsProviderRegistry.orderedByHealth(
             configuredPlan, healthMonitor, config.protocol, config.fastestHealthyProvider
         )
+        val plan = mediaAwareOrder(healthOrdered, config, query.questionDomain)
         val failures = mutableListOf<String>()
-        for (endpoint in plan) {
+
+        /**
+         * One provider attempt. Returns only a response that passed
+         * [DnsResponseValidator]; anything else throws.
+         */
+        suspend fun attempt(endpoint: DnsProviderEndpoint): UpstreamResult {
             val providerStart = System.currentTimeMillis()
-            try {
-                healthMonitor.checkAvailable(endpoint.providerId, config.protocol, providerStart)
-                val response = providerTransport?.query(query, config, endpoint)
-                    ?: executeProviderQuery(query, config, endpoint)
-                val inspection = DnsResponseValidator.validate(query.rawPayload, response, config.dnssecMode)
-                val latency = (System.currentTimeMillis() - providerStart).coerceAtLeast(1)
-                healthMonitor.recordSuccess(endpoint.providerId, config.protocol, latency, System.currentTimeMillis())
-                val protocol = "${config.protocol.name} (${endpoint.displayName}) · ${inspection.dnssecStatus.name}"
-                if (shouldCacheDnsResponse(response)) {
-                    val ttlSeconds = DnsPacketCodec.extractResponseTtlSeconds(response)
-                    synchronized(dnsCache) {
-                        dnsCache.put(
-                            cacheKey,
-                            CachedDnsEntry(
-                                wireResponse = response.copyOf(),
-                                expiresAtEpochMs = System.currentTimeMillis() + ttlSeconds * 1000L,
-                                protocolOrigin = protocol
-                            )
+            healthMonitor.checkAvailable(endpoint.providerId, config.protocol, providerStart)
+            val response = providerTransport?.query(query, config, endpoint)
+                ?: executeProviderQuery(query, config, endpoint)
+            val inspection = DnsResponseValidator.validate(query.rawPayload, response, config.dnssecMode)
+            val latency = (System.currentTimeMillis() - providerStart).coerceAtLeast(1)
+            healthMonitor.recordSuccess(endpoint.providerId, config.protocol, latency, System.currentTimeMillis())
+            val protocol = "${config.protocol.name} (${endpoint.displayName}) · ${inspection.dnssecStatus.name}"
+            if (shouldCacheDnsResponse(response)) {
+                val ttlSeconds = DnsPacketCodec.extractResponseTtlSeconds(response)
+                synchronized(dnsCache) {
+                    dnsCache.put(
+                        cacheKey,
+                        CachedDnsEntry(
+                            wireResponse = response.copyOf(),
+                            expiresAtEpochMs = System.currentTimeMillis() + ttlSeconds * 1000L,
+                            protocolOrigin = protocol
                         )
-                    }
+                    )
                 }
-                return@withContext UpstreamResult(
-                    responseBytes = response,
-                    protocolUsed = protocol,
-                    fromCache = false,
-                    latencyMs = latency.toInt().coerceAtMost(Int.MAX_VALUE),
-                    providerId = endpoint.providerId,
-                    dnssecStatus = inspection.dnssecStatus
+            }
+            return UpstreamResult(
+                responseBytes = response,
+                protocolUsed = protocol,
+                fromCache = false,
+                latencyMs = latency.toInt().coerceAtMost(Int.MAX_VALUE),
+                providerId = endpoint.providerId,
+                dnssecStatus = inspection.dnssecStatus
+            )
+        }
+
+        fun noteFailure(endpoint: DnsProviderEndpoint, error: Throwable) {
+            if (error !is ProviderCircuitOpenException) {
+                healthMonitor.recordFailure(
+                    endpoint.providerId, config.protocol, error, System.currentTimeMillis()
                 )
+            }
+            failures += "${endpoint.providerId}: ${error.message ?: error.javaClass.simpleName}"
+        }
+
+        /** An attempt whose failure has already been recorded, so it can be raced. */
+        suspend fun trackedAttempt(endpoint: DnsProviderEndpoint): AttemptOutcome =
+            endpoint to try {
+                Result.success(attempt(endpoint))
             } catch (cancel: kotlinx.coroutines.CancellationException) {
                 throw cancel
             } catch (error: Throwable) {
-                if (error !is ProviderCircuitOpenException) {
-                    healthMonitor.recordFailure(
-                        endpoint.providerId, config.protocol, error, System.currentTimeMillis()
-                    )
+                noteFailure(endpoint, error)
+                Result.failure(error)
+            }
+
+        // Providers whose circuit breaker is open are skipped up front: they are
+        // known to be failing, so racing one only delays the answer. When every
+        // circuit is open the full plan is used anyway — a real attempt still beats
+        // a synthetic SERVFAIL, and the failures stay visible in diagnostics.
+        val nowMs = System.currentTimeMillis()
+        val usable = plan.filter { endpoint ->
+            runCatching { healthMonitor.checkAvailable(endpoint.providerId, config.protocol, nowMs) }
+                .onFailure { failures += "${endpoint.providerId}: ${it.message}" }
+                .isSuccess
+        }.ifEmpty { plan }
+
+        var resolved: UpstreamResult? = null
+        var index = 0
+        while (resolved == null && index < usable.size) {
+            val primary = usable[index]
+            val runnerUp = usable.getOrNull(index + 1)
+
+            if (runnerUp == null) {
+                resolved = trackedAttempt(primary).second.getOrNull()
+                index += 1
+                continue
+            }
+
+            // Give the primary a head start, then race the runner-up. Worst case is
+            // HEDGE_DELAY_MS + one provider timeout instead of the sum of every
+            // provider timeout — the difference between a dead resolver costing
+            // 2.5 s and costing 12 s on every single app launch.
+            val raced = coroutineScope {
+                val first = async { trackedAttempt(primary) }
+                val second = async {
+                    delay(HEDGE_DELAY_MS)
+                    trackedAttempt(runnerUp)
                 }
-                failures += "${endpoint.providerId}: ${error.message ?: error.javaClass.simpleName}"
+                val winner = select<AttemptOutcome> {
+                    first.onAwait { it }
+                    second.onAwait { it }
+                }
+                // Abandon the straggler so a hanging provider cannot hold the scope.
+                first.cancel()
+                second.cancel()
+                winner
+            }
+            resolved = raced.second.getOrNull()
+            index += 2
+
+            if (resolved == null) {
+                // Both of this pair failed. Nothing is retried blindly: the loop
+                // moves on to the next providers in the same validated plan.
+                continue
             }
         }
+
+        if (resolved != null) return@withContext resolved as UpstreamResult
 
         // Fail closed at the DNS protocol layer: return SERVFAIL, never an unvalidated response
         // and never an implicit plaintext downgrade.
@@ -252,6 +343,32 @@ class UpstreamDnsResolver @Inject constructor(
             fromCache = false,
             latencyMs = 0
         )
+    }
+
+    /**
+     * Media-aware provider order.
+     *
+     * The authoritative server picks the video CDN edge from the resolver's
+     * address, so a resolver that forwards EDNS Client Subnet returns an edge near
+     * the user while a resolver that does not may return one in another region.
+     * For media hostnames only, providers that forward a client subnet are moved
+     * to the front of the plan. Everything else keeps the configured/health order,
+     * so ordinary browsing is unaffected and no provider outside the user's plan
+     * is ever contacted.
+     */
+    internal fun mediaAwareOrder(
+        plan: List<DnsProviderEndpoint>,
+        config: DnsResolverConfig,
+        domain: String
+    ): List<DnsProviderEndpoint> {
+        if (!config.preferGeoAccurateMediaDns || plan.size < 2) return plan
+        if (!DnsMediaPlaybackGuard.isProtectedPlaybackHost(domain)) return plan
+        val (geoAccurate, rest) = plan.partition { endpoint ->
+            DnsProviderPreset.entries.any {
+                it.id == endpoint.providerId && it.forwardsClientSubnet
+            }
+        }
+        return if (geoAccurate.isEmpty()) plan else geoAccurate + rest
     }
 
     private fun executeProviderQuery(
@@ -436,6 +553,41 @@ class UpstreamDnsResolver @Inject constructor(
     companion object {
         private val DNS_MESSAGE_MEDIA_TYPE = "application/dns-message".toMediaType()
 
+        /**
+         * How long the primary provider gets before the runner-up is started in
+         * parallel. 250 ms covers a healthy resolver on a mobile network; past that
+         * the user is waiting on a straggler that will probably never answer.
+         */
+        private const val HEDGE_DELAY_MS = 250L
+
+        /** Hard bound on resolving a DoH endpoint's own hostname. */
+        private const val BOOTSTRAP_DNS_TIMEOUT_MS = 1_500L
+
+        /**
+         * DoH/DoT endpoints are known ahead of time, so they are never resolved
+         * through the tunnel. Literal addresses only: a hostname here would trigger
+         * exactly the recursive lookup this map exists to avoid.
+         */
+        private val PRESET_BOOTSTRAP_IPS: Map<String, List<String>> = mapOf(
+            "cloudflare-dns.com" to listOf("1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"),
+            "one.one.one.one" to listOf("1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"),
+            "dns.quad9.net" to listOf("9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::9"),
+            // Quad9 Secure + ECS endpoints.
+            "dns11.quad9.net" to listOf("9.9.9.11", "149.112.112.11", "2620:fe::11", "2620:fe::fe:11"),
+            "unfiltered.adguard-dns.com" to listOf("94.140.14.140", "94.140.14.141", "2a10:50c0::1:ff", "2a10:50c0::2:ff"),
+            "dns.adguard-dns.com" to listOf("94.140.14.14", "94.140.14.15", "2a10:50c0::ad1:ff", "2a10:50c0::ad2:ff"),
+            "dns.google" to listOf("8.8.8.8", "8.8.4.4", "2001:4860:4860::8888", "2001:4860:4860::8844"),
+            "dns.nextdns.io" to listOf("45.90.28.0", "45.90.30.0", "2a07:a8c0::", "2a07:a8c1::"),
+            "dns.mullvad.net" to listOf("194.242.2.2", "2a07:e340::2"),
+            "freedns.controld.com" to listOf("76.76.2.0", "76.76.10.0", "2606:1a40::", "2606:1a40:1::"),
+            "p0.freedns.controld.com" to listOf("76.76.2.0", "76.76.10.0", "2606:1a40::", "2606:1a40:1::")
+        )
+
+        /**
+         * 2.5 s for UDP/53. A public resolver that has not answered in 2.5 s is
+         * unreachable on this network, and every millisecond after that is a
+         * millisecond the app waits before the failover provider is even tried.
+         */
         private const val UDP_TIMEOUT_MS = 2500
 
         fun transactionIdOf(rawDnsMessage: ByteArray): Int {

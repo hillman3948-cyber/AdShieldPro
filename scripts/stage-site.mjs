@@ -25,7 +25,7 @@ export const APP_ROOT_FILES = [
   'index.html', 'app.js', 'engine.js', 'sw.js', 'manifest.webmanifest', 'omnishield-x-extension.zip'
 ];
 /** Directories copied wholesale (they contain only runtime assets). */
-export const APP_DIRS = ['ui', 'dns', 'aether', 'security', 'assets'];
+export const APP_DIRS = ['ui', 'dns', 'aether', 'security', 'guard', 'assets'];
 
 /** Parses the service worker's precache list and reports which entries are missing. */
 export function checkPrecache(appDir) {
