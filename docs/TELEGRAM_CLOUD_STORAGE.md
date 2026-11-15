@@ -248,9 +248,12 @@ Run: `./gradlew :app:testDebugUnitTest` (or `tools/gradle-ci.sh .ci/test.log :ap
 
 The Android build workflow additionally compiles Kotlin/Java, assembles both debug and
 R8-minified release APKs, runs the universal-build gate, executes all JVM tests, runs Android
-lint, and asserts that the debug APK packages `libtdjni.so`, `libsslx.so` and `libcryptox.so` for
-`arm64-v8a`, `armeabi-v7a`, `x86` and `x86_64`. Those twelve libraries are downloaded and
-SHA-256-verified by `:app:fetchTdlibNative` on every build; a mismatch fails the build.
+lint, and runs `tools/check_apk_native_libs.py` against the debug APK. That verifier confirms the
+packaged bytes of `libtdjni.so`, `libsslx.so` and `libcryptox.so` for `arm64-v8a`,
+`armeabi-v7a`, `x86` and `x86_64` still match `tdlib/native-checksums.sha256`. Those twelve
+libraries are downloaded and SHA-256-verified by `:app:fetchTdlibNative` on every build; a
+missing, swapped or altered `.so` fails the build. Run the same check locally on any APK with
+`python3 tools/check_apk_native_libs.py <path-to-apk>`.
 
 ### Manual on-device checklist (real account, real network)
 

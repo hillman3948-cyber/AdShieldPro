@@ -164,16 +164,10 @@ jobs:
           unzip -l "$APK" | grep -qE 'classes[0-9]*\.dex'
           unzip -l "$APK" | grep -q 'resources.arsc'
           # The Telegram provider needs all three TDLib/OpenSSL libraries for every supported
-          # ABI. A missing or checksum-unverified .so must never ship as a "successful" build.
-          for abi in arm64-v8a armeabi-v7a x86 x86_64; do
-            for lib in libtdjni.so libsslx.so libcryptox.so; do
-              unzip -l "$APK" | grep -q "lib/$abi/$lib" || {
-                echo "::error::APK is missing lib/$abi/$lib"
-                exit 1
-              }
-            done
-          done
-          echo "TDLib native runtime: 4 ABIs x 3 checksum-verified libraries packaged"
+          # ABI, and the packaged bytes must still match the pinned checksums. A missing,
+          # swapped or unverified .so must never ship as a "successful" build.
+          chmod +x tools/check_apk_native_libs.py
+          python3 tools/check_apk_native_libs.py "$APK"
           echo "APK: $APK"
           ls -l "$APK"
           sha256sum "$APK"
