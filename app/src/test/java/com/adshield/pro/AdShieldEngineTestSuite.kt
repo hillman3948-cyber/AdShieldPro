@@ -433,10 +433,12 @@ class AdShieldEngineTestSuite {
             allowSubdomains = parsed.allowSubdomains
         )
 
-        // Playback host under a blanket media rule stays resolvable.
+        // Video Safety refuses the blanket media-domain rule at parse time, so a
+        // playback host stays resolvable with no matching rule. The specific
+        // ad/telemetry rules below are still enforced.
         val playback = engine.evaluate("rr3---sn-ab5l6nr6.googlevideo.com")
         assertFalse(playback.isBlocked)
-        assertEquals("Video Safety", playback.sourceName)
+        assertEquals("Allowed", playback.sourceName)
 
         // A rule naming the specific ad/telemetry host is always enforced.
         for (host in listOf("log.byteoversea.com", "views.hulu.com", "mcs.tiktokv.com")) {

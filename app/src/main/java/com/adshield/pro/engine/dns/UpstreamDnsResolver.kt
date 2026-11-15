@@ -318,10 +318,20 @@ class UpstreamDnsResolver @Inject constructor(
                     first.onAwait { it }
                     second.onAwait { it }
                 }
+                // A fast failure from the primary must not swallow the runner-up:
+                // hedging is for latency, not for dropping failover. Wait for the
+                // other attempt when the first one to finish did not succeed.
+                val outcome = if (winner.second.isSuccess) {
+                    winner
+                } else {
+                    val other = if (winner.first.providerId == primary.providerId) second else first
+                    val fallback = other.await()
+                    if (fallback.second.isSuccess) fallback else winner
+                }
                 // Abandon the straggler so a hanging provider cannot hold the scope.
                 first.cancel()
                 second.cancel()
-                winner
+                outcome
             }
             resolved = raced.second.getOrNull()
             index += 2
