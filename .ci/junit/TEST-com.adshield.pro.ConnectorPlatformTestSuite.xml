@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.ConnectorPlatformTestSuite" tests="29" skipped="0" failures="0" errors="0" timestamp="2026-11-14T16:31:30.412Z" hostname="runnervmccnms" time="0.048">
+<testsuite name="com.adshield.pro.ConnectorPlatformTestSuite" tests="29" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:10.897Z" hostname="runnervmccnms" time="0.055">
   <properties/>
-  <testcase name="testTextUrlFeedsRejectNonUrlsAndDeduplicate" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.007"/>
-  <testcase name="testEveryImplementedFeedIsHttpsAndHasMetadata" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.007"/>
-  <testcase name="testSuccessfulSyncParsesAndCaps" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.007"/>
-  <testcase name="testEmergencyFeedParsers" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.007"/>
+  <testcase name="testTextUrlFeedsRejectNonUrlsAndDeduplicate" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.009"/>
+  <testcase name="testEveryImplementedFeedIsHttpsAndHasMetadata" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.005"/>
+  <testcase name="testSuccessfulSyncParsesAndCaps" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.003"/>
+  <testcase name="testEmergencyFeedParsers" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.01"/>
   <testcase name="testCisaKevParserAndInvalidShape" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.002"/>
-  <testcase name="testUrlhausCsvParserProducesUrlAndDomain" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testFeodoCsvParsesOnlyValidIPv4" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testStatusIsNeverConnectedWithoutSuccessAndGoesStale" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
-  <testcase name="testMispListClassifiesValuesAndIgnoresJunk" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testUrlhausCsvParserProducesUrlAndDomain" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
+  <testcase name="testFeodoCsvParsesOnlyValidIPv4" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
+  <testcase name="testStatusIsNeverConnectedWithoutSuccessAndGoesStale" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testMispListClassifiesValuesAndIgnoresJunk" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <testcase name="testUrlHostExtractionRejectsSpoofedInput" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testUnavailableSourcesAreLabelledUnavailable" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testRiskEngineHonoursSuppressionAndLocalRisk" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.003"/>
+  <testcase name="testUnavailableSourcesAreLabelledUnavailable" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
+  <testcase name="testRiskEngineHonoursSuppressionAndLocalRisk" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.008"/>
   <testcase name="testParserRejectsEmptyAndUnknown" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testCatalogueIdsAndEndpointsAreUnique" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testOfflineTimeoutAndInvalidBody" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.004"/>
+  <testcase name="testCatalogueIdsAndEndpointsAreUnique" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
+  <testcase name="testOfflineTimeoutAndInvalidBody" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <testcase name="testOnlyDefaultEnabledFeedsAreScheduled" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
   <testcase name="testDisabledAndNotConfiguredOverrideOldSuccess" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
   <testcase name="testDiagnosticFeedsValidateResponseAndProduceNoThreats" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
@@ -23,13 +23,13 @@
   <testcase name="testDisabledAndKeyRequiredAreSkipped" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <testcase name="testCooldownSkipsNetworkEntirely" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <testcase name="testValueNormalisationAndKindDetection" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testRateLimitProviderErrorAndAuthFailures" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testRateLimitProviderErrorAndAuthFailures" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <testcase name="testDomainBlocklistsAndIpsum" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.002"/>
   <testcase name="testBackoffIsExponentialAndBounded" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testNotModifiedIsSuccessWithoutIndicators" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
-  <testcase name="testEveryModuleHasRealConnectorsAndHonestGaps" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
-  <testcase name="testRiskEngineExplainsAndCorroborates" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
-  <testcase name="testEpssNvdAndGithubParsers" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testNotModifiedIsSuccessWithoutIndicators" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testEveryModuleHasRealConnectorsAndHonestGaps" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
+  <testcase name="testRiskEngineExplainsAndCorroborates" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.0"/>
+  <testcase name="testEpssNvdAndGithubParsers" classname="com.adshield.pro.ConnectorPlatformTestSuite" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

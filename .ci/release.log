@@ -14,8 +14,8 @@ TDLib native runtime: 12 checksum-verified libraries present
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libcryptox.so, libdatastore_shared_counter.so, libsslx.so, libtdjni.so. Run with --info option to learn more.
 
 > Task :app:mergeReleaseArtProfile
-> Task :app:generateReleaseBuildConfig
 > Task :app:extractReleaseNativeSymbolTables
+> Task :app:generateReleaseBuildConfig
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :app:generateReleaseResources FROM-CACHE
 > Task :app:packageReleaseResources
@@ -28,20 +28,20 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:compileReleaseNavigationResources FROM-CACHE
 > Task :app:createReleaseCompatibleScreenManifests
 > Task :app:extractDeepLinksRelease
+> Task :app:mergeReleaseResources
 > Task :app:processReleaseMainManifest
 > Task :app:processReleaseManifest
 > Task :app:extractProguardFiles
-> Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseStartupProfile
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
 > Task :app:extractReleaseVersionControlInfo
-> Task :app:mergeReleaseResources
 > Task :app:collectReleaseDependencies
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
 > Task :app:writeReleaseSigningConfigVersions
+> Task :app:processReleaseManifestForPackage
 > Task :app:processReleaseResources
 > Task :app:compressReleaseAssets
 > Task :app:kspReleaseKotlin
@@ -74,7 +74,7 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:542:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:543:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:336:59 Cast is redundant.
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:401:38 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:375:38 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/intelligence/IntelligenceAggregator.kt:701:59 Unnecessary safe call on a non-null receiver of type 'BatteryTelemetry'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/onion/OnionRoutingManager.kt:108:30 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/onion/OnionRoutingManager.kt:148:39 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
@@ -129,6 +129,6 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 
 [Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
-BUILD SUCCESSFUL in 4m 16s
+BUILD SUCCESSFUL in 5m 36s
 58 actionable tasks: 52 executed, 6 from cache
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html

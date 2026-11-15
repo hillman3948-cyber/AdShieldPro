@@ -43,7 +43,7 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:542:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/connectors/NativeProbeExpansion.kt:543:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:336:59 Cast is redundant.
-w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:401:38 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/dns/UpstreamDnsResolver.kt:375:38 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/intelligence/IntelligenceAggregator.kt:701:59 Unnecessary safe call on a non-null receiver of type 'BatteryTelemetry'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/onion/OnionRoutingManager.kt:108:30 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshield/pro/engine/onion/OnionRoutingManager.kt:148:39 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
@@ -74,6 +74,6 @@ w: file:///home/runner/work/AdShieldPro/AdShieldPro/app/src/main/java/com/adshie
 
 [Incubating] Problems report is available at: file:///home/runner/work/AdShieldPro/AdShieldPro/build/reports/problems/problems-report.html
 
-BUILD SUCCESSFUL in 2m 27s
+BUILD SUCCESSFUL in 3m 5s
 9 actionable tasks: 9 executed
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html

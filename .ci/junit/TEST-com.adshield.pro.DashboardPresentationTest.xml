@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.DashboardPresentationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-14T16:31:30.512Z" hostname="runnervmccnms" time="0.007">
+<testsuite name="com.adshield.pro.DashboardPresentationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:11.049Z" hostname="runnervmccnms" time="0.005">
   <properties/>
-  <testcase name="eventTitlesDescribeRealOutcomes" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
-  <testcase name="overview_threatsCannotExceedBlocked" classname="com.adshield.pro.DashboardPresentationTest" time="0.002"/>
+  <testcase name="eventTitlesDescribeRealOutcomes" classname="com.adshield.pro.DashboardPresentationTest" time="0.001"/>
+  <testcase name="overview_threatsCannotExceedBlocked" classname="com.adshield.pro.DashboardPresentationTest" time="0.001"/>
   <testcase name="motionRequiresConnectedTunnelRealTrafficAndSystemAnimations" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="overview_prefersDeviceHistoryAndNeverMixesSessionCounters" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="liveEventsKeepDatabaseIdsForStableLazyKeys" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
-  <testcase name="overview_emptyStateIsExplicitAndZeroSafe" classname="com.adshield.pro.DashboardPresentationTest" time="0.001"/>
+  <testcase name="overview_emptyStateIsExplicitAndZeroSafe" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="severityMappingIsStableAndNeverInventsCriticalForAllowedTraffic" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="idleLiveSnapshotDoesNotPretendToHaveTraffic" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="percentLabelRoundsAndClamps" classname="com.adshield.pro.DashboardPresentationTest" time="0.002"/>
-  <testcase name="navScrollTargetCentersSelectionAndClampsAtStart" classname="com.adshield.pro.DashboardPresentationTest" time="0.001"/>
+  <testcase name="navScrollTargetCentersSelectionAndClampsAtStart" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="overview_fallsBackToCurrentSessionOnlyWhenHistoryIsEmpty" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="overview_clampsImpossibleBlockedCounters" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>
   <testcase name="overview_recomputesAllowedWhenReportedCounterContradictsTotal" classname="com.adshield.pro.DashboardPresentationTest" time="0.0"/>

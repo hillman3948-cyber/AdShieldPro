@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adshield.pro.TelegramCloudTestSuite" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-14T16:31:31.152Z" hostname="runnervmccnms" time="0.079">
+<testsuite name="com.adshield.pro.TelegramCloudTestSuite" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-15T06:07:11.867Z" hostname="runnervmccnms" time="0.107">
   <properties/>
-  <testcase name="testDuplicateSha256IsRejectedBeforeAnyUploadRequest" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.029"/>
-  <testcase name="testDownloadProgressResumeAndHashVerification" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.006"/>
-  <testcase name="testWrongDatabaseEncryptionKeyClearsSessionInsteadOfLooping" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.002"/>
+  <testcase name="testDuplicateSha256IsRejectedBeforeAnyUploadRequest" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.036"/>
+  <testcase name="testDownloadProgressResumeAndHashVerification" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.007"/>
+  <testcase name="testWrongDatabaseEncryptionKeyClearsSessionInsteadOfLooping" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.001"/>
   <testcase name="testOfficialAuthorizationFlowUsesRealTdlibRequestsAndNeverPersistsSecrets" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.003"/>
   <testcase name="testUnsupportedAuthorizationStatesAreReportedNeverSimulated" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.002"/>
   <testcase name="testHashStreamIsExactSha256AndSize" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.0"/>
-  <testcase name="testDisconnectLogsOutWipesEncryptedSessionKeyAndAllLocalSessionData" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.004"/>
-  <testcase name="testOfflineDisconnectWarnsThatServerSessionRemainsActive" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.001"/>
-  <testcase name="testHashMismatchDoesNotClaimDownloadSuccess" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.005"/>
+  <testcase name="testDisconnectLogsOutWipesEncryptedSessionKeyAndAllLocalSessionData" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.005"/>
+  <testcase name="testOfflineDisconnectWarnsThatServerSessionRemainsActive" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.006"/>
+  <testcase name="testHashMismatchDoesNotClaimDownloadSuccess" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.009"/>
   <testcase name="testCaptionEnvelopeAndUploadLimitAreHonest" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.0"/>
-  <testcase name="testLabelIsWrittenBackToTelegramCaptionAndDeleteTargetsOneMessage" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.007"/>
+  <testcase name="testLabelIsWrittenBackToTelegramCaptionAndDeleteTargetsOneMessage" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.009"/>
   <testcase name="testSearchReadsOnlyOurTaggedDocumentsAndLocalFilterWorks" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.003"/>
-  <testcase name="testUploadSendsRealDocumentRecordsMetadataAndProgress" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.003"/>
-  <testcase name="testAppRestartMarksRunningTransferInterruptedInsteadOfFakingCompletion" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.002"/>
-  <testcase name="testInterruptedUploadIsPersistedAndRetryReusesUploadedFileId" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.004"/>
-  <testcase name="testFailedDownloadCanRetryFromRecordedOffset" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.003"/>
-  <testcase name="testSecureStoreNeverWritesPlaintextAndRejectsTampering" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.001"/>
-  <testcase name="testEncryptedSessionThatCannotBeUnlockedIsWipedNotInvented" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.001"/>
+  <testcase name="testUploadSendsRealDocumentRecordsMetadataAndProgress" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.004"/>
+  <testcase name="testAppRestartMarksRunningTransferInterruptedInsteadOfFakingCompletion" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.003"/>
+  <testcase name="testInterruptedUploadIsPersistedAndRetryReusesUploadedFileId" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.007"/>
+  <testcase name="testFailedDownloadCanRetryFromRecordedOffset" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.005"/>
+  <testcase name="testSecureStoreNeverWritesPlaintextAndRejectsTampering" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.0"/>
+  <testcase name="testEncryptedSessionThatCannotBeUnlockedIsWipedNotInvented" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.002"/>
   <testcase name="testPrivateChannelConnectionCreatesChannelAndOnlyDesignatedChatIsQueried" classname="com.adshield.pro.TelegramCloudTestSuite" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
